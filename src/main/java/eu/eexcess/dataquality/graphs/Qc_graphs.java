@@ -28,8 +28,10 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RectangleEdge;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_paramDataList;
@@ -106,7 +108,7 @@ public final class Qc_graphs {
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("mean data fields / record / provider", "provider", "mean data fields / record ", dataset);
-		
+        
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
 		// get a reference to the plot for further customisation... 
@@ -119,9 +121,17 @@ public final class Qc_graphs {
 //        plot.setCircular(false);
 //        plot.setLabelGap(0.02);
 		
-		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		/*
+		LegendTitle legend = new LegendTitle(plot.getRenderer());
+		Font font3 = new Font("Dialog", Font.PLAIN, 20); 
+        legend.setItemFont(font3); 
+        legend.setPosition(RectangleEdge.BOTTOM); 
+        chart.removeLegend();
+        chart.addLegend(legend); 
+*/
+        BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("all_datafields_bar_chart.png");
+		File outputfile = new File("all_datafields_bar_chart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -155,7 +165,7 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("links_barchart.png");
+		File outputfile = new File("links_barchart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -183,7 +193,7 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("non_empty_datafields.png");
+		File outputfile = new File("non_empty_datafields_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -218,7 +228,7 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("non_empty_datafields_barchart.png");
+		File outputfile = new File("non_empty_datafields_barchart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -253,7 +263,7 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("non_empty_datafields_perdatafields_barchart.png");
+		File outputfile = new File("non_empty_datafields_perdatafields_barchart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {

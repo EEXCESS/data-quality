@@ -40,8 +40,12 @@ public class Qc_dataprovider {
 
 	private static final String STATISTIC_FILE_FIELD_SEPERATOR = ";";
 	private static final String STATISTIC_SYSTEMOUT_FIELD_SEPERATOR = "\t";
-	private static final int CHART_WIDTH = 800;
-	private static final int CHART_HEIGHT = 600;
+	private static final int CHART_WIDTH_HIGH = 1600;
+	private static final int CHART_HEIGHT_HIGH = 1200;
+	private static final int CHART_WIDTH_MID = 800;
+	private static final int CHART_HEIGHT_MID = 600;
+	private static final int CHART_WIDTH_LOW = 400;
+	private static final int CHART_HEIGHT_LOW = 350;
 	Qc_base currentProvider = null;
 	Qc_paramDataList paramDataList = new Qc_paramDataList();
 
@@ -153,15 +157,22 @@ public class Qc_dataprovider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*		
-		Qc_graphs.allProviderRecordsPie(CHART_WIDTH, CHART_HEIGHT, paramDataList);
-		Qc_graphs.allProviderDataFieldsPerRecordsPie(CHART_WIDTH, CHART_HEIGHT, paramDataList);
-		Qc_graphs.allProviderNonEmptyDataFieldsPerRecordsPie(CHART_WIDTH, CHART_HEIGHT, paramDataList);
-		*/
-		Qc_graphs.allProviderDataFieldsPerRecordsBarChart(CHART_WIDTH, CHART_HEIGHT, paramDataList);
-		Qc_graphs.allProviderNonEmptyDataFieldsPerRecordsBarChart(CHART_WIDTH, CHART_HEIGHT, paramDataList);
-		Qc_graphs.allProviderNonEmptyDataFieldsPerDatafieldsPerRecordsBarChart(CHART_WIDTH, CHART_HEIGHT, paramDataList);
-		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH, CHART_HEIGHT, paramDataList);
+
+		Qc_graphs.allProviderDataFieldsPerRecordsBarChart(CHART_WIDTH_LOW, CHART_HEIGHT_LOW, paramDataList);
+		Qc_graphs.allProviderDataFieldsPerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
+		Qc_graphs.allProviderDataFieldsPerRecordsBarChart(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList);
+
+		Qc_graphs.allProviderNonEmptyDataFieldsPerRecordsBarChart(CHART_WIDTH_LOW, CHART_HEIGHT_LOW, paramDataList);
+		Qc_graphs.allProviderNonEmptyDataFieldsPerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
+		Qc_graphs.allProviderNonEmptyDataFieldsPerRecordsBarChart(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList);
+
+		Qc_graphs.allProviderNonEmptyDataFieldsPerDatafieldsPerRecordsBarChart(CHART_WIDTH_LOW, CHART_HEIGHT_LOW, paramDataList);
+		Qc_graphs.allProviderNonEmptyDataFieldsPerDatafieldsPerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
+		Qc_graphs.allProviderNonEmptyDataFieldsPerDatafieldsPerRecordsBarChart(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList);
+
+		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH_LOW, CHART_HEIGHT_LOW, paramDataList);
+		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
+		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList);
 
 	}
 

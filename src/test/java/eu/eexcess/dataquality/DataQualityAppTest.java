@@ -47,56 +47,56 @@ public class DataQualityAppTest
 
     public void testAppDebugKIMCollectSimpleExample()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\debug\\kim-collect\\simple-example"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\simple-example"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppDebugKIMCollectOneRecordWithImages()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\debug\\kim-collect\\one-record-with-images"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\one-record-with-images"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppDebugMendeleySimpleExample()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\debug\\mendeley\\simple-example"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\mendeley\\simple-example"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputTestbedServiceResponse()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\input-testbed\\service-response"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-testbed\\service-response"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppInputTestbedRandom100()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\input-testbed\\random-100"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-testbed\\random-100"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputKultur20150302()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\kultur-2015-03-02"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\kultur-2015-03-02"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputEnrichedManuallyServiceResponse()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\input-enriched-manually\\service-response"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-enriched-manually\\service-response"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputEnrichedManuallyServiceResponseEnriched()
     {
-    	String[] args = new String[]{ ".\\..\\resources\\input-enriched-manually\\service-response-enriched"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-enriched-manually\\service-response-enriched"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
