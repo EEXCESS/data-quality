@@ -19,26 +19,62 @@ package eu.eexcess.dataquality.graphs;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.LegendItem;
+import org.jfree.chart.LegendItemCollection;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_paramDataList;
 
 public final class Qc_graphs {
 
+	
+	private static void setupFonts(JFreeChart chart, final CategoryPlot plot) {
+		Font fontTitle = new Font("Tahoma", Font.BOLD, 32); 
+        chart.getTitle().setFont(fontTitle);
+        chart.removeLegend();
+        LegendTitle legend = new LegendTitle(plot.getRenderer());
+		Font fontLegend = new Font("Tahoma", Font.PLAIN, 29);// 29 or 34
+//		legend.setBorder(2, 2, 3, 4);
+        legend.setItemFont(fontLegend); 
+        legend.setPosition(RectangleEdge.BOTTOM); 
+        legend.setItemLabelPadding(new RectangleInsets(2, 2, 2, 30));
+        legend.setLegendItemGraphicPadding(new RectangleInsets(10, 1, 1, 10));
+//        legend.setMargin(new RectangleInsets(2, 2, 2, 2));
+        legend.setLegendItemGraphicLocation(RectangleAnchor.CENTER);
+        legend.setLegendItemGraphicAnchor(RectangleAnchor.CENTER);
+        legend.setLegendItemGraphicEdge(RectangleEdge.LEFT);
+        legend.setMargin(0, 10, 0, 20);
+        chart.addLegend(legend);
+		Font fontRangeAxis = new Font("Tahoma", Font.PLAIN, 29); 
+        plot.getRangeAxis().setTickLabelFont(fontRangeAxis);
+        plot.getRangeAxis().setLabelFont(fontRangeAxis);
+		Font fontDomainAxis = new Font("Tahoma", Font.PLAIN, 29); 
+        plot.getDomainAxis().setLabelFont(fontDomainAxis);
+        plot.getDomainAxis().setTickLabelFont(fontDomainAxis);
+	}
 
+
+/*
 	public static void allProviderRecordsPie (int nWidth, int nHeight, Qc_paramDataList paramList) {
 
 		DefaultPieDataset piechart = new DefaultPieDataset();
@@ -67,7 +103,8 @@ public final class Qc_graphs {
 			System.out.println(e.getMessage());
 		}
 	}
-
+*/
+	/*
 	public static void allProviderDataFieldsPerRecordsPie (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		DefaultPieDataset piechart = new DefaultPieDataset();
 		
@@ -95,7 +132,7 @@ public final class Qc_graphs {
 			System.out.println(e.getMessage());
 		}
 	}
-
+*/
 	public static void allProviderDataFieldsPerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
@@ -120,15 +157,8 @@ public final class Qc_graphs {
 //        plot.setIgnoreZeroValues(true);
 //        plot.setCircular(false);
 //        plot.setLabelGap(0.02);
-		
-		/*
-		LegendTitle legend = new LegendTitle(plot.getRenderer());
-		Font font3 = new Font("Dialog", Font.PLAIN, 20); 
-        legend.setItemFont(font3); 
-        legend.setPosition(RectangleEdge.BOTTOM); 
-        chart.removeLegend();
-        chart.addLegend(legend); 
-*/
+		setupFonts(chart, plot); 
+
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
 		File outputfile = new File("all_datafields_bar_chart_"+nWidth+"x"+nHeight+".png");
@@ -163,6 +193,8 @@ public final class Qc_graphs {
 //        plot.setCircular(false);
 //        plot.setLabelGap(0.02);
 		
+		setupFonts(chart, plot); 
+
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
 		File outputfile = new File("links_barchart_"+nWidth+"x"+nHeight+".png");
@@ -218,6 +250,7 @@ public final class Qc_graphs {
 
 		final CategoryPlot plot = chart.getCategoryPlot(); 
 		plot.setDrawingSupplier(new ChartDrawingSupplier());
+		setupFonts(chart, plot); 
 
 //        PiePlot plot = (PiePlot) chart.getPlot();
 //        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
@@ -253,7 +286,11 @@ public final class Qc_graphs {
 
 		final CategoryPlot plot = chart.getCategoryPlot(); 
 		plot.setDrawingSupplier(new ChartDrawingSupplier());
-
+		setupFonts(chart, plot); 
+		NumberAxis domain = (NumberAxis) plot.getRangeAxis();
+        domain.setRange(0.00, 1.00);
+        domain.setTickUnit(new NumberTickUnit(0.1));
+        
 //        PiePlot plot = (PiePlot) chart.getPlot();
 //        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
 //        plot.setNoDataMessage("No data available");
