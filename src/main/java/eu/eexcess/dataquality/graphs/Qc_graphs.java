@@ -54,12 +54,10 @@ public final class Qc_graphs {
         chart.removeLegend();
         LegendTitle legend = new LegendTitle(plot.getRenderer());
 		Font fontLegend = new Font("Tahoma", Font.PLAIN, 29);// 29 or 34
-//		legend.setBorder(2, 2, 3, 4);
         legend.setItemFont(fontLegend); 
         legend.setPosition(RectangleEdge.BOTTOM); 
-        legend.setItemLabelPadding(new RectangleInsets(2, 2, 2, 30));
-        legend.setLegendItemGraphicPadding(new RectangleInsets(10, 1, 1, 10));
-//        legend.setMargin(new RectangleInsets(2, 2, 2, 2));
+        legend.setItemLabelPadding(new RectangleInsets(2, 2, 2, 50));
+//        legend.setLegendItemGraphicPadding(new RectangleInsets(10, 1, 1, 10));
         legend.setLegendItemGraphicLocation(RectangleAnchor.CENTER);
         legend.setLegendItemGraphicAnchor(RectangleAnchor.CENTER);
         legend.setLegendItemGraphicEdge(RectangleEdge.LEFT);

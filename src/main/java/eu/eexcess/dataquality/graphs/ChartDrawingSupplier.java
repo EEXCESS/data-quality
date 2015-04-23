@@ -30,6 +30,8 @@ public class ChartDrawingSupplier extends DefaultDrawingSupplier  {
     public int fillPaintIndex;
 
     {
+    	// for color
+    	/*
         paintSequence =  new Paint[] {
                 new Color(227, 26, 28),
                 new Color(000,102, 204),
@@ -40,7 +42,21 @@ public class ChartDrawingSupplier extends DefaultDrawingSupplier  {
                 new Color(153,51,51),
                 new Color(102,51,0),
                 new Color(204,153,51),
+                new Color(0,51,0)
+        };
+        */
+// for Black and White        
+        paintSequence =  new Paint[] {
+                new Color(227, 26, 0),
+                new Color(102,51,153),
+                new Color(204,153,51),
+                new Color(102,51,0),
+                new Color(153,204,102),
+                new Color(0,102, 204),
+                new Color(102,51,0),
+                new Color(156,136,0),
                 new Color(0,51,0),
+                new Color(0,102, 204)
         };
     }
 
