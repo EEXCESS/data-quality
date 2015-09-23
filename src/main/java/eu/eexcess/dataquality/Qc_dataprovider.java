@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -88,14 +88,20 @@ public class Qc_dataprovider {
 					"mean non empty fields per datafields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
 					"mean empty fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
 					"mean empty fields per datafields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
-					"links/record");
+//uriCheck					
+//					"links/record");
+					"links/record"+STATISTIC_FILE_FIELD_SEPERATOR+
+					"accessible links/record");
 			writerStatisticRecords.newLine();
 			System.out.println("file"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"provider"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"#records"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"mean fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"min fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"max fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"mean non empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"mean non empty fields per datafields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"mean empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"mean empty fields per datafields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"mean links/record");
+//uriCheck
+//					"mean links/record");
+					"links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+					"accessible links/record");					
 			
 			for (int i = 0; i < paramDataList.size(); i++) {
 				Qc_params param = paramDataList.get(i);
@@ -109,7 +115,10 @@ public class Qc_dataprovider {
 						+ formatNumber(param.getNonEmptyDataFieldsPerRecordPerDatafields()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 						+ formatNumber(param.getEmptyDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 						+ formatNumber(param.getEmptyDataFieldsPerRecordPerDatafields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getLinkDataFieldsPerRecord()));
+//uriCheck						
+//						+ formatNumber(param.getLinkDataFieldsPerRecord()));
+						+ formatNumber(param.getLinkDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord()));						
 				writerStatisticRecords.write(param.getXmlFileName() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ param.getProvider().toString() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(param.getRecordCount()) + STATISTIC_FILE_FIELD_SEPERATOR
@@ -120,7 +129,10 @@ public class Qc_dataprovider {
 						+ formatNumber(param.getNonEmptyDataFieldsPerRecordPerDatafields()) + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(param.getEmptyDataFieldsPerRecord()) + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(param.getEmptyDataFieldsPerRecordPerDatafields()) + STATISTIC_FILE_FIELD_SEPERATOR
-						+ formatNumber(param.getLinkDataFieldsPerRecord()));
+//uriCheck
+//						+ formatNumber(param.getLinkDataFieldsPerRecord()));
+						+ formatNumber(param.getLinkDataFieldsPerRecord()) + STATISTIC_FILE_FIELD_SEPERATOR
+						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord()));						
 				writerStatisticRecords.newLine();
 			}
 			writerStatisticRecords.close();
@@ -135,7 +147,10 @@ public class Qc_dataprovider {
 						"mean non empty fields per datafields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
 						"mean empty fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
 						"mean empty fields per datafields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
-						"mean links/record");
+						//uriCheck
+						//"mean links/record");
+						"mean links/record"+STATISTIC_FILE_FIELD_SEPERATOR+
+						"mean accessible links/record");
 			writerStatisticRecords.newLine();
 			
 			for (int i=0;i<DataProvider.values().length; i++)
@@ -150,7 +165,10 @@ public class Qc_dataprovider {
 						+ formatNumber(paramDataList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])) + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(paramDataList.getEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(paramDataList.getEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])) + STATISTIC_FILE_FIELD_SEPERATOR
-						+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+
+						//uriCheck+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+						+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + STATISTIC_FILE_FIELD_SEPERATOR
+						+ formatNumber(paramDataList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i])));
 				writerStatisticRecords.newLine();
 			}
 			writerStatisticRecords.close();
@@ -173,7 +191,10 @@ public class Qc_dataprovider {
 //		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH_LOW, CHART_HEIGHT_LOW, paramDataList);
 		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
 		Qc_graphs.allProviderLinksPerRecordsBarChart(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList);
-
+		
+		//uriCheck
+		Qc_graphs.allProviderLinksNotAccessiblePerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
+		Qc_graphs.allProviderLinksNotAccessiblePerRecordsBarChart(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList);
 	}
 
 	// try to check from which partner the XML file is.
@@ -223,6 +244,8 @@ public class Qc_dataprovider {
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
 						currentProvider.countDataFields(SearchType.linkDataFields);
+						//uriCheck
+						currentProvider.countDataFields(SearchType.uriDataFields);
 						Qc_params param = currentProvider.getParam();
 						paramDataList.addParam(param);
 						break;

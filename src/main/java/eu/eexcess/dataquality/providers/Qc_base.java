@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -17,7 +17,13 @@ limitations under the License.
  */
 package eu.eexcess.dataquality.providers;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,14 +39,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_interface;
 import eu.eexcess.dataquality.Qc_params;
-import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 
 public class Qc_base implements Qc_interface {
 
 	public enum SearchType {
 		allDataFields, notEmptyDataFields, linkDataFields
+		//uriCheck
+		, uriDataFields
 	}
 
 	String xmlFileName = "";
@@ -132,6 +140,10 @@ public class Qc_base implements Qc_interface {
 			} else if (searchType == SearchType.linkDataFields) {
 				param.addLinkDataFieldsPerRecord(countDataFieldsNode(
 						nodelistRecords.item(i), searchType));
+			}//uriCheck
+			  else if (searchType == SearchType.uriDataFields) {
+					param.addAccessibleLinksDataFieldsPerRecord(countDataFieldsNode(
+							nodelistRecords.item(i), searchType));
 			}
 		}
 	}
@@ -159,34 +171,59 @@ public class Qc_base implements Qc_interface {
 				Node actNode = nodeChilds.item(i);
 				nReturn = countLinksInNodes(nReturn, actNode);
 			}
+		} //uriCheck 
+		  else if (searchType == SearchType.uriDataFields) {
+			for (int i = 0; i < nodeChilds.getLength(); i++) {
+				Node actNode = nodeChilds.item(i);
+				nReturn = countAccessibleLinks(nReturn, actNode);
+			}
 		}
 		return nReturn;
 	}
 
+	/*
+	 * count Links in nodes
+	 * */
 	protected int countLinksInNodes(int nReturn, Node actNode) {
+		
 		if (actNode.getNodeType() == Node.ELEMENT_NODE) {
-			if (actNode.getTextContent() != null &&
+			String actNodeTextContent = actNode.getTextContent();
+			if (actNodeTextContent != null &&
 					(
-					actNode.getTextContent().toLowerCase().startsWith("http://") || 
-					actNode.getTextContent().toLowerCase().startsWith("https://")
+					actNodeTextContent.toLowerCase().startsWith("http://") || 
+					//uriCheck additional uri-schemes
+					actNodeTextContent.toLowerCase().startsWith("https://") ||
+					actNodeTextContent.toLowerCase().startsWith("ftp://")
+//					actNodeTextContent.toLowerCase().startsWith("mailto://") ||
+//					actNodeTextContent.toLowerCase().startsWith("file://") ||
+//					actNodeTextContent.toLowerCase().startsWith("data://")
 					)
-					){
+				){
 				nReturn++;
 			} else {
 				
 			}
+			
 			if (actNode.getAttributes() != null && actNode.getAttributes().getLength() > 0)
 			{
 				NamedNodeMap attributes = actNode.getAttributes();
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
 					Node attribute = attributes.item(attributesIndex);
 					String value = attribute.getNodeValue();
-					if (value != null && !value.isEmpty() && (value.toLowerCase().startsWith("http://") || value.toLowerCase().startsWith("https://")))
-					{
+					if (value != null && !value.isEmpty() && 
+							(value.toLowerCase().startsWith("http://") || 
+							 value.toLowerCase().startsWith("https://") || 
+							 value.toLowerCase().startsWith("ftp://")
+//							 value.toLowerCase().startsWith("mailto://") ||
+//							 value.toLowerCase().startsWith("file://") ||
+//							 value.toLowerCase().startsWith("data://")									
+							)
+						){
 						nReturn++;
 					}
 				}
 			}
+
 			if (actNode.hasChildNodes())
 			{
 				for (int i = 0; i < actNode.getChildNodes().getLength(); i++) {
@@ -198,6 +235,107 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 
+	
+	protected int countAccessibleLinks(int nReturn, Node actNode) {
+		
+		if (actNode.getNodeType() == Node.ELEMENT_NODE) {
+			String textContent = actNode.getTextContent();
+			if (textContent != null &&
+					(
+					textContent.toLowerCase().startsWith("http://") || 
+					//uriCheck additional uri-schemes
+					textContent.toLowerCase().startsWith("https://") ||
+					textContent.toLowerCase().startsWith("ftp://")
+//					textContent.toLowerCase().startsWith("mailto://") ||
+//					textContent.toLowerCase().startsWith("file://") ||
+//					textContent.toLowerCase().startsWith("data://")
+					)
+				){
+//				Socket socket = null;
+//				boolean reachable = false;
+//				try {
+//				    socket = new Socket(textContent);
+//				    reachable = true;
+//				} finally {            
+//				    if (socket != null) try { socket.close(); } catch(IOException e) {}
+				nReturn++;
+				try{
+				    final URLConnection connection = new URL(textContent).openConnection();
+				    connection.setConnectTimeout(1000);
+				    connection.setReadTimeout(2000);
+				    connection.setUseCaches(false);
+				    connection.connect();
+
+				    //System.out.println("Ressource " + textContent + " is available. ");
+				    //available = true;
+				} catch(final MalformedURLException e){
+					nReturn--;
+				    System.out.println("Ressource " + textContent + " is NOT available. ");
+				    throw new IllegalStateException("Bad URL: " + textContent, e);
+//				}   catch(final SocketTimeoutException e){
+//					Log.info("Ressource " + textContent + " NOT available (Timeout exceeded).", e);
+				} catch(final IOException e){
+					nReturn--;
+					//Log.info("Ressource " + textContent + " NOT available. ", e);				    
+					System.out.println("Ressource " + textContent + " is NOT available. " + e.getMessage());
+				}
+			} 
+//				else {
+//				
+//			}
+			
+			if (actNode.getAttributes() != null && actNode.getAttributes().getLength() > 0)
+			{
+				NamedNodeMap attributes = actNode.getAttributes();
+				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
+					Node attribute = attributes.item(attributesIndex);
+					String value = attribute.getNodeValue();
+					if (value != null && !value.isEmpty() && 
+							(value.toLowerCase().startsWith("http://") || 
+									 value.toLowerCase().startsWith("https://") || 
+									 value.toLowerCase().startsWith("ftp://")
+//									 value.toLowerCase().startsWith("mailto://") ||
+//									 value.toLowerCase().startsWith("file://") ||
+//									 value.toLowerCase().startsWith("data://")									
+							)
+					   ){
+						writeToTempFile(this.dataProvider + " | " + value);
+						nReturn++;
+						try{
+						    final URLConnection connection = new URL(value).openConnection();
+						    connection.setConnectTimeout(1000);
+						    connection.setReadTimeout(2000);
+						    connection.setUseCaches(false);
+						    connection.connect();
+						    //System.out.println("Ressource " + value + " is available. ");
+						} catch(final MalformedURLException e){
+							nReturn--;
+						    System.out.println("Ressource " + value + " is NOT available. ");							
+						    throw new IllegalStateException("Bad URL: " + value, e);
+//						}   catch(final SocketTimeoutException e){
+//							Log.info("Ressource " + value + " NOT available (Timeout exceeded).", e);
+						} catch(final IOException e){
+							nReturn--;
+							System.out.println("Ressource " + value + " is NOT available. " + e.getMessage());				    
+							//System.out.println("Ressource " + value + " NOT available. " + e.getMessage());
+						}						
+					}
+				}
+			}
+
+			if (actNode.hasChildNodes())
+			{
+				for (int i = 0; i < actNode.getChildNodes().getLength(); i++) {
+					Node actNodeChild = actNode.getChildNodes().item(i);
+					nReturn = countAccessibleLinks(nReturn, actNodeChild);
+				}
+			}
+		}
+		return nReturn;
+	}
+
+	
+	
 	@Override
 	public int getRecordsCount() {
 		if (param != null) {
@@ -209,5 +347,20 @@ public class Qc_base implements Qc_interface {
 	@Override
 	public Qc_params getParam() {
 		return param;
+	}
+	
+	protected void writeToTempFile(String textToAppend){
+		File tempFile = new File("tempFileJR.csv");
+		BufferedWriter writeBuffer;
+		try {
+			writeBuffer = new BufferedWriter(new FileWriter(tempFile));
+			writeBuffer.append(textToAppend);
+			writeBuffer.newLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//writeBuffer.close();
 	}
 }

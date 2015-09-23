@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -16,6 +16,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 package eu.eexcess.dataquality;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -100,5 +109,74 @@ public class DataQualityAppTest
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
+    
+    public void testContentNegotiation() throws IOException{
+    	URL myUrl= new URL("http://digv525.joanneum.at/kim-kgs/rest/masterdata/collection/5");
+    	URLConnection urlConnection = myUrl.openConnection();
+    	
+    	 Map<String, List<String>> headers = urlConnection.getHeaderFields();
+    	 Set<Map.Entry<String, List<String>>> entrySet = headers.entrySet();
+         for (Map.Entry<String, List<String>> entry : entrySet) {
+             String headerName = entry.getKey();
+             System.out.println("Header Name:" + headerName);
+             List<String> headerValues = entry.getValue();
+             for (String value : headerValues) {
+                 System.out.print("Header value:" + value);
+             }
+             System.out.println();
+             System.out.println();
+  	    	
+		};
+		
+    	System.out.println("JRtest");
+    	assertEquals(true, true);
+    	
+    }
+
+	public void testContentNegotiation3() throws IOException{
+		URL myUrl= new URL("http://dbpedia.org/page/Delos");
+		URLConnection urlConnection = myUrl.openConnection();
+		
+		 Map<String, List<String>> headers = urlConnection.getHeaderFields();
+		 Set<Map.Entry<String, List<String>>> entrySet = headers.entrySet();
+	     for (Map.Entry<String, List<String>> entry : entrySet) {
+	         String headerName = entry.getKey();
+	         System.out.println("Header Name:" + headerName);
+	         List<String> headerValues = entry.getValue();
+	         for (String value : headerValues) {
+	             System.out.print("Header value:" + value);
+	         }
+	         System.out.println();
+	         System.out.println();
+	    	
+		};
+		
+		System.out.println("JRtest");
+		assertEquals(true, true);
+		
+	}
+
+	public void testContentNegotiation4() throws IOException{
+		URL myUrl= new URL("http://dbpedia.org/page/Delos");
+		URLConnection urlConnection = myUrl.openConnection();
+		
+		 Map<String, List<String>> headers = urlConnection.getHeaderFields();
+		 Set<Map.Entry<String, List<String>>> entrySet = headers.entrySet();
+	     for (Map.Entry<String, List<String>> entry : entrySet) {
+	         String headerName = entry.getKey();
+	         System.out.println("Header Name:" + headerName);
+	         List<String> headerValues = entry.getValue();
+	         for (String value : headerValues) {
+	             System.out.print("Header value:" + value);
+	         }
+	         System.out.println();
+	         System.out.println();
+	    	
+		};
+		
+		System.out.println("JRtest");
+		assertEquals(true, true);
+		
+	}
 
 }

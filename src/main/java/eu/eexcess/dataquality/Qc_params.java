@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -102,6 +102,16 @@ public class Qc_params {
 	public void addLinkDataFieldsPerRecord(int nCount) {
 		dataLinkFieldsPerRecord.add(nCount);
 	}
+	
+	// - - - - - - - - - - data fields with reachable link per record - - - - - - - - - -
+	// -
+	List<Integer> dataLinkFieldsAccessiblePerRecord = new ArrayList<Integer>();
+
+	public void addAccessibleLinksDataFieldsPerRecord(int nCount) {
+		dataLinkFieldsAccessiblePerRecord.add(nCount);
+	}
+	
+	
 
 	// - - - - - - - - - - - data fields per record - - - - - - - - -
 	public double getDataFieldsPerRecord() {
@@ -187,4 +197,19 @@ public class Qc_params {
 		}
 		return fReturn;
 	}
+
+	// - - - - - - - - - - - - - accessible non empty data fields per record - - - - - - -
+	// - - -
+	public double getAccessibleLinksDataFieldsPerRecord() {
+		double fReturn = 0;
+		if (recordCount > 0) {
+			for (int i = 0; i < dataLinkFieldsAccessiblePerRecord.size(); i++) {
+				fReturn += dataLinkFieldsAccessiblePerRecord.get(i);
+			}
+			fReturn = fReturn / (double) recordCount;
+//			fReturn = Math.round(fReturn * 100) / 100;
+		}
+		return fReturn;
+	}
+	
 }

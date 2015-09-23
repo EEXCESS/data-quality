@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -203,6 +203,46 @@ public final class Qc_graphs {
 		}
 	}
 
+	
+	public static void allProviderLinksNotAccessiblePerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
+		
+		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
+		
+		for (int i=0;i<DataProvider.values().length; i++)
+		{
+			if (paramList.hasProviderData(DataProvider.values()[i]))
+				if (DataProvider.values()[i] != DataProvider.unknown)
+					dataset.addValue(paramList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+		}
+		
+		JFreeChart chart = ChartFactory.createBarChart("mean links accessible / record / provider", "provider", "mean links accessible / record ", dataset);
+		
+		chart.setAntiAlias(true);
+		final CategoryPlot plot = chart.getCategoryPlot(); 
+		plot.setDrawingSupplier(new ChartDrawingSupplier());
+
+//        Plot plot = chart.getPlot();
+//        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+//        plot.setNoDataMessage("No data available");
+//        plot.setIgnoreZeroValues(true);
+//        plot.setCircular(false);
+//        plot.setLabelGap(0.02);
+		
+		setupFonts(chart, plot); 
+
+		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+		File outputfile = new File("links_accessible_barchart_"+nWidth+"x"+nHeight+".png");
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	
+	
+	
 	public static void allProviderNonEmptyDataFieldsPerRecordsPie (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		DefaultPieDataset piechart = new DefaultPieDataset();
 		

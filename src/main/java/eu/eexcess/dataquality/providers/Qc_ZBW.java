@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -22,7 +22,9 @@ import java.util.List;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
+import eu.eexcess.dataquality.providers.Qc_base.SearchType;
 
 public class Qc_ZBW extends Qc_base {
 	public Qc_ZBW() {
@@ -42,7 +44,11 @@ public class Qc_ZBW extends Qc_base {
 			} else if (searchType == SearchType.linkDataFields) {
 				param.addLinkDataFieldsPerRecord(countDataFieldsNode(
 						nodelistRecords.item(i), searchType));
-			}
+			} //uriCheck
+			  else if (searchType == SearchType.uriDataFields){
+				param.addAccessibleLinksDataFieldsPerRecord(countDataFieldsNode(
+						nodelistRecords.item(i), searchType));				
+			}			
 		}
 	}
 

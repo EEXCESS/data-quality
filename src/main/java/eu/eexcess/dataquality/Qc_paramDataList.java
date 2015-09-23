@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -177,6 +177,23 @@ public class Qc_paramDataList {
 		for (int i = 0; i < paramList.size(); i++) {
 			if (paramList.get(i).getProvider() == provider && paramList.get(i).getRecordCount() > 0) {
 				nReturn += paramList.get(i).getLinkDataFieldsPerRecord();
+				nFiles++;
+			}
+		}
+
+		if (nFiles > 0) {
+			nReturn = nReturn / (double) nFiles;
+		}
+		return nReturn;
+	}
+	
+	
+	public double getAccesibleLinksPerRecordsPerProvider(
+			DataProvider provider) {
+		double nReturn = 0, nFiles = 0;
+		for (int i = 0; i < paramList.size(); i++) {
+			if (paramList.get(i).getProvider() == provider && paramList.get(i).getRecordCount() > 0) {
+				nReturn += paramList.get(i).getAccessibleLinksDataFieldsPerRecord();
 				nFiles++;
 			}
 		}

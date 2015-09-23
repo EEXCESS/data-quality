@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2014 
+Copyright (C) 2015
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -43,6 +43,9 @@ public class Qc_kimcollect extends Qc_base {
 			} else if (searchType == SearchType.linkDataFields) {
 				param.addLinkDataFieldsPerRecord(countDataFieldsNode(
 						nodelistRecords.item(i), searchType));
+			} else if (searchType == SearchType.uriDataFields){
+				param.addAccessibleLinksDataFieldsPerRecord(countDataFieldsNode(
+						nodelistRecords.item(i), searchType));				
 			}
 		}
 	}
@@ -73,9 +76,13 @@ public class Qc_kimcollect extends Qc_base {
 				Node actNode = nodeChilds.item(i);
 				nReturn = countLinksInNodes(nReturn, actNode);
 			}
+		}//uriCheck
+		else if (searchType == SearchType.uriDataFields) {
+			for (int i = 0; i < nodeChilds.getLength(); i++) {
+				Node actNode = nodeChilds.item(i);
+				nReturn = countAccessibleLinks(nReturn, actNode);
+			}
 		}
 		return nReturn;
 	}
-
-	
 }
