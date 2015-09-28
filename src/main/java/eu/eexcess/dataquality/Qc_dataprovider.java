@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import eu.eexcess.dataquality.graphs.Qc_graphs;
+import eu.eexcess.dataquality.output.dataqualityvocabulary.DataQualityVocabularyRDFWriter;
 import eu.eexcess.dataquality.providers.Qc_DDB;
 import eu.eexcess.dataquality.providers.Qc_ZBW;
 import eu.eexcess.dataquality.providers.Qc_base;
@@ -44,8 +45,8 @@ public class Qc_dataprovider {
 	private static final int CHART_HEIGHT_HIGH = 1200;
 	private static final int CHART_WIDTH_MID = 800;
 	private static final int CHART_HEIGHT_MID = 600;
-	private static final int CHART_WIDTH_LOW = 400;
-	private static final int CHART_HEIGHT_LOW = 350;
+//	private static final int CHART_WIDTH_LOW = 400;
+//	private static final int CHART_HEIGHT_LOW = 350;
 	Qc_base currentProvider = null;
 	Qc_paramDataList paramDataList = new Qc_paramDataList();
 
@@ -175,6 +176,24 @@ public class Qc_dataprovider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		DataQualityVocabularyRDFWriter dQVRDFWriter = new DataQualityVocabularyRDFWriter();
+		for (int i=0;i<DataProvider.values().length; i++)
+		{
+			dQVRDFWriter.addQualityMeasure_numberOfRecords(DataProvider.values()[i].toString(), formatNumber(paramDataList.getRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_meanFieldsPerRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_minFieldsPerRecord(DataProvider.values()[i].toString(), ""+paramDataList.getMinDataFieldsPerRecordsPerProvider(DataProvider.values()[i]));
+			dQVRDFWriter.addQualityMeasure_maxFieldsPerRecord(DataProvider.values()[i].toString(), ""+paramDataList.getMaxDataFieldsPerRecordsPerProvider(DataProvider.values()[i]));
+			
+			dQVRDFWriter.addQualityMeasure_meanNonEmptyFieldsPreRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_meanNonEmptyFieldsPerDatafieldsPreRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			
+			dQVRDFWriter.addQualityMeasure_meanEmptyFieldsPreRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_meanEmptyFieldsPerDatafieldsRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			
+		}
+		dQVRDFWriter.write();
+		
 
 //		Qc_graphs.allProviderDataFieldsPerRecordsBarChart(CHART_WIDTH_LOW, CHART_HEIGHT_LOW, paramDataList);
 		Qc_graphs.allProviderDataFieldsPerRecordsBarChart(CHART_WIDTH_MID, CHART_HEIGHT_MID, paramDataList);
