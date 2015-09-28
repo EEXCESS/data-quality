@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class DataQualityVocabularyRDFWriter {
 	
-	StringBuffer fileContent;
+	StringBuffer qualityMeasures;
 	
 	ArrayList<String> metricList = new ArrayList<String>();
 	
@@ -34,7 +34,7 @@ public class DataQualityVocabularyRDFWriter {
 	}
 	
 	public void initNewFile(){
-		fileContent =  new StringBuffer();
+		qualityMeasures =  new StringBuffer();
 	}
 	
 	public void write() {
@@ -62,7 +62,7 @@ public class DataQualityVocabularyRDFWriter {
 			
 			writerStatisticRecords.write("</dcat:Dataset>");
 			
-			writerStatisticRecords.append(this.fileContent);
+			writerStatisticRecords.append(this.qualityMeasures);
 	
 			writerStatisticRecords.write("</rdf:RDF>");
 			writerStatisticRecords.close();
@@ -75,11 +75,11 @@ public class DataQualityVocabularyRDFWriter {
 		if (!this.metricList.contains(metric)) this.metricList.add(metric);
 		if (!this.distributionList.contains(dataprovider)) this.distributionList.add(dataprovider);
 		
-		fileContent.append("<dqv:QualityMeasure rdf:about=\"#measure"+metric+dataprovider+"\">");
-		fileContent.append("<daq:value rdf:datatype=\"http://www.w3.org/2001/XMLSchemadouble\">"+value+"</daq:value>");
-		fileContent.append("<daq:computedOn rdf:resource=\""+this.getDistributionName(dataprovider)+"\"/>");
-		fileContent.append("<daq:metric rdf:resource=\""+this.getMetricName(metric)+"\"/>");
-		fileContent.append("</dqv:QualityMeasure>");
+		qualityMeasures.append("<dqv:QualityMeasure rdf:about=\"#measure"+metric+dataprovider+"\">");
+		qualityMeasures.append("<daq:value rdf:datatype=\"http://www.w3.org/2001/XMLSchemadouble\">"+value+"</daq:value>");
+		qualityMeasures.append("<daq:computedOn rdf:resource=\""+this.getDistributionName(dataprovider)+"\"/>");
+		qualityMeasures.append("<daq:metric rdf:resource=\""+this.getMetricName(metric)+"\"/>");
+		qualityMeasures.append("</dqv:QualityMeasure>");
 	}
 	
 	
@@ -99,16 +99,16 @@ public class DataQualityVocabularyRDFWriter {
 		this.addQualityMeasure("maxFieldsPerRecord", dataprovider, value);
 	}
 	
-	public void addQualityMeasure_meanNonEmptyFieldsPreRecord(String dataprovider, String value) {
-		this.addQualityMeasure("meanNonEmptyFieldsPreRecord", dataprovider, value);
+	public void addQualityMeasure_meanNonEmptyFieldsPerRecord(String dataprovider, String value) {
+		this.addQualityMeasure("meanNonEmptyFieldsPerRecord", dataprovider, value);
 	}
 	
 	public void addQualityMeasure_meanNonEmptyFieldsPerDatafieldsPreRecord(String dataprovider, String value) {
 		this.addQualityMeasure("meanNonEmptyFieldsPerDatafieldsPreRecord", dataprovider, value);
 	}
 	
-	public void addQualityMeasure_meanEmptyFieldsPreRecord(String dataprovider, String value) {
-		this.addQualityMeasure("meanEmptyFieldsPreRecord", dataprovider, value);
+	public void addQualityMeasure_meanEmptyFieldsPerRecord(String dataprovider, String value) {
+		this.addQualityMeasure("meanEmptyFieldsPerRecord", dataprovider, value);
 	}
 
 	public void addQualityMeasure_meanEmptyFieldsPerDatafieldsRecord(String dataprovider, String value) {

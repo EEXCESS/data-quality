@@ -18,12 +18,10 @@ limitations under the License.
 package eu.eexcess.dataquality;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import junit.framework.Test;
