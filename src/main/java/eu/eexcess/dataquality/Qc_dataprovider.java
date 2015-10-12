@@ -74,7 +74,7 @@ public class Qc_dataprovider {
 		PrintStatistics();
 	}
 
-	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("de").setRegion("DE").build());
+	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
 
 	private String formatNumber(double number) {
 		return numberFormater.format(number);
