@@ -103,8 +103,8 @@ public class DataQualityVocabularyRDFWriter {
 		this.addQualityMeasure("meanNonEmptyFieldsPerRecord", dataprovider, value);
 	}
 	
-	public void addQualityMeasure_meanNonEmptyFieldsPerDatafieldsPreRecord(String dataprovider, String value) {
-		this.addQualityMeasure("meanNonEmptyFieldsPerDatafieldsPreRecord", dataprovider, value);
+	public void addQualityMeasure_meanNonEmptyFieldsPerDatafieldsPerRecord(String dataprovider, String value) {
+		this.addQualityMeasure("meanNonEmptyFieldsPerDatafieldsPerRecord", dataprovider, value);
 	}
 	
 	public void addQualityMeasure_meanEmptyFieldsPerRecord(String dataprovider, String value) {
