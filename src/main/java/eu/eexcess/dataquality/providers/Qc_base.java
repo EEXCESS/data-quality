@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -200,9 +201,7 @@ public class Qc_base implements Qc_interface {
 					)
 				){
 				nReturn++;
-			} else {
-				
-			}
+			} 
 			
 			if (actNode.getAttributes() != null && actNode.getAttributes().getLength() > 0)
 			{
@@ -268,9 +267,16 @@ public class Qc_base implements Qc_interface {
 
 				    //System.out.println("Ressource " + textContent + " is available. ");
 				    //available = true;
-				} catch(final MalformedURLException e){
+				    
+				    
+				} 
+				catch (UnknownHostException e){
 					nReturn--;
-				    System.out.println("Ressource " + textContent + " is NOT available. ");
+				    System.out.println("Ressource " + textContent + ": UnknownHostException");					
+				}
+				catch(final MalformedURLException e){
+					nReturn--;
+				    System.out.println("Ressource " + textContent + ": MalformedURLException");
 				    throw new IllegalStateException("Bad URL: " + textContent, e);
 //				}   catch(final SocketTimeoutException e){
 //					Log.info("Ressource " + textContent + " NOT available (Timeout exceeded).", e);
@@ -308,9 +314,14 @@ public class Qc_base implements Qc_interface {
 						    connection.setUseCaches(false);
 						    connection.connect();
 						    //System.out.println("Ressource " + value + " is available. ");
-						} catch(final MalformedURLException e){
+						}						    
+						catch (UnknownHostException e){
+								nReturn--;
+							    System.out.println("Ressource " + textContent + ": UnknownHostException");					
+						}						    
+						catch(final MalformedURLException e){
 							nReturn--;
-						    System.out.println("Ressource " + value + " is NOT available. ");							
+						    System.out.println("Ressource " + value + ": MalformedURLException");							
 						    throw new IllegalStateException("Bad URL: " + value, e);
 //						}   catch(final SocketTimeoutException e){
 //							Log.info("Ressource " + value + " NOT available (Timeout exceeded).", e);

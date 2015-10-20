@@ -184,7 +184,7 @@ public class Qc_params {
 			return 0;
 	}
 
-	// - - - - - - - - - - - - - non empty data fields per record - - - - - - -
+	// - - - - - - - - - - - - - links per record - - - - - - -
 	// - - -
 	public double getLinkDataFieldsPerRecord() {
 		double fReturn = 0;
@@ -193,6 +193,32 @@ public class Qc_params {
 				fReturn += dataLinkFieldsPerRecord.get(i);
 			}
 			fReturn = fReturn / (double) recordCount;
+//			fReturn = Math.round(fReturn * 100) / 100;
+		}
+		return fReturn;
+	}
+	
+	// - - - - - - - - - - - - - number of all links - - - - - - -
+	// - - -
+	public double getNumberOfAllLinkDataFields() {
+		double fReturn = 0;
+		if (recordCount > 0) {
+			for (int i = 0; i < dataLinkFieldsPerRecord.size(); i++) {
+				fReturn += dataLinkFieldsPerRecord.get(i);
+			}
+		}
+		return fReturn;
+	}
+
+	// - - - - - - - - - - - - - number of accessible links - - - - - - -
+	// - - -
+	public double getNumberOfAllAccessibleLinks() {
+		double fReturn = 0;
+		if (recordCount > 0) {
+			for (int i = 0; i < dataLinkFieldsAccessiblePerRecord.size(); i++) {
+				fReturn += dataLinkFieldsAccessiblePerRecord.get(i);
+			}
+//			fReturn = fReturn / (double) recordCount;
 //			fReturn = Math.round(fReturn * 100) / 100;
 		}
 		return fReturn;
@@ -211,5 +237,8 @@ public class Qc_params {
 		}
 		return fReturn;
 	}
+	
+
+	
 	
 }

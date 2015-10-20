@@ -92,7 +92,9 @@ public class Qc_dataprovider {
 //uriCheck					
 //					"links/record");
 					"links/record"+STATISTIC_FILE_FIELD_SEPERATOR+
-					"accessible links/record");
+					"accessible links/record"+STATISTIC_FILE_FIELD_SEPERATOR+
+					"#links"+STATISTIC_FILE_FIELD_SEPERATOR+					
+					"#accessible links");
 			writerStatisticRecords.newLine();
 			System.out.println("file"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"provider"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"#records"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"mean fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"min fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"max fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"mean non empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
@@ -102,7 +104,9 @@ public class Qc_dataprovider {
 //uriCheck
 //					"mean links/record");
 					"links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"accessible links/record");					
+					"accessible links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+					"#links"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+					"#accessible links");					
 			
 			for (int i = 0; i < paramDataList.size(); i++) {
 				Qc_params param = paramDataList.get(i);
@@ -119,7 +123,9 @@ public class Qc_dataprovider {
 //uriCheck						
 //						+ formatNumber(param.getLinkDataFieldsPerRecord()));
 						+ formatNumber(param.getLinkDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord()));						
+						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+						+ formatNumber(param.getNumberOfAllAccessibleLinks()));						
 				writerStatisticRecords.write(param.getXmlFileName() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ param.getProvider().toString() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(param.getRecordCount()) + STATISTIC_FILE_FIELD_SEPERATOR
@@ -133,7 +139,9 @@ public class Qc_dataprovider {
 //uriCheck
 //						+ formatNumber(param.getLinkDataFieldsPerRecord()));
 						+ formatNumber(param.getLinkDataFieldsPerRecord()) + STATISTIC_FILE_FIELD_SEPERATOR
-						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord()));						
+						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_FILE_FIELD_SEPERATOR
+						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_FILE_FIELD_SEPERATOR
+						+ formatNumber(param.getNumberOfAllAccessibleLinks()));						
 				writerStatisticRecords.newLine();
 			}
 			writerStatisticRecords.close();
@@ -151,7 +159,9 @@ public class Qc_dataprovider {
 						//uriCheck
 						//"mean links/record");
 						"mean links/record"+STATISTIC_FILE_FIELD_SEPERATOR+
-						"mean accessible links/record");
+						"mean accessible links/record"+STATISTIC_FILE_FIELD_SEPERATOR+
+						"#links"+STATISTIC_FILE_FIELD_SEPERATOR+
+						"#accessible links");											
 			writerStatisticRecords.newLine();
 			
 			for (int i=0;i<DataProvider.values().length; i++)
@@ -169,7 +179,10 @@ public class Qc_dataprovider {
 
 						//uriCheck+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
 						+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + STATISTIC_FILE_FIELD_SEPERATOR
-						+ formatNumber(paramDataList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i])));
+						+ formatNumber(paramDataList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i])) + STATISTIC_FILE_FIELD_SEPERATOR
+						+ formatNumber(paramDataList.getNumberOfLinkDataFieldsPerProvider(DataProvider.values()[i]))+ STATISTIC_FILE_FIELD_SEPERATOR
+						+ formatNumber(paramDataList.getNumberOfAccesibleLinksPerProvider(DataProvider.values()[i]))
+						);
 				writerStatisticRecords.newLine();
 			}
 			writerStatisticRecords.close();

@@ -187,6 +187,23 @@ public class Qc_paramDataList {
 		return nReturn;
 	}
 	
+	public double getNumberOfLinkDataFieldsPerProvider(
+			DataProvider provider) {
+		double nReturn = 0;
+		for (int i = 0; i < paramList.size(); i++) {
+			if (paramList.get(i).getProvider() == provider && paramList.get(i).getRecordCount() > 0) {
+				//nReturn += paramList.get(i).getLinkDataFieldsPerRecord();
+				nReturn += paramList.get(i).getNumberOfAllLinkDataFields();
+			}			
+		}
+
+//		if (nFiles > 0) {
+//			nReturn = nReturn / (double) nFiles;
+//		}
+		return nReturn;
+	}
+
+	
 	
 	public double getAccesibleLinksPerRecordsPerProvider(
 			DataProvider provider) {
@@ -203,4 +220,22 @@ public class Qc_paramDataList {
 		}
 		return nReturn;
 	}
+	
+	public double getNumberOfAccesibleLinksPerProvider(
+			DataProvider provider) {
+		double nReturn = 0;
+		for (int i = 0; i < paramList.size(); i++) {
+			if (paramList.get(i).getProvider() == provider && paramList.get(i).getRecordCount() > 0) {
+				//nReturn += paramList.get(i).getAccessibleLinksDataFieldsPerRecord();
+				nReturn += paramList.get(i).getNumberOfAllAccessibleLinks();
+			}
+		}
+
+//		if (nFiles > 0) {
+//			nReturn = nReturn / (double) nFiles;
+//		}
+		return nReturn;
+	}
+
+	
 }

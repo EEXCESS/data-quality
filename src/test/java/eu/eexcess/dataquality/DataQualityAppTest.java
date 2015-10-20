@@ -93,6 +93,8 @@ public class DataQualityAppTest
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
+    
+    
 
     public void testAppInputEnrichedManuallyServiceResponse()
     {
@@ -177,4 +179,19 @@ public class DataQualityAppTest
 		
 	}
 
+    public void testAppZBWOneRecord(){
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\zbw\\one-record"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+    
+    public void testAppInputTestbedRandom100_DDB()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\ddb"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    
+	
 }
