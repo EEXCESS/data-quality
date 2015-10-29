@@ -45,7 +45,7 @@ public class StructureRecTest extends TestCase {
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
 		System.out.println("Results:\n"+path+"\n" + result.toString());
-		assertEquals(18, result.getRecords());
+		assertEquals(23, result.getRecords());
     }
     
     public void testStructureEntstehungszeitValues()
