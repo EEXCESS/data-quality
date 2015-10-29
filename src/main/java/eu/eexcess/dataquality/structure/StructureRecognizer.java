@@ -15,6 +15,9 @@ public class StructureRecognizer {
 		result = calcLengthHistogramm(values, result);
 		result = calcValuesHashmap(values, result);
 		result = calcValuesPatternHashmap(values, result);
+//		System.out.println("records:"+result.records + " with " + result.getValuesPatternHashMap().size() + " different patterns");
+//		double value = result.records / result.getValuesPatternHashMap().size();
+//		System.out.println(value);
 		return result;
 	}
 	

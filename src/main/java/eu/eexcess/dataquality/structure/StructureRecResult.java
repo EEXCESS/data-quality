@@ -139,6 +139,23 @@ public class StructureRecResult {
 		return out;
 	}
 
+	public HashMap<String, Integer> getValuesHashMap() {
+		return valuesHashMap;
+	}
+
+	public void setValuesHashMap(HashMap<String, Integer> valuesHashMap) {
+		this.valuesHashMap = valuesHashMap;
+	}
+
+	public HashMap<String, Integer> getValuesPatternHashMap() {
+		return valuesPatternHashMap;
+	}
+
+	public void setValuesPatternHashMap(
+			HashMap<String, Integer> valuesPatternHashMap) {
+		this.valuesPatternHashMap = valuesPatternHashMap;
+	}
+
 	public int getLengthMin() {
 		return lengthMin;
 	}
