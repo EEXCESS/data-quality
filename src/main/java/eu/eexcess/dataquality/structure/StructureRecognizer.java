@@ -13,7 +13,7 @@ public class StructureRecognizer {
 		}
 		result.initLengthHistogramm(result.getLengthMaxTrimmed());
 		result = calcLengthHistogramm(values, result);
-		
+		result = calcValuesHashmap(values, result);
 		return result;
 	}
 	
@@ -47,4 +47,13 @@ public class StructureRecognizer {
 		return result;
 	}
 	
+	protected StructureRecResult calcValuesHashmap(List<String> values, StructureRecResult result) {
+		for (String actValue : values) {
+			if (actValue != null ) {
+				actValue = actValue.trim();
+				result.addValueToHashMap(actValue);
+			}			
+		}
+		return result;
+	}
 }

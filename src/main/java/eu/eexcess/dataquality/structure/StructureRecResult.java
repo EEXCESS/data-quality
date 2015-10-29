@@ -1,5 +1,10 @@
 package eu.eexcess.dataquality.structure;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class StructureRecResult {
 
 	protected boolean structureDetected = false;
@@ -22,6 +27,17 @@ public class StructureRecResult {
 		this.lengthHistogram = new int[size+1];
 		for (int i = 0; i < lengthHistogram.length; i++) {
 			lengthHistogram[i] = 0;
+		}
+	}
+	
+	protected HashMap<String, Integer> valuesHashMap =  new HashMap<String, Integer>();
+	
+	public void addValueToHashMap(String value) {
+		value = value.trim();
+		if (!valuesHashMap.containsKey(value)) {
+			valuesHashMap.put(value, 1);
+		} else {
+			valuesHashMap.put(value, valuesHashMap.get(value) + 1);
 		}
 	}
 	
@@ -91,6 +107,13 @@ public class StructureRecResult {
 		out += "\n";
 		for (int i = 0; i < lengthHistogram.length; i++) {
 			out += lengthHistogram[i] + "\t";
+		}
+		out += "\n";
+		out += "valuesMap:\n";
+		Iterator<Entry<String, Integer>> it = valuesHashMap.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pair = (Map.Entry) it.next();
+			out += pair.getKey() + " = " + pair.getValue() + "\n";
 		}
 		out += "\n";
 		out += "pattern:" + pattern + "\n";
