@@ -41,6 +41,17 @@ public class StructureRecResult {
 		}
 	}
 	
+	protected HashMap<String, Integer> valuesPatternHashMap =  new HashMap<String, Integer>();
+	
+	public void addValuePatternToHashMap(String value) {
+		value = value.trim();
+		if (!valuesPatternHashMap.containsKey(value)) {
+			valuesPatternHashMap.put(value, 1);
+		} else {
+			valuesPatternHashMap.put(value, valuesPatternHashMap.get(value) + 1);
+		}
+	}
+
 	public void addValueLengthHistogram(int length) {
 		lengthHistogram[length]++;
 	}
@@ -110,10 +121,17 @@ public class StructureRecResult {
 		}
 		out += "\n";
 		out += "valuesMap:\n";
-		Iterator<Entry<String, Integer>> it = valuesHashMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
-			out += pair.getKey() + " = " + pair.getValue() + "\n";
+		Iterator<Entry<String, Integer>> valuesMapIterator = valuesHashMap.entrySet().iterator();
+		while (valuesMapIterator.hasNext()) {
+			Map.Entry pair = (Map.Entry) valuesMapIterator.next();
+			out += pair.getKey() + " \t" + pair.getValue() + "\n";
+		}
+		out += "\n";
+		out += "valuesPatternHashMap:\n";
+		Iterator<Entry<String, Integer>> valuesPatternMapIterator = valuesPatternHashMap.entrySet().iterator();
+		while (valuesPatternMapIterator.hasNext()) {
+			Map.Entry pair = (Map.Entry) valuesPatternMapIterator.next();
+			out += pair.getKey() + " \t" + pair.getValue() + "\n";
 		}
 		out += "\n";
 		out += "pattern:" + pattern + "\n";

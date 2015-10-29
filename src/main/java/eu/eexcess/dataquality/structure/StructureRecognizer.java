@@ -14,6 +14,7 @@ public class StructureRecognizer {
 		result.initLengthHistogramm(result.getLengthMaxTrimmed());
 		result = calcLengthHistogramm(values, result);
 		result = calcValuesHashmap(values, result);
+		result = calcValuesPatternHashmap(values, result);
 		return result;
 	}
 	
@@ -55,5 +56,23 @@ public class StructureRecognizer {
 			}			
 		}
 		return result;
+	}
+	
+	protected StructureRecResult calcValuesPatternHashmap(List<String> values, StructureRecResult result) {
+		for (String actValue : values) {
+			if (actValue != null ) {
+				actValue = actValue.trim();
+				result.addValuePatternToHashMap(calcPattern(actValue));
+			}			
+		}
+		return result;
+	}
+	
+	protected String calcPattern(String value) {
+		if (value == null) return null;
+		value = value.replaceAll("\\p{L}", "a");
+		value = value.replaceAll("\\d", "0");
+		value = value.replaceAll("\\s\\s+", " ");
+		return value;
 	}
 }
