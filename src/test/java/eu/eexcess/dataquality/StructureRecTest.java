@@ -89,7 +89,47 @@ public class StructureRecTest extends TestCase {
 		assertEquals(1886, result.getRecords());
     }
     
-	private List<String> loadValues(String path) {
+    public void testStructureTitelValues()
+    {
+		String path = ".\\src\\test\\resources\\values-titel-original-values.txt";
+		List<String> values = loadValues(path);
+		StructureRecognizer recognizer = new StructureRecognizer();
+		StructureRecResult result = recognizer.analyse(values);
+		System.out.println("Results:\n" + result.toString());
+		assertEquals(1886, result.getRecords());
+    }
+
+    public void testStructureSachgruppeValues()
+    {
+		String path = ".\\src\\test\\resources\\values-sachgruppe-original-values.txt";
+		List<String> values = loadValues(path);
+		StructureRecognizer recognizer = new StructureRecognizer();
+		StructureRecResult result = recognizer.analyse(values);
+		System.out.println("Results:\n" + result.toString());
+		assertEquals(1886, result.getRecords());
+    }
+
+    public void testStructureZustandValues()
+    {
+		String path = ".\\src\\test\\resources\\values-zustand-original-values.txt";
+		List<String> values = loadValues(path);
+		StructureRecognizer recognizer = new StructureRecognizer();
+		StructureRecResult result = recognizer.analyse(values);
+		System.out.println("Results:\n" + result.toString());
+		assertEquals(1886, result.getRecords());
+    }
+
+    public void testStructureTechnikValues()
+    {
+		String path = ".\\src\\test\\resources\\values-technik-original-values.txt";
+		List<String> values = loadValues(path);
+		StructureRecognizer recognizer = new StructureRecognizer();
+		StructureRecResult result = recognizer.analyse(values);
+		System.out.println("Results:\n" + result.toString());
+		assertEquals(1886, result.getRecords());
+    }
+
+    private List<String> loadValues(String path) {
 		try {
 			return Files.readAllLines(Paths.get(path));
 		} catch (IOException e) {
