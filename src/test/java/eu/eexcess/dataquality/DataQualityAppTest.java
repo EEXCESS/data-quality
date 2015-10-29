@@ -191,6 +191,13 @@ public class DataQualityAppTest
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
+    
+    public void testAppInputTestbedRandom100_ZBW()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\zbw\\testbed-records"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
 
     
 	
