@@ -34,7 +34,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(18, result.getRecords());
     }
     
@@ -45,7 +45,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -55,7 +55,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -65,7 +65,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -75,7 +75,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -85,7 +85,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
     
@@ -95,7 +95,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -105,7 +105,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -115,7 +115,7 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
@@ -125,7 +125,17 @@ public class StructureRecTest extends TestCase {
 		List<String> values = loadValues(path);
 		StructureRecognizer recognizer = new StructureRecognizer();
 		StructureRecResult result = recognizer.analyse(values);
-		System.out.println("Results:\n" + result.toString());
+		System.out.println("Results:\n"+path+"\n" + result.toString());
+		assertEquals(1886, result.getRecords());
+    }
+
+    public void testStructureTypeValues()
+    {
+		String path = ".\\src\\test\\resources\\values-type-original-values.txt";
+		List<String> values = loadValues(path);
+		StructureRecognizer recognizer = new StructureRecognizer();
+		StructureRecResult result = recognizer.analyse(values);
+		System.out.println("Results:\n"+path+"\n" + result.toString());
 		assertEquals(1886, result.getRecords());
     }
 
