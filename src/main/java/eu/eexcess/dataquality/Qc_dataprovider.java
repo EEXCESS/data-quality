@@ -22,7 +22,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import eu.eexcess.dataquality.graphs.Qc_graphs;
 import eu.eexcess.dataquality.output.dataqualityvocabulary.DataQualityVocabularyRDFWriter;
@@ -35,6 +43,8 @@ import eu.eexcess.dataquality.providers.Qc_europeana;
 import eu.eexcess.dataquality.providers.Qc_kimcollect;
 import eu.eexcess.dataquality.providers.Qc_mendeley;
 import eu.eexcess.dataquality.providers.Qc_wissenmedia;
+import eu.eexcess.dataquality.structure.StructureRecResult;
+import eu.eexcess.dataquality.structure.StructureRecognizer;
 
 // Check for data provider
 public class Qc_dataprovider {
@@ -49,6 +59,8 @@ public class Qc_dataprovider {
 //	private static final int CHART_HEIGHT_LOW = 350;
 	Qc_base currentProvider = null;
 	Qc_paramDataList paramDataList = new Qc_paramDataList();
+	
+	HashMap<String,HashMap<String, StructureRecResult>> structurednessResults = new HashMap<String, HashMap<String, StructureRecResult>>();
 
 	// XML files of known partners
 	public enum DataProvider {
@@ -71,8 +83,15 @@ public class Qc_dataprovider {
 				}
 			}
 		}
+		// check structuredness
+		checkStructuredness(sParams);
 		PrintStatistics();
+		printStructuredness();
 	}
+
+
+	
+
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
 
@@ -292,4 +311,172 @@ public class Qc_dataprovider {
 		}
 	}
 
+	private void checkStructuredness(String[] sParams) {
+		// get a list of all Files
+		ArrayList<String> fileNames = new ArrayList<String>();
+		for (int i = 0; i < sParams.length; i++) {
+			File f = new File(sParams[i]);
+			if (f.isFile() == true && f.isDirectory() == false) {
+				fileNames.add(sParams[i]);
+			} else if (f.isDirectory() == true) {
+				File[] files = f.listFiles(new FilenameFilter() {
+					public boolean accept(File dir, String name) {
+						return name.toLowerCase().endsWith(".xml");
+					}
+				});
+				for (int j = 0; j < files.length; j++) {
+					fileNames.add(files[j].getPath());
+				}
+			}
+		}
+		ArrayList<String> dataproviders = new ArrayList<String>();
+		for (Iterator<String> iteratorFileNames = fileNames.iterator(); iteratorFileNames.hasNext();) {
+			String actFileName = (String) iteratorFileNames.next();
+			String temp = actFileName.substring(actFileName.lastIndexOf("\\")+40);
+			temp = temp.substring(0,temp.indexOf("-"));
+			if (!dataproviders.contains(temp))
+				dataproviders.add(temp);
+		}
+		/*
+		System.out.println("dataprovider:");
+		for (Iterator<String> iterator = dataproviders.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+			System.out.println(string);
+		}
+		*/
+		
+		//next list of all files per provider
+		HashMap<String, ArrayList<String>> filesNameByDataproviderHashMap = new HashMap<String, ArrayList<String>>();
+		for (Iterator<String> iteratorDataprovider = dataproviders.iterator(); iteratorDataprovider.hasNext();) {
+			String actDataProvider = (String) iteratorDataprovider.next();
+			ArrayList<String> fileNameByDataProvider = new ArrayList<String>();
+			for (Iterator<String> iteratorFileNames = fileNames.iterator(); iteratorFileNames.hasNext();) {
+				String actFileName = (String) iteratorFileNames.next();
+				if (actFileName.contains(actDataProvider))
+					fileNameByDataProvider.add(actFileName);
+			}
+			filesNameByDataproviderHashMap.put(actDataProvider, fileNameByDataProvider);
+/*
+			System.out.println("files for dataprovider:" + actDataProvider);
+			for (Iterator<String> iterator = fileNameByDataProvider.iterator(); iterator.hasNext();) {
+				String string = (String) iterator.next();
+				System.out.println(string);
+			}
+	*/		
+		}
+		Iterator<Entry<String, ArrayList<String>>> filesNameByDataproviderHashMapIterator = filesNameByDataproviderHashMap.entrySet().iterator();
+	    while (filesNameByDataproviderHashMapIterator.hasNext()) {
+	        Entry<String, ArrayList<String>> entry = filesNameByDataproviderHashMapIterator.next();
+	        String actDataprovider = entry.getKey();
+	        ArrayList<String> actProviderFileList = entry.getValue();
+			Qc_base qcBase = createProviderQC(actDataprovider);
+//			System.out.println("dataprovider:"+actDataprovider+" "+qcBase.getRecordSeparator());
+			
+			// calc all XPaths for all fields in all file from a data provider
+			ArrayList<String> fieldXPaths = new ArrayList<String>();
+			for (String actFileName : actProviderFileList) {
+				//System.out.println(actFileName);
+				qcBase.setXmlFileName(actFileName);
+				NodeList nodes = qcBase.getNodesListByXPath(qcBase.getRecordSeparator() + qcBase.getXpathsToFieldsFromRecordSeparator());
+				for (int countRecords = 0; countRecords < nodes.getLength(); countRecords++) {
+					//iterate over records
+					if (nodes.item(countRecords).hasChildNodes())
+					{
+						for (int countFields = 0; countFields < nodes.item(countRecords).getChildNodes().getLength(); countFields++) {
+							Node actNodeField = nodes.item(countRecords).getChildNodes().item(countFields);
+							if (actNodeField.getNodeType() == Node.ELEMENT_NODE) {
+								String tempFieldXpath = qcBase.getXPath(actNodeField);
+								if (!fieldXPaths.contains(tempFieldXpath))
+									fieldXPaths.add(tempFieldXpath);
+							} else {
+								if (actNodeField.hasChildNodes()) {
+									for (int countSubFields = 0; countSubFields < actNodeField.getChildNodes().getLength(); countSubFields++) {
+										Node actNodeSubField = actNodeField.getChildNodes().item(countSubFields);
+										if (actNodeSubField.getNodeType() == Node.ELEMENT_NODE) {
+											String tempFieldXpath = qcBase.getXPath(actNodeSubField);
+											if (!fieldXPaths.contains(tempFieldXpath))
+												fieldXPaths.add(tempFieldXpath);
+										}
+									}
+								}
+							}
+						}
+					}
+
+				}
+				
+			}
+			// now we have a list of all XPaths to fields for this data provider
+			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
+			for (int i = 0; i < fieldXPaths.size(); i++) {
+				// for earch field
+				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/"));
+				ArrayList<String> values = new ArrayList<String>();
+//				System.out.println(fieldXPaths.get(i));
+				for (String actFileName : actProviderFileList) {
+					// for each file
+					qcBase.setXmlFileName(actFileName);
+					NodeList nodes = qcBase.getNodesListByXPath(fieldXPaths.get(i));
+					for (int count = 0; count < nodes.getLength(); count++) {
+						if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
+//							System.out.println(nodes.item(count).getTextContent());
+							values.add(nodes.item(count).getTextContent());
+						}
+					}
+				}
+				StructureRecognizer recognizer = new StructureRecognizer();
+				actProviderStructurednessResults.put(actFieldName, recognizer.analyse(values ));
+			}
+
+			
+			this.structurednessResults.put(actDataprovider, actProviderStructurednessResults);
+
+	    }
+	}
+	
+	public static String DATAPROVIDER_KIMCOLLECT ="KIMCollect";
+	public static String DATAPROVIDER_EUROPEANA ="Europeana";
+	public static String DATAPROVIDER_DDB ="DeutscheDigitaleBibliothek";
+	public static String DATAPROVIDER_MENDELEY ="Mendeley";
+	public static String DATAPROVIDER_WISSENMEDIA ="Wissenmedia";
+	public static String DATAPROVIDER_ZBW ="ZBW";
+	
+	public Qc_base createProviderQC(String dataprovider){
+		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
+			return new Qc_wissenmedia();
+		if (dataprovider.equals(DATAPROVIDER_DDB))
+			return new Qc_DDB();
+		if (dataprovider.equals(DATAPROVIDER_EUROPEANA))
+			return new Qc_europeana();
+		if (dataprovider.equals(DATAPROVIDER_KIMCOLLECT))
+			return new Qc_kimcollect();
+		if (dataprovider.equals(DATAPROVIDER_MENDELEY))
+			return new Qc_mendeley();
+		if (dataprovider.equals(DATAPROVIDER_ZBW))
+			return new Qc_ZBW();
+		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
+			return new Qc_wissenmedia();
+		
+		return null;
+	}
+	
+	private void printStructuredness() {
+		Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
+	    while (iteratorDataprovider.hasNext()) {
+	        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
+	        String dataprovider = entry.getKey();
+	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
+            System.out.println("Dataprovider:" + dataprovider);
+	        
+	        
+	        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+	        while (iteratorByDataprovider.hasNext()) {
+	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
+	            String field = fieldResult.getKey();
+	            StructureRecResult result = fieldResult.getValue();
+	            System.out.println("field:"+field);
+	            System.out.println("result:\n"+result.toString());
+	        }
+	    }
+	}
 }

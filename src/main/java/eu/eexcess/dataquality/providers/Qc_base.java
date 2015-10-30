@@ -28,12 +28,15 @@ import java.net.UnknownHostException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -71,6 +74,17 @@ public class Qc_base implements Qc_interface {
 	// - - - - - - - - - recordSeparator - - - - - - - - - -
 	String recordSeparator = "";
 
+	String xpathsToFieldsFromRecordSeparator = "";
+	
+	public String getXpathsToFieldsFromRecordSeparator() {
+		return xpathsToFieldsFromRecordSeparator;
+	}
+
+	public void setXpathsToFieldsFromRecordSeparator(
+			String xpathsToFieldsFromRecordSeparator) {
+		this.xpathsToFieldsFromRecordSeparator = xpathsToFieldsFromRecordSeparator;
+	}
+
 	public String getRecordSeparator() {
 		return recordSeparator;
 	}
@@ -81,6 +95,14 @@ public class Qc_base implements Qc_interface {
 
 	// XML node list of records
 	NodeList nodelistRecords = null;
+
+	public NodeList getNodelistRecords() {
+		return nodelistRecords;
+	}
+
+	public void setNodelistRecords(NodeList nodelistRecords) {
+		this.nodelistRecords = nodelistRecords;
+	}
 
 	// check if XML file is from current data provider
 	public boolean IsProviderRecord() {
@@ -373,5 +395,51 @@ public class Qc_base implements Qc_interface {
 		}
 
 		//writeBuffer.close();
+	}
+	
+	public NodeList getNodesListByXPath(String xpathValues){
+		if (xmlFileName.length() > 0) {
+			try {
+				File f = new File(xmlFileName);
+				if (f.exists() == true && f.isDirectory() == false) {
+					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder dBuilder;
+						dBuilder = dbFactory.newDocumentBuilder();
+					Document doc = dBuilder.parse(f);
+
+					doc.getDocumentElement().normalize();
+
+					XPathFactory xPathfactory = XPathFactory.newInstance();
+					XPath xpath = xPathfactory.newXPath();
+					XPathExpression expr = xpath.compile(xpathValues);
+					NodeList ret = (NodeList) expr.evaluate(doc,
+							XPathConstants.NODESET);
+					return ret;
+				}
+			} catch (ParserConfigurationException | XPathExpressionException | SAXException | IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return null;
+	}
+	
+	public String getXPath(Node node) {
+	    return getXPath(node, "");
+	}
+
+	public String getXPath(Node node, String xpath) {
+	    if (node == null) {
+	        return "";
+	    }
+	    String elementName = "";
+	    if (node instanceof Element) {
+	        elementName = ((Element) node).getNodeName();
+	    }
+	    Node parent = node.getParentNode();
+	    if (parent == null) {
+	        return xpath;
+	    }
+	    return getXPath(parent, "/" + elementName + xpath);
 	}
 }

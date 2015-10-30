@@ -87,6 +87,13 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputStructurednessKIMCollect()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\kimcollect"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputKultur20150302()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\kultur-2015-03-02"};

@@ -24,6 +24,7 @@ public class Qc_wissenmedia extends Qc_base {
 	{
 		recordSeparator = "/results/result";
 		dataProvider = DataProvider.Wissenmedia;
+		this.xpathsToFieldsFromRecordSeparator = "/fields";
 	}
 
 }
