@@ -30,7 +30,7 @@ public interface Qc_interface {
 	public void setRecordSeparator(String recordSeparator);
 	
 	// Is the record from the data provider
-	public boolean IsProviderRecord();
+	public boolean isProviderRecord();
 	
 	// Name of data provider
 	public DataProvider getDataProvider();

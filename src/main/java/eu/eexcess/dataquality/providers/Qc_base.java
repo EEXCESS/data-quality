@@ -105,7 +105,7 @@ public class Qc_base implements Qc_interface {
 	}
 
 	// check if XML file is from current data provider
-	public boolean IsProviderRecord() {
+	public boolean isProviderRecord() {
 		boolean bReturn = false;
 		if (xmlFileName.length() > 0) {
 			try {

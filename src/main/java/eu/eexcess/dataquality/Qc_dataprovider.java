@@ -85,7 +85,7 @@ public class Qc_dataprovider {
 		}
 		// check structuredness
 		checkStructuredness(sParams);
-		PrintStatistics();
+		printStatistics();
 		printStructuredness();
 	}
 
@@ -99,7 +99,7 @@ public class Qc_dataprovider {
 		return numberFormater.format(number);
 	}
 	
-	private void PrintStatistics() {
+	private void printStatistics() {
 		try {
 			File fileStatisticRecords = new File("statistics-results.csv");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
@@ -290,7 +290,7 @@ public class Qc_dataprovider {
 
 				if (currentProvider != null) {
 					currentProvider.setXmlFileName(xmlFile);
-					if (currentProvider.IsProviderRecord() == true) {
+					if (currentProvider.isProviderRecord() == true) {
 						currentProvider.getDataProvider();
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
