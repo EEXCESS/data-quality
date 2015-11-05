@@ -19,18 +19,17 @@ package eu.eexcess.dataquality.graphs;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.LegendItem;
-import org.jfree.chart.LegendItemCollection;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
@@ -42,8 +41,10 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
+import eu.eexcess.dataquality.Qc_dataprovider;
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_paramDataList;
+import eu.eexcess.dataquality.structure.StructureRecResult;
 
 public final class Qc_graphs {
 
@@ -159,7 +160,7 @@ public final class Qc_graphs {
 
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("all_datafields_bar_chart_"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "all_datafields_bar_chart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -195,7 +196,7 @@ public final class Qc_graphs {
 
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("links_barchart_"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "links_barchart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -232,7 +233,7 @@ public final class Qc_graphs {
 
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("links_accessible_barchart_"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "links_accessible_barchart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -263,7 +264,7 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("non_empty_datafields_"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "non_empty_datafields_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -299,7 +300,7 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("non_empty_datafields_barchart_"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "non_empty_datafields_barchart_"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -338,7 +339,93 @@ public final class Qc_graphs {
 		
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File("non_empty_datafields_perdatafields_barchart_"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "non_empty_datafields_perdatafields_barchart_"+nWidth+"x"+nHeight+".png");
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+
+	public static void struturendnessDataproviderFieldValueLengthHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
+		
+		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
+		
+		for (int i=0;i<result.getLengthHistogram().length; i++)
+		{
+			dataset.addValue(result.getLengthHistogram()[i], dataprovider +" "+fieldname,i+"");
+		}
+		
+		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value length histogram", "length", "number ", dataset);
+        
+		chart.setAntiAlias(true);
+		chart.setBackgroundPaint(Color.white);
+		// get a reference to the plot for further customisation... 
+		final CategoryPlot plot = chart.getCategoryPlot(); 
+		plot.setDrawingSupplier(new ChartDrawingSupplier());
+//        Plot plot = chart.getPlot();
+//        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+//        plot.setNoDataMessage("No data available");
+//        plot.setIgnoreZeroValues(true);
+//        plot.setCircular(false);
+//        plot.setLabelGap(0.02);
+		setupFonts(chart, plot);
+
+		chart.removeLegend();
+		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
+	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
+	      
+        BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+		File outputfile = new File(Qc_dataprovider.outputDir+ dataprovider +"-"+ fieldname + "-value length histogram"+nWidth+"x"+nHeight+".png");
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void struturendnessDataproviderFieldValuePatternHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
+		
+		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
+		
+        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+        while (iteratorPatternHashMap.hasNext()) {
+            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+            String patternString = pattern.getKey();
+            if (patternString.isEmpty()) patternString = "[empty]";
+ 			dataset.addValue(pattern.getValue(), dataprovider +" "+fieldname,patternString);
+        }
+		
+		/*
+		for (int i=0;i<result.getValuesPatternHashMap().size(); i++)
+		{
+			dataset.addValue(result.getValuesPatternHashMap().entrySet().toArray()[i].get, dataprovider +" "+fieldname,pattern);
+		}
+		*/
+		
+		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value pattern histogram", "pattern", "number ", dataset);
+        
+		chart.setAntiAlias(true);
+		chart.setBackgroundPaint(Color.white);
+		// get a reference to the plot for further customisation... 
+		final CategoryPlot plot = chart.getCategoryPlot(); 
+		plot.setDrawingSupplier(new ChartDrawingSupplier());
+//        Plot plot = chart.getPlot();
+//        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+//        plot.setNoDataMessage("No data available");
+//        plot.setIgnoreZeroValues(true);
+//        plot.setCircular(false);
+//        plot.setLabelGap(0.02);
+		setupFonts(chart, plot); 
+		chart.removeLegend();
+		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
+	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
+
+        BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+		File outputfile = new File(Qc_dataprovider.outputDir+ dataprovider +"-"+ fieldname + "-value pattern histogram"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {

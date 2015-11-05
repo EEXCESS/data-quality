@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import eu.eexcess.dataquality.Qc_dataprovider;
+
 public class DataQualityVocabularyRDFWriter {
 	
 	StringBuffer qualityMeasures;
@@ -56,7 +58,7 @@ public class DataQualityVocabularyRDFWriter {
 	
 	public void write() {
 		try {
-			File fileStatisticRecords = new File("statistics-dataprovider.xml");
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "statistics-dataprovider.xml");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 			writerStatisticRecords.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 			writerStatisticRecords.append("<rdf:RDF xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:prov=\"http://www.w3.org/ns/prov#\" >");

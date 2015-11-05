@@ -44,6 +44,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
+import eu.eexcess.dataquality.Qc_dataprovider;
 import eu.eexcess.dataquality.Qc_interface;
 import eu.eexcess.dataquality.Qc_params;
 
@@ -383,7 +384,7 @@ public class Qc_base implements Qc_interface {
 	}
 	
 	protected void writeToTempFile(String textToAppend){
-		File tempFile = new File("tempFileJR.csv");
+		File tempFile = new File(Qc_dataprovider.outputDir+ "tempFileJR.csv");
 		BufferedWriter writeBuffer;
 		try {
 			writeBuffer = new BufferedWriter(new FileWriter(tempFile));

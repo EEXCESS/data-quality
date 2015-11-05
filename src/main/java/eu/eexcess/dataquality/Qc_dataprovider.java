@@ -59,6 +59,8 @@ public class Qc_dataprovider {
 	Qc_base currentProvider = null;
 	Qc_paramDataList paramDataList = new Qc_paramDataList();
 	
+	public static String outputDir ="./output/";
+	
 	HashMap<String,HashMap<String, StructureRecResult>> structurednessResults = new HashMap<String, HashMap<String, StructureRecResult>>();
 
 	// XML files of known partners
@@ -100,7 +102,7 @@ public class Qc_dataprovider {
 	
 	private void printStatistics() {
 		try {
-			File fileStatisticRecords = new File("statistics-results.csv");
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "statistics-results.csv");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 			writerStatisticRecords.write("file"+STATISTIC_FILE_FIELD_SEPERATOR+"provider"+STATISTIC_FILE_FIELD_SEPERATOR+"#records"+STATISTIC_FILE_FIELD_SEPERATOR+"mean fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+"min fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+"max fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
 					"mean non empty fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
@@ -167,7 +169,7 @@ public class Qc_dataprovider {
 			e.printStackTrace();
 		}
 		try {
-			File fileStatisticRecords = new File("statistics-dataprovider.csv");
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "statistics-dataprovider.csv");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 			writerStatisticRecords.write("file"+STATISTIC_FILE_FIELD_SEPERATOR+"provider"+STATISTIC_FILE_FIELD_SEPERATOR+"#records"+STATISTIC_FILE_FIELD_SEPERATOR+"mean fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+"min fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+"max fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
 						"mean non empty fields/record"+STATISTIC_FILE_FIELD_SEPERATOR+
@@ -409,7 +411,7 @@ public class Qc_dataprovider {
 			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
 			for (int i = 0; i < fieldXPaths.size(); i++) {
 				// for earch field
-				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/"));
+				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
 				ArrayList<String> values = new ArrayList<String>();
 //				System.out.println(fieldXPaths.get(i));
 				for (String actFileName : actProviderFileList) {
@@ -460,6 +462,7 @@ public class Qc_dataprovider {
 	}
 	
 	private void printStructuredness() {
+		{
 		Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
 	    while (iteratorDataprovider.hasNext()) {
 	        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
@@ -477,5 +480,76 @@ public class Qc_dataprovider {
 	            System.out.println("result:\n"+result.toString());
 	        }
 	    }
+		}
+	    
+	    
+		Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
+	    while (iteratorDataprovider.hasNext()) {
+	        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
+	        String dataprovider = entry.getKey();
+	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
+            System.out.println("Dataprovider:" + dataprovider);
+	        
+	        
+	        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+	        while (iteratorByDataprovider.hasNext()) {
+	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
+	            String field = fieldResult.getKey();
+	            StructureRecResult result = fieldResult.getValue();
+	            // write Histogramm for value length
+				try {
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value length histogram.csv");
+					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+					
+					for (int i = 0; i < result.getLengthHistogram().length; i++) {
+						writerStatisticRecords.write( i + STATISTIC_FILE_FIELD_SEPERATOR);
+					}
+					writerStatisticRecords.newLine();
+					for (int i = 0; i < result.getLengthHistogram().length; i++) {
+						writerStatisticRecords.write(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
+					}
+					writerStatisticRecords.newLine();
+
+					
+					writerStatisticRecords.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				// write histogram for pattern
+				try {
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value pattern histogram.csv");
+					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+					
+					
+			        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+			        while (iteratorPatternHashMap.hasNext()) {
+			             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+						writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+			        }
+					writerStatisticRecords.newLine();
+			        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+			        while (iteratorPatternHashMap.hasNext()) {
+			             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+						writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+			        }
+					writerStatisticRecords.newLine();
+					writerStatisticRecords.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+//				Qc_graphs.struturendnessDataproviderFieldPatternsHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
+				Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
+				Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				
+//				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
+				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
+				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				
+
+	        }
+	    }
+
+	    
 	}
 }
