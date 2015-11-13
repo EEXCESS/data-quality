@@ -348,7 +348,7 @@ public final class Qc_graphs {
 	}
 
 
-	public static void struturendnessDataproviderFieldValueLengthHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
+	public static String struturendnessDataproviderFieldValueLengthHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
@@ -375,6 +375,8 @@ public final class Qc_graphs {
 		chart.removeLegend();
 		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
 	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
+	    if (result.getLengthHistogram().length > 10 )
+	    	domainAxis.setVisible(false);
 	      
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
@@ -384,6 +386,7 @@ public final class Qc_graphs {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		return outputfile.getName();
 	}
 
 	public static void struturendnessDataproviderFieldValuePatternHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
@@ -397,13 +400,6 @@ public final class Qc_graphs {
             if (patternString.isEmpty()) patternString = "[empty]";
  			dataset.addValue(pattern.getValue(), dataprovider +" "+fieldname,patternString);
         }
-		
-		/*
-		for (int i=0;i<result.getValuesPatternHashMap().size(); i++)
-		{
-			dataset.addValue(result.getValuesPatternHashMap().entrySet().toArray()[i].get, dataprovider +" "+fieldname,pattern);
-		}
-		*/
 		
 		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value pattern histogram", "pattern", "number ", dataset);
         
@@ -422,7 +418,9 @@ public final class Qc_graphs {
 		chart.removeLegend();
 		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
 	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
-
+	    
+	    if (result.getValuesPatternHashMap().size() > 10 )
+	    	domainAxis.setVisible(false);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
 		File outputfile = new File(Qc_dataprovider.outputDir+ dataprovider +"-"+ fieldname + "-value pattern histogram"+nWidth+"x"+nHeight+".png");

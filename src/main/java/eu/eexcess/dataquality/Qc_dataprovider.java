@@ -17,12 +17,21 @@ limitations under the License.
  */
 package eu.eexcess.dataquality;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -462,24 +471,68 @@ public class Qc_dataprovider {
 	}
 	
 	private void printStructuredness() {
-		{
-		Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
-	    while (iteratorDataprovider.hasNext()) {
-	        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
-	        String dataprovider = entry.getKey();
-	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
-            System.out.println("Dataprovider:" + dataprovider);
-	        
-	        
-	        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
-	        while (iteratorByDataprovider.hasNext()) {
-	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
-	            String field = fieldResult.getKey();
-	            StructureRecResult result = fieldResult.getValue();
-	            System.out.println("field:"+field);
-	            System.out.println("result:\n"+result.toString());
+		
+		InputStream inStream = null;
+		OutputStream outStream = null;
+	    try{
+	      try {
+//	    	  inStream = getClass().getResourceAsStream("test.txt");
+	    	  File file = new File("./resources/report.css");
+	    	  inStream = new FileInputStream(file); 
+	        byte[] bucket = new byte[32*1024];
+	        outStream = new BufferedOutputStream(new FileOutputStream(Qc_dataprovider.outputDir + "report.css"));
+	        int bytesRead = 0;
+	        while(bytesRead != -1){
+	          bytesRead = inStream.read(bucket); //-1, 0, or more
+	          if(bytesRead > 0){
+	            outStream.write(bucket, 0, bytesRead);
+	          }
 	        }
+	      }
+	      finally {
+	        if (inStream != null) inStream.close();
+	        if (outStream != null) outStream.close();
+	      }
 	    }
+	    catch (FileNotFoundException ex){
+	      System.out.println("File not found: " + ex);
+	    }
+	    catch (IOException ex){
+	    	System.out.println(ex);
+	    }
+		
+		String htmlReportJavascript = new String();
+		htmlReportJavascript += "<script>$(document).ready(function(){";
+
+		
+		String htmlReport = "<html xmlns:prov=\"http://www.w3.org/ns/prov#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" lang=\"en\">";
+		htmlReport += " <head><title>EEXCESS Data Quality Report</title>";
+		htmlReport += "<link rel=\"stylesheet\" type=\"text/css\" href=\"./report.css\">";
+		htmlReport += "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
+		htmlReport += " </head>";
+		htmlReport += " <body>";
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		htmlReport += "<h1>EEXCESS Data Quality Report</h1><br/><h2>generated at:" +dt.format(new Date(System.currentTimeMillis()))+"</h2>";
+		
+		{
+			
+			Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
+		    while (iteratorDataprovider.hasNext()) {
+		        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
+		        String dataprovider = entry.getKey();
+		        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
+	            System.out.println("Dataprovider:" + dataprovider);
+		        
+		        
+		        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+		        while (iteratorByDataprovider.hasNext()) {
+		            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
+		            String field = fieldResult.getKey();
+		            StructureRecResult result = fieldResult.getValue();
+		            System.out.println("field:"+field);
+		            System.out.println("result:\n"+result.toString());
+		        }
+		    }
 		}
 	    
 	    
@@ -489,32 +542,52 @@ public class Qc_dataprovider {
 	        String dataprovider = entry.getKey();
 	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
             System.out.println("Dataprovider:" + dataprovider);
-	        
+            htmlReport += "<h3>" + dataprovider +"</h3>";
 	        
 	        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
+	            htmlReport += "<h4 id=\""+dataprovider+field+"Header\" class=\"flip\">Field:" + field +"</h4>";
+	            htmlReport +="<div id=\""+dataprovider+field+"Panel\" class=\"panel\">";
+
+	            htmlReportJavascript += "$(\"#"+dataprovider+field+"Header\").click(function(){";
+	            htmlReportJavascript += "    $(\"#"+dataprovider+field+"Panel\").slideToggle(\"slow\");";
+	            htmlReportJavascript +="});";
+	            htmlReportJavascript += "    $(\"#"+dataprovider+field+"Panel\").slideToggle(\"slow\");";
+
 	            StructureRecResult result = fieldResult.getValue();
 	            // write Histogramm for value length
 				try {
+					htmlReport +="<h5>Histogram for value length</h5>";
+					htmlReport += "<table><tr><td><b>length:</b></td>";
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value length histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
 					for (int i = 0; i < result.getLengthHistogram().length; i++) {
+						htmlReport += "<td>"+i+"</td>";
 						writerStatisticRecords.write( i + STATISTIC_FILE_FIELD_SEPERATOR);
 					}
+					htmlReport += "</tr><tr><td><b>number:</b></td>";
 					writerStatisticRecords.newLine();
 					for (int i = 0; i < result.getLengthHistogram().length; i++) {
+						htmlReport += "<td>"+result.getLengthHistogram()[i]+"</td>";
 						writerStatisticRecords.write(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
 					}
 					writerStatisticRecords.newLine();
+					htmlReport += "</tr></table>";
 
 					
 					writerStatisticRecords.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+//				Qc_graphs.struturendnessDataproviderFieldPatternsHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
+				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
+				//htmlReport += "<img src=\""+filename+"\"/>";
+				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				htmlReport += "<img src=\""+filename+"\" style=\"width:1000px;\"/>";
+				
 				// write histogram for pattern
 				try {
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value pattern histogram.csv");
@@ -538,16 +611,28 @@ public class Qc_dataprovider {
 					e.printStackTrace();
 				}
 				
-//				Qc_graphs.struturendnessDataproviderFieldPatternsHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
-				Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
-				Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				
 //				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
 				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
 				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				
+				htmlReport += "</div>";
 
 	        }
+	        
+	        htmlReportJavascript += "});</script>";
+	        htmlReport += htmlReportJavascript;
+	        htmlReport += "</body></html>";
+			try {
+				File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report.html");
+				BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+				
+				writerStatisticRecords.write(htmlReport);
+				writerStatisticRecords.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 	    }
 
 	    
