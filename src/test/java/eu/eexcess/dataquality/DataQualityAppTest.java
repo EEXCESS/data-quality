@@ -87,6 +87,20 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputStructurednessTestbedRandom100()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppInputStructurednessTestbedRandom100Small()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputStructurednessKIMCollect()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\kimcollect"};

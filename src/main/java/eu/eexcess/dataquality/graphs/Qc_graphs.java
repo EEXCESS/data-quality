@@ -389,7 +389,7 @@ public final class Qc_graphs {
 		return outputfile.getName();
 	}
 
-	public static void struturendnessDataproviderFieldValuePatternHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
+	public static String struturendnessDataproviderFieldValuePatternHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
@@ -429,5 +429,6 @@ public final class Qc_graphs {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		return outputfile.getName();
 	}
 }

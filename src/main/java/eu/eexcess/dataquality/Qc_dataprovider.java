@@ -554,7 +554,6 @@ public class Qc_dataprovider {
 	            htmlReportJavascript += "$(\"#"+dataprovider+field+"Header\").click(function(){";
 	            htmlReportJavascript += "    $(\"#"+dataprovider+field+"Panel\").slideToggle(\"slow\");";
 	            htmlReportJavascript +="});";
-	            htmlReportJavascript += "    $(\"#"+dataprovider+field+"Panel\").slideToggle(\"slow\");";
 
 	            StructureRecResult result = fieldResult.getValue();
 	            // write Histogramm for value length
@@ -590,6 +589,8 @@ public class Qc_dataprovider {
 				
 				// write histogram for pattern
 				try {
+					htmlReport +="<h5>Histogram for pattern</h5>";
+					htmlReport += "<table><tr><td><b>pattern:</b></td>";
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value pattern histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
@@ -598,13 +599,17 @@ public class Qc_dataprovider {
 			        while (iteratorPatternHashMap.hasNext()) {
 			             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 						writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+						htmlReport += "<td>"+pattern.getKey()+"</td>";
 			        }
+					htmlReport += "</tr><tr><td><b>number:</b></td>";
 					writerStatisticRecords.newLine();
 			        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 			        while (iteratorPatternHashMap.hasNext()) {
 			             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 						writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+						htmlReport += "<td>"+pattern.getValue()+"</td>";
 			        }
+					htmlReport += "</tr></table>";
 					writerStatisticRecords.newLine();
 					writerStatisticRecords.close();
 				} catch (Exception e) {
@@ -614,27 +619,28 @@ public class Qc_dataprovider {
 				
 //				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
 				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
-				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				htmlReport += "<img src=\""+filename+"\" style=\"width:1000px;\"/>";
 				
 				htmlReport += "</div>";
 
 	        }
 	        
-	        htmlReportJavascript += "});</script>";
-	        htmlReport += htmlReportJavascript;
-	        htmlReport += "</body></html>";
-			try {
-				File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report.html");
-				BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-				
-				writerStatisticRecords.write(htmlReport);
-				writerStatisticRecords.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
 	    }
 
+        htmlReportJavascript += "});</script>";
+        htmlReport += htmlReportJavascript;
+        htmlReport += "</body></html>";
+		try {
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report.html");
+			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+			
+			writerStatisticRecords.write(htmlReport);
+			writerStatisticRecords.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	    
 	}
 }
