@@ -1,2 +1,9 @@
 /output/*.png
 /output/*.html
+/.classpath
+/.project
+/.settings/org.eclipse.jdt.core.prefs
+/output/*.csv
+/output/*.css
+/output/*.xml
+/target
