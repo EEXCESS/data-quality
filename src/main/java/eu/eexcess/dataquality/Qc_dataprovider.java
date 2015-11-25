@@ -28,6 +28,17 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchEvent.Modifier;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +48,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -94,6 +106,7 @@ public class Qc_dataprovider {
 			}
 		}
 		// check structuredness
+		copyResources();
 		checkStructuredness(sParams);
 		printStatistics();
 		printStructuredness();
@@ -472,34 +485,7 @@ public class Qc_dataprovider {
 	
 	private void printStructuredness() {
 		
-		InputStream inStream = null;
-		OutputStream outStream = null;
-	    try{
-	      try {
-//	    	  inStream = getClass().getResourceAsStream("test.txt");
-	    	  File file = new File("./resources/report.css");
-	    	  inStream = new FileInputStream(file); 
-	        byte[] bucket = new byte[32*1024];
-	        outStream = new BufferedOutputStream(new FileOutputStream(Qc_dataprovider.outputDir + "report.css"));
-	        int bytesRead = 0;
-	        while(bytesRead != -1){
-	          bytesRead = inStream.read(bucket); //-1, 0, or more
-	          if(bytesRead > 0){
-	            outStream.write(bucket, 0, bytesRead);
-	          }
-	        }
-	      }
-	      finally {
-	        if (inStream != null) inStream.close();
-	        if (outStream != null) outStream.close();
-	      }
-	    }
-	    catch (FileNotFoundException ex){
-	      System.out.println("File not found: " + ex);
-	    }
-	    catch (IOException ex){
-	    	System.out.println(ex);
-	    }
+
 		
 		String htmlReportJavascriptGeneral = new String();
 		htmlReportJavascriptGeneral += "<script>$(document).ready(function(){";
@@ -679,5 +665,55 @@ public class Qc_dataprovider {
 			e.printStackTrace();
 		}
 	    
+	}
+
+	private void copyResources() {
+		copyResourcesCSS();
+	    copyResourcesJQplot();
+	}
+
+	private void copyResourcesCSS() {
+		InputStream inStream = null;
+		OutputStream outStream = null;
+	    try{
+	      try {
+//	    	  inStream = getClass().getResourceAsStream("test.txt");
+	    	  File file = new File("./resources/report.css");
+	    	  inStream = new FileInputStream(file); 
+	        byte[] bucket = new byte[32*1024];
+	        outStream = new BufferedOutputStream(new FileOutputStream(Qc_dataprovider.outputDir + "report.css"));
+	        int bytesRead = 0;
+	        while(bytesRead != -1){
+	          bytesRead = inStream.read(bucket); //-1, 0, or more
+	          if(bytesRead > 0){
+	            outStream.write(bucket, 0, bytesRead);
+	          }
+	        }
+	      }
+	      finally {
+	        if (inStream != null) inStream.close();
+	        if (outStream != null) outStream.close();
+	      }
+	    }
+	    catch (FileNotFoundException ex){
+	      System.out.println("File not found: " + ex);
+	    }
+	    catch (IOException ex){
+	    	System.out.println(ex);
+	    }
+	}
+	
+	private void copyResourcesJQplot() {
+	    try{
+	    	File destDir = new File(Qc_dataprovider.outputDir + "jqplot/");
+            File srcDir = new File("./resources/jqplot");
+	    	FileUtils.copyDirectory(srcDir, destDir);
+	    }
+	    catch (FileNotFoundException ex){
+	      System.out.println("File not found: " + ex);
+	    }
+	    catch (IOException ex){
+	    	System.out.println(ex);
+	    }
 	}
 }
