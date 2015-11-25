@@ -7,3 +7,4 @@
 /output/*.css
 /output/*.xml
 /target
+/output/jqplot
