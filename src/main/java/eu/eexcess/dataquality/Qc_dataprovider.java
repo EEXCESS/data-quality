@@ -28,6 +28,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -48,7 +49,23 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.commons.io.FileUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -69,6 +86,7 @@ import eu.eexcess.dataquality.structure.StructureRecognizer;
 // Check for data provider
 public class Qc_dataprovider {
 
+	private static final String DATAQUALITY_REPORT_PLOT_HTML_FILENAME = "dataquality-report-plot.html";
 	private static final String STATISTIC_FILE_FIELD_SEPERATOR = ";";
 	private static final String STATISTIC_SYSTEMOUT_FIELD_SEPERATOR = "\t";
 	private static final int CHART_WIDTH_HIGH = 1600;
@@ -106,10 +124,13 @@ public class Qc_dataprovider {
 			}
 		}
 		// check structuredness
-		copyResources();
 		checkStructuredness(sParams);
+		// output results
+		copyResources();
 		printStatistics();
 		printStructuredness();
+		printRDFXMLVisWithJQPlot();
+		
 	}
 
 
@@ -484,12 +505,8 @@ public class Qc_dataprovider {
 	}
 	
 	private void printStructuredness() {
-		
-
-		
 		String htmlReportJavascriptGeneral = new String();
 		htmlReportJavascriptGeneral += "<script>$(document).ready(function(){";
-
 		
 		String htmlReportGeneral = "<html xmlns:prov=\"http://www.w3.org/ns/prov#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" lang=\"en\">";
 		htmlReportGeneral += " <head><title>EEXCESS Data Quality Report</title>";
@@ -508,14 +525,12 @@ public class Qc_dataprovider {
 		htmlReportGeneral += "<p>By clicking on one data field the histogram sections of this report are opened so that the data provider gets the result of the quality checks.</p>";
 		
 		{
-			
 			Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
 		    while (iteratorDataprovider.hasNext()) {
 		        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
 		        String dataprovider = entry.getKey();
 		        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
 	            System.out.println("Dataprovider:" + dataprovider);
-		        
 		        
 		        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 		        while (iteratorByDataprovider.hasNext()) {
@@ -652,6 +667,12 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>The chart shows how many links are accessible.</p>";
         htmlReportGeneral += "<img src=\"links_accessible_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         
+        htmlReportGeneral += "<h3>Summary</h3>";
+        htmlReportGeneral += "<ul>";
+        htmlReportGeneral += "<li><a target=\"_blank\" href=\""+DATAQUALITY_REPORT_PLOT_HTML_FILENAME+"\">Data Quality Report with JQPlot </a></li>";
+        htmlReportGeneral += "<li><a target=\"_blank\" href=\""+DataQualityVocabularyRDFWriter.STATISTICS_DATAPROVIDER_XML_FILENAME+"\">Data Quality Report (RDF/XML) </a></li>";
+        htmlReportGeneral += "</ul>";
+        
         htmlReportGeneral += "<h3>Reports for single Dataproviders</h3>";
         htmlReportGeneral += htmlReportGeneralDataproviders;
         htmlReportGeneral += "</body></html>";
@@ -667,6 +688,43 @@ public class Qc_dataprovider {
 	    
 	}
 
+	private void printRDFXMLVisWithJQPlot() {
+        try {
+        	TransformerFactory factory = TransformerFactory.newInstance();
+        	Templates template = factory.newTemplates(new StreamSource(new FileInputStream("./src/resources/dqv2html.xsl")));
+        	Transformer xformer = template.newTransformer();
+        	Source source = new StreamSource(new FileInputStream(Qc_dataprovider.outputDir + DataQualityVocabularyRDFWriter.STATISTICS_DATAPROVIDER_XML_FILENAME));
+        	DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        	Document doc = builder.newDocument();
+        	DOMResult result = new DOMResult(doc);
+        	xformer.transform(source, result);
+        	
+        			
+        			File filePlot = new File(Qc_dataprovider.outputDir+ DATAQUALITY_REPORT_PLOT_HTML_FILENAME);
+        			BufferedWriter writerPlot = new BufferedWriter(new FileWriter(filePlot));
+        			
+        			writerPlot.write(getStringFromDocument((Document)result.getNode()));
+        			writerPlot.close();
+
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	private void copyResources() {
 		copyResourcesCSS();
 	    copyResourcesJQplot();
@@ -677,7 +735,6 @@ public class Qc_dataprovider {
 		OutputStream outStream = null;
 	    try{
 	      try {
-//	    	  inStream = getClass().getResourceAsStream("test.txt");
 	    	  File file = new File("./resources/report.css");
 	    	  inStream = new FileInputStream(file); 
 	        byte[] bucket = new byte[32*1024];
@@ -716,4 +773,24 @@ public class Qc_dataprovider {
 	    	System.out.println(ex);
 	    }
 	}
+	
+	public static String getStringFromDocument(Document doc)
+    {
+        try
+        {
+           DOMSource domSource = new DOMSource(doc);
+           StringWriter writer = new StringWriter();
+           StreamResult result = new StreamResult(writer);
+           TransformerFactory tf = TransformerFactory.newInstance();
+           javax.xml.transform.Transformer transformer = tf.newTransformer();
+           transformer.transform(domSource, result);
+           return writer.toString();
+        }
+        catch(TransformerException ex)
+        {
+           ex.printStackTrace();
+           return null;
+        }
+    }
+
 }

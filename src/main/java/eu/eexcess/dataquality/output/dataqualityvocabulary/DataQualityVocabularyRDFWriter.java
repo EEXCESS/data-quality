@@ -11,6 +11,8 @@ import eu.eexcess.dataquality.Qc_dataprovider;
 
 public class DataQualityVocabularyRDFWriter {
 	
+	public static final String STATISTICS_DATAPROVIDER_XML_FILENAME = "statistics-dataprovider.xml";
+
 	StringBuffer qualityMeasures;
 	
 	String namespace ="eexdaq:";
@@ -58,7 +60,7 @@ public class DataQualityVocabularyRDFWriter {
 	
 	public void write() {
 		try {
-			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "statistics-dataprovider.xml");
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ STATISTICS_DATAPROVIDER_XML_FILENAME);
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 			writerStatisticRecords.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 			writerStatisticRecords.append("<rdf:RDF xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:prov=\"http://www.w3.org/ns/prov#\" >");
