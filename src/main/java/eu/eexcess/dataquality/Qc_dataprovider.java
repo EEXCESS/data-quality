@@ -501,25 +501,25 @@ public class Qc_dataprovider {
 	    	System.out.println(ex);
 	    }
 		
-		String htmlReportJavascript = new String();
-		htmlReportJavascript += "<script>$(document).ready(function(){";
+		String htmlReportJavascriptGeneral = new String();
+		htmlReportJavascriptGeneral += "<script>$(document).ready(function(){";
 
 		
-		String htmlReport = "<html xmlns:prov=\"http://www.w3.org/ns/prov#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" lang=\"en\">";
-		htmlReport += " <head><title>EEXCESS Data Quality Report</title>";
-		htmlReport += "<link rel=\"stylesheet\" type=\"text/css\" href=\"./report.css\">";
-		htmlReport += "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
-		htmlReport += " </head>";
-		htmlReport += " <body>";
+		String htmlReportGeneral = "<html xmlns:prov=\"http://www.w3.org/ns/prov#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" lang=\"en\">";
+		htmlReportGeneral += " <head><title>EEXCESS Data Quality Report</title>";
+		htmlReportGeneral += "<link rel=\"stylesheet\" type=\"text/css\" href=\"./report.css\">";
+		htmlReportGeneral += "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
+		htmlReportGeneral += " </head>";
+		htmlReportGeneral += " <body>";
 		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		htmlReport += "<h1>EEXCESS Data Quality Report</h1><br/><h2>generated at:" +dt.format(new Date(System.currentTimeMillis()))+"</h2>";
+		htmlReportGeneral += "<h1>EEXCESS Data Quality Report</h1><br/><h2>generated at:" +dt.format(new Date(System.currentTimeMillis()))+"</h2>";
 		
-		htmlReport += "<p>Portals providing access to different data provider more and more face the problem of \"data quality\". Data providers and aggregators are asked to do more quality checks on data they deliver. This clearly calls for more automation of the quality assessment process. In EEXCESS we decided to implement and include easy to handle features and analysis methods to provide feedback to the data provider regarding the data quality. Therefore, questions regarding the metadata provenance, the referencing of terms from relevant online vocabularies or the usage of open multilingual vocabularies and last but not least the very important questions regarding metadata rights that indicate the options for reusing the published resources have been stressed.</p>"; 
-		htmlReport += "<p>We determine measure about the structuredness of values, for example of fields containing dates, names or dimensions of objects. The aim is not only to make a binary decision whether they are structured, but also whether the format the field can be inferred.</p>";
-		htmlReport += "<p>This report gives feedback based on the data provider’s datasets. On field level the data provider gets feedback regarding the structuredness, number of data provided and vocabulary accessibility.</p>";
-		htmlReport += "<p>On field level the report provides feedback regarding the field length and field pattern. Having similar field length over the records and having less and similar patterns leads to the conclusion of better data quality and therefore, better recommendations and better visibility.</p>";
-		htmlReport += "<p>To detect patterns in the values of the datasets, we replace all letters with \"a\", all numbers with \"0\" and multiple whitespaces with single whitespaces.</p>";
-		htmlReport += "<p>By clicking on one data field the histogram sections of this report are opened so that the data provider gets the result of the quality checks.</p>";
+		htmlReportGeneral += "<p>Portals providing access to different data provider more and more face the problem of \"data quality\". Data providers and aggregators are asked to do more quality checks on data they deliver. This clearly calls for more automation of the quality assessment process. In EEXCESS we decided to implement and include easy to handle features and analysis methods to provide feedback to the data provider regarding the data quality. Therefore, questions regarding the metadata provenance, the referencing of terms from relevant online vocabularies or the usage of open multilingual vocabularies and last but not least the very important questions regarding metadata rights that indicate the options for reusing the published resources have been stressed.</p>"; 
+		htmlReportGeneral += "<p>We determine measure about the structuredness of values, for example of fields containing dates, names or dimensions of objects. The aim is not only to make a binary decision whether they are structured, but also whether the format the field can be inferred.</p>";
+		htmlReportGeneral += "<p>This report gives feedback based on the data provider’s datasets. On field level the data provider gets feedback regarding the structuredness, number of data provided and vocabulary accessibility.</p>";
+		htmlReportGeneral += "<p>On field level the report provides feedback regarding the field length and field pattern. Having similar field length over the records and having less and similar patterns leads to the conclusion of better data quality and therefore, better recommendations and better visibility.</p>";
+		htmlReportGeneral += "<p>To detect patterns in the values of the datasets, we replace all letters with \"a\", all numbers with \"0\" and multiple whitespaces with single whitespaces.</p>";
+		htmlReportGeneral += "<p>By clicking on one data field the histogram sections of this report are opened so that the data provider gets the result of the quality checks.</p>";
 		
 		{
 			
@@ -542,15 +542,17 @@ public class Qc_dataprovider {
 		    }
 		}
 	    
-	    
+		String htmlReportGeneralDataproviders = "<ul>";
 		Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
 	    while (iteratorDataprovider.hasNext()) {
+	    	String htmlReportJavascript = new String(htmlReportJavascriptGeneral);
+	    	String htmlReport =  new String(htmlReportGeneral);
 	        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
 	        String dataprovider = entry.getKey();
 	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
             System.out.println("Dataprovider:" + dataprovider);
             htmlReport += "<h3>" + dataprovider +"</h3>";
-	        
+            
 	        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
@@ -582,15 +584,12 @@ public class Qc_dataprovider {
 					}
 					writerStatisticRecords.newLine();
 					htmlReport += "</tr></table>";
-
 					
 					writerStatisticRecords.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-//				Qc_graphs.struturendnessDataproviderFieldPatternsHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
 				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
-				//htmlReport += "<img src=\""+filename+"\"/>";
 				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+filename+"\" style=\"width:1000px;\"/>";
 				
@@ -624,7 +623,6 @@ public class Qc_dataprovider {
 				}
 				
 				
-//				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_LOW, CHART_HEIGHT_LOW, result);
 				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
 				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+filename+"\" style=\"width:1000px;\"/>";
@@ -632,18 +630,50 @@ public class Qc_dataprovider {
 				htmlReport += "</div>";
 
 	        }
-	        
+	        htmlReportJavascript += "});</script>";
+	        htmlReport += htmlReportJavascript;
+	        htmlReport += "</body></html>";
+			try {
+				File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report-"+dataprovider+".html");
+				BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+				
+				writerStatisticRecords.write(htmlReport);
+				writerStatisticRecords.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			htmlReportGeneralDataproviders +="<li> <a href=\"dataquality-report-"+dataprovider+".html\">" +           dataprovider +"</a></li>";
+
 
 	    }
-
-        htmlReportJavascript += "});</script>";
-        htmlReport += htmlReportJavascript;
-        htmlReport += "</body></html>";
+	    htmlReportGeneralDataproviders += "</ul>";
+        htmlReportJavascriptGeneral += "});</script>";
+        htmlReportGeneral += htmlReportJavascriptGeneral;
+        
+        htmlReportGeneral += "<h3>All datafields</h3>";
+        htmlReportGeneral += "<p>The chart shows how many datafields are provided by dataprovider.</p>";
+        htmlReportGeneral += "<img src=\"all_datafields_bar_chart_1600x1200.png\" style=\"width:1000px;\"/>"; 
+        htmlReportGeneral += "<h3>non empty datafields</h3>";
+        htmlReportGeneral += "<p>The chart shows the non empty datafields.</p>";
+        htmlReportGeneral += "<img src=\"non_empty_datafields_barchart_1600x1200.png\" style=\"width:1000px;\"/>"; 
+        htmlReportGeneral += "<h3>non empty datafields per datafields</h3>";
+        htmlReportGeneral += "<p>The chart shows the non empty datafields in respect to the number of datafields.</p>";
+        htmlReportGeneral += "<img src=\"non_empty_datafields_perdatafields_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
+        htmlReportGeneral += "<h3>links in datafields</h3>";
+        htmlReportGeneral += "<p>The chart shows how many links are in the datafields.</p>";
+        htmlReportGeneral += "<img src=\"links_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
+        htmlReportGeneral += "<h3>links accessible</h3>";
+        htmlReportGeneral += "<p>The chart shows how many links are accessible.</p>";
+        htmlReportGeneral += "<img src=\"links_accessible_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
+        
+        htmlReportGeneral += "<h3>Reports for single Dataproviders</h3>";
+        htmlReportGeneral += htmlReportGeneralDataproviders;
+        htmlReportGeneral += "</body></html>";
 		try {
 			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report.html");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 			
-			writerStatisticRecords.write(htmlReport);
+			writerStatisticRecords.write(htmlReportGeneral);
 			writerStatisticRecords.close();
 		} catch (Exception e) {
 			e.printStackTrace();
