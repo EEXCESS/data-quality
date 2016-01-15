@@ -29,17 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchEvent.Modifier;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +41,6 @@ import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -86,6 +74,12 @@ import eu.eexcess.dataquality.structure.StructureRecognizer;
 // Check for data provider
 public class Qc_dataprovider {
 
+	public static final String OUTPUT_STRUCT = "struct";
+	public static final String OUTPUT_STRUCT_IMG = "img";
+	public static final String OUTPUT_STRUCT_IMG_DIR = OUTPUT_STRUCT + "/" + OUTPUT_STRUCT_IMG + "/";
+	public static final String OUTPUT_STRUCT_CSV = "csv";
+	public static final String OUTPUT_STRUCT_CSV_DIR = OUTPUT_STRUCT + "/" + OUTPUT_STRUCT_CSV + "/";
+	
 	private static final String DATAQUALITY_REPORT_PLOT_HTML_FILENAME = "dataquality-report-plot.html";
 	private static final String STATISTIC_FILE_FIELD_SEPERATOR = ";";
 	private static final String STATISTIC_SYSTEMOUT_FIELD_SEPERATOR = "\t";
@@ -505,6 +499,8 @@ public class Qc_dataprovider {
 	}
 	
 	private void printStructuredness() {
+		new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_IMG_DIR).mkdirs();
+		new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR).mkdirs();
 		String htmlReportJavascriptGeneral = new String();
 		htmlReportJavascriptGeneral += "<script>$(document).ready(function(){";
 		
@@ -570,7 +566,7 @@ public class Qc_dataprovider {
 				try {
 					htmlReport +="<h5>Histogram for value length</h5>";
 					htmlReport += "<table><tr><td><b>length:</b></td>";
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value length histogram.csv");
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value length histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
 					for (int i = 0; i < result.getLengthHistogram().length; i++) {
@@ -592,13 +588,13 @@ public class Qc_dataprovider {
 				}
 				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
 				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
-				htmlReport += "<img src=\""+filename+"\" style=\"width:1000px;\"/>";
+				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
 				// write histogram for pattern
 				try {
 					htmlReport +="<h5>Histogram for pattern</h5>";
 					htmlReport += "<table><tr><td><b>pattern:</b></td>";
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ dataprovider+"-"+field+"-value pattern histogram.csv");
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value pattern histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
 					
@@ -626,7 +622,7 @@ public class Qc_dataprovider {
 				
 				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
 				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
-				htmlReport += "<img src=\""+filename+"\" style=\"width:1000px;\"/>";
+				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
 				htmlReport += "</div>";
 

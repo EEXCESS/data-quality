@@ -380,7 +380,7 @@ public final class Qc_graphs {
 	      
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File(Qc_dataprovider.outputDir+ dataprovider +"-"+ fieldname + "-value length histogram"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-"+ fieldname + "-value length histogram"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -423,7 +423,7 @@ public final class Qc_graphs {
 	    	domainAxis.setVisible(false);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File(Qc_dataprovider.outputDir+ dataprovider +"-"+ fieldname + "-value pattern histogram"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-"+ fieldname + "-value pattern histogram"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
