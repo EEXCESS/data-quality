@@ -2,7 +2,6 @@ package eu.eexcess.dataquality.structure;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 
 public class StructureRecResult {
@@ -123,14 +122,14 @@ public class StructureRecResult {
 		out += "valuesMap:\n";
 		Iterator<Entry<String, Integer>> valuesMapIterator = valuesHashMap.entrySet().iterator();
 		while (valuesMapIterator.hasNext()) {
-			Map.Entry pair = (Map.Entry) valuesMapIterator.next();
+			Entry<String, Integer> pair = valuesMapIterator.next();
 			out += pair.getKey() + " \t" + pair.getValue() + "\n";
 		}
 		out += "\n";
 		out += "valuesPatternHashMap:\n";
 		Iterator<Entry<String, Integer>> valuesPatternMapIterator = valuesPatternHashMap.entrySet().iterator();
 		while (valuesPatternMapIterator.hasNext()) {
-			Map.Entry pair = (Map.Entry) valuesPatternMapIterator.next();
+			Entry<String, Integer> pair = valuesPatternMapIterator.next();
 			out += pair.getKey() + " \t" + pair.getValue() + "\n";
 		}
 		out += "\n";

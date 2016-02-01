@@ -29,17 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchEvent.Modifier;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +41,6 @@ import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -532,7 +520,7 @@ public class Qc_dataprovider {
 		        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
 	            System.out.println("Dataprovider:" + dataprovider);
 		        
-		        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+		        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 		        while (iteratorByDataprovider.hasNext()) {
 		            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 		            String field = fieldResult.getKey();
@@ -554,7 +542,7 @@ public class Qc_dataprovider {
             System.out.println("Dataprovider:" + dataprovider);
             htmlReport += "<h3>" + dataprovider +"</h3>";
             
-	        Iterator iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
