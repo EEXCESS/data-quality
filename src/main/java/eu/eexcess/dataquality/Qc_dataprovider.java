@@ -63,7 +63,9 @@ import eu.eexcess.dataquality.providers.Qc_DDB;
 import eu.eexcess.dataquality.providers.Qc_ZBW;
 import eu.eexcess.dataquality.providers.Qc_base;
 import eu.eexcess.dataquality.providers.Qc_base.SearchType;
+import eu.eexcess.dataquality.providers.Qc_cultureWeb;
 import eu.eexcess.dataquality.providers.Qc_eexcess;
+import eu.eexcess.dataquality.providers.Qc_eexcess_enriched;
 import eu.eexcess.dataquality.providers.Qc_europeana;
 import eu.eexcess.dataquality.providers.Qc_kimcollect;
 import eu.eexcess.dataquality.providers.Qc_mendeley;
@@ -98,7 +100,7 @@ public class Qc_dataprovider {
 
 	// XML files of known partners
 	public enum DataProvider {
-		KIMCollect, ZBW, Europeana, Wissenmedia, Mendeley, EEXCESS, DDB, unknown
+		KIMCollect, ZBW, Europeana, Wissenmedia, Mendeley, EEXCESS, EEXCESS_enriched, DDB, cultureWeb, unknown
 	}
 
 	public void InputParams(String[] sParams) {
@@ -126,10 +128,6 @@ public class Qc_dataprovider {
 		printRDFXMLVisWithJQPlot();
 		
 	}
-
-
-	
-
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
 
@@ -289,6 +287,8 @@ public class Qc_dataprovider {
 	// try to check from which partner the XML file is.
 	private void checkDataProviderFile(String xmlFile) {
 
+		System.out.println(xmlFile);
+		
 		File f = new File(xmlFile);
 		if (f.exists() == true && f.isDirectory() == false) {
 			for (int i = 0; i < DataProvider.values().length; i++) {
@@ -308,9 +308,17 @@ public class Qc_dataprovider {
 				case Wissenmedia:
 					currentProvider = new Qc_wissenmedia();
 					break;
+					
+				case cultureWeb:
+					currentProvider = new Qc_cultureWeb();
+					break;
 
 				case KIMCollect:
 					currentProvider = new Qc_kimcollect();
+					break;
+					
+				case EEXCESS_enriched:
+					currentProvider = new Qc_eexcess_enriched();
 					break;
 
 				case EEXCESS:
@@ -337,6 +345,9 @@ public class Qc_dataprovider {
 						currentProvider.countDataFields(SearchType.uriDataFields);
 						Qc_params param = currentProvider.getParam();
 						paramDataList.addParam(param);
+						
+						System.out.println(currentProvider + " " + xmlFile);
+						
 						break;
 					}
 				}

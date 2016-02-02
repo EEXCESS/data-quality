@@ -51,6 +51,13 @@ public class DataQualityAppTest
     {
         return new TestSuite( DataQualityAppTest.class );
     }
+    
+    public void testAppDebugEEXCESS()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
 
     public void testAppDebugKIMCollectSimpleExample()
     {

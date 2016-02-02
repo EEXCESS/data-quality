@@ -21,6 +21,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -29,6 +30,13 @@ import java.net.UnknownHostException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -93,6 +101,14 @@ public class Qc_base implements Qc_interface {
 	public void setRecordSeparator(String recordSeparator) {
 		this.recordSeparator = recordSeparator;
 	}
+	
+	// - - - - - - - - - - - - Additional Provider Condition - - - - - - - - - - - - -
+	// Condition which should occur for a specified data provider
+	String additionalProviderCondition = "";
+	
+	// - - - - - - - - - - - - - Not Provider Condition - - - - - - - - - - - - - -
+	// Condition which should not occur for a specified data provider
+	String notProviderCondition = "";
 
 	// XML node list of records
 	NodeList nodelistRecords = null;
@@ -103,6 +119,49 @@ public class Qc_base implements Qc_interface {
 
 	public void setNodelistRecords(NodeList nodelistRecords) {
 		this.nodelistRecords = nodelistRecords;
+	}
+	
+	private boolean isProviderRecordCheckAdditional(Document doc)
+	{
+		StringWriter sw = new StringWriter();
+		
+		if (additionalProviderCondition.length() > 0 || notProviderCondition.length() > 0)
+		{
+	        TransformerFactory tf = TransformerFactory.newInstance();
+	        Transformer transformer;
+			try {
+				transformer = tf.newTransformer();
+
+	        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	        transformer.transform(new DOMSource(doc), new StreamResult(sw));
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+		
+		if (additionalProviderCondition.length() > 0)
+		{
+			if (sw.toString().contains(notProviderCondition) == false)
+			{
+				return false;
+			}
+		}
+		if (notProviderCondition.length() > 0)
+		{
+			
+			if (sw.toString().contains(notProviderCondition) == true)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// check if XML file is from current data provider
@@ -117,24 +176,26 @@ public class Qc_base implements Qc_interface {
 					Document doc = dBuilder.parse(f);
 
 					doc.getDocumentElement().normalize();
-
-					XPathFactory xPathfactory = XPathFactory.newInstance();
-					XPath xpath = xPathfactory.newXPath();
-					XPathExpression expr = xpath.compile(recordSeparator);
-					nodelistRecords = (NodeList) expr.evaluate(doc,
-							XPathConstants.NODESET);
-					if (nodelistRecords.getLength() > 0) {
-						param = new Qc_params(dataProvider);
-						param.setRecordCount(nodelistRecords.getLength());
-						param.setXmlPath(xmlFileName);
-						bReturn = true;
-					} else {
-						if (xmlFileName.contains(dataProvider.toString()))
-						{
+					if (isProviderRecordCheckAdditional(doc) == true)
+					{
+						XPathFactory xPathfactory = XPathFactory.newInstance();
+						XPath xpath = xPathfactory.newXPath();
+						XPathExpression expr = xpath.compile(recordSeparator);
+						nodelistRecords = (NodeList) expr.evaluate(doc,
+								XPathConstants.NODESET);
+						if (nodelistRecords.getLength() > 0) {
 							param = new Qc_params(dataProvider);
-							param.setRecordCount(0);
+							param.setRecordCount(nodelistRecords.getLength());
 							param.setXmlPath(xmlFileName);
 							bReturn = true;
+						} else {
+							if (xmlFileName.contains(dataProvider.toString()))
+							{
+								param = new Qc_params(dataProvider);
+								param.setRecordCount(0);
+								param.setXmlPath(xmlFileName);
+								bReturn = true;
+							}
 						}
 					}
 				}
@@ -384,7 +445,7 @@ public class Qc_base implements Qc_interface {
 	}
 	
 	protected void writeToTempFile(String textToAppend){
-		File tempFile = new File(Qc_dataprovider.outputDir+ "tempFileJR.csv");
+		File tempFile = new File(Qc_dataprovider.outputDir + "tempFileJR.csv");
 		BufferedWriter writeBuffer;
 		try {
 			writeBuffer = new BufferedWriter(new FileWriter(tempFile));
