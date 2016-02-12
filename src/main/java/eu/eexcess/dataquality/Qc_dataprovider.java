@@ -484,6 +484,7 @@ public class Qc_dataprovider {
 	}
 	
 	public static String DATAPROVIDER_KIMCOLLECT ="KIMCollect";
+	public static String DATAPROVIDER_KIMPORTAL ="KIMPortal";
 	public static String DATAPROVIDER_EUROPEANA ="Europeana";
 	public static String DATAPROVIDER_DDB ="DeutscheDigitaleBibliothek";
 	public static String DATAPROVIDER_MENDELEY ="Mendeley";
@@ -499,6 +500,8 @@ public class Qc_dataprovider {
 			return new Qc_europeana();
 		if (dataprovider.equals(DATAPROVIDER_KIMCOLLECT))
 			return new Qc_kimcollect();
+		if (dataprovider.equals(DATAPROVIDER_KIMPORTAL))
+			return new Qc_cultureWeb();
 		if (dataprovider.equals(DATAPROVIDER_MENDELEY))
 			return new Qc_mendeley();
 		if (dataprovider.equals(DATAPROVIDER_ZBW))
