@@ -338,6 +338,8 @@ public class Qc_dataprovider {
 					currentProvider.setXmlFileName(xmlFile);
 					if (currentProvider.isProviderRecord() == true) {
 						currentProvider.getDataProvider();
+						
+						System.out.println("Records Count: " + currentProvider.getRecordsCount());
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
 						currentProvider.countDataFields(SearchType.linkDataFields);

@@ -235,32 +235,35 @@ public class Qc_base implements Qc_interface {
 
 	private int countDataFieldsNode(Node cNode, SearchType searchType) {
 		int nReturn = 0;
-		NodeList nodeChilds = cNode.getChildNodes();
-		if (searchType == SearchType.allDataFields) {
-			for (int i = 0; i < nodeChilds.getLength(); i++) {
-				if (nodeChilds.item(i).getNodeType() == Node.ELEMENT_NODE) {
-					nReturn++;
-				}
-			}
-		} else if (searchType == SearchType.notEmptyDataFields) {
-			for (int i = 0; i < nodeChilds.getLength(); i++) {
-				if (nodeChilds.item(i).getNodeType() == Node.ELEMENT_NODE) {
-					if (nodeChilds.item(i).getTextContent().trim().length() > 0)
-					{
+		if (cNode != null)
+		{
+			NodeList nodeChilds = cNode.getChildNodes();
+			if (searchType == SearchType.allDataFields) {
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					if (nodeChilds.item(i).getNodeType() == Node.ELEMENT_NODE) {
 						nReturn++;
 					}
 				}
-			}
-		} else if (searchType == SearchType.linkDataFields) {
-			for (int i = 0; i < nodeChilds.getLength(); i++) {
-				Node actNode = nodeChilds.item(i);
-				nReturn = countLinksInNodes(nReturn, actNode);
-			}
-		} //uriCheck 
-		  else if (searchType == SearchType.uriDataFields) {
-			for (int i = 0; i < nodeChilds.getLength(); i++) {
-				Node actNode = nodeChilds.item(i);
-				nReturn = countAccessibleLinks(nReturn, actNode);
+			} else if (searchType == SearchType.notEmptyDataFields) {
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					if (nodeChilds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						if (nodeChilds.item(i).getTextContent().trim().length() > 0)
+						{
+							nReturn++;
+						}
+					}
+				}
+			} else if (searchType == SearchType.linkDataFields) {
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					Node actNode = nodeChilds.item(i);
+					nReturn = countLinksInNodes(nReturn, actNode, true);
+				}
+			} //uriCheck 
+			  else if (searchType == SearchType.uriDataFields) {
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					Node actNode = nodeChilds.item(i);
+					nReturn = countAccessibleLinks(nReturn, actNode, true);
+				}
 			}
 		}
 		return nReturn;
@@ -269,16 +272,16 @@ public class Qc_base implements Qc_interface {
 	/*
 	 * count Links in nodes
 	 * */
-	protected int countLinksInNodes(int nReturn, Node actNode) {
+	protected int countLinksInNodes(int nReturn, Node actNode, boolean bSearchAttributes) {
 		
 		if (actNode.getNodeType() == Node.ELEMENT_NODE) {
 			String actNodeTextContent = actNode.getTextContent();
 			if (actNodeTextContent != null &&
 					(
-					actNodeTextContent.toLowerCase().startsWith("http://") || 
+					actNodeTextContent.toLowerCase().trim().startsWith("http://") || 
 					//uriCheck additional uri-schemes
-					actNodeTextContent.toLowerCase().startsWith("https://") ||
-					actNodeTextContent.toLowerCase().startsWith("ftp://")
+					actNodeTextContent.toLowerCase().trim().startsWith("https://") ||
+					actNodeTextContent.toLowerCase().trim().startsWith("ftp://")
 //					actNodeTextContent.toLowerCase().startsWith("mailto://") ||
 //					actNodeTextContent.toLowerCase().startsWith("file://") ||
 //					actNodeTextContent.toLowerCase().startsWith("data://")
@@ -287,16 +290,16 @@ public class Qc_base implements Qc_interface {
 				nReturn++;
 			} 
 			
-			if (actNode.getAttributes() != null && actNode.getAttributes().getLength() > 0)
+			if (actNode.getAttributes() != null && bSearchAttributes == true && actNode.getAttributes().getLength() > 0)
 			{
 				NamedNodeMap attributes = actNode.getAttributes();
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
 					Node attribute = attributes.item(attributesIndex);
 					String value = attribute.getNodeValue();
 					if (value != null && !value.isEmpty() && 
-							(value.toLowerCase().startsWith("http://") || 
-							 value.toLowerCase().startsWith("https://") || 
-							 value.toLowerCase().startsWith("ftp://")
+							(value.toLowerCase().trim().startsWith("http://") || 
+							 value.toLowerCase().trim().startsWith("https://") || 
+							 value.toLowerCase().trim().startsWith("ftp://")
 //							 value.toLowerCase().startsWith("mailto://") ||
 //							 value.toLowerCase().startsWith("file://") ||
 //							 value.toLowerCase().startsWith("data://")									
@@ -311,7 +314,7 @@ public class Qc_base implements Qc_interface {
 			{
 				for (int i = 0; i < actNode.getChildNodes().getLength(); i++) {
 					Node actNodeChild = actNode.getChildNodes().item(i);
-					nReturn = countLinksInNodes(nReturn, actNodeChild);
+					nReturn = countLinksInNodes(nReturn, actNodeChild, bSearchAttributes);
 				}
 			}
 		}
@@ -319,16 +322,16 @@ public class Qc_base implements Qc_interface {
 	}
 
 	
-	protected int countAccessibleLinks(int nReturn, Node actNode) {
+	protected int countAccessibleLinks(int nReturn, Node actNode, boolean bSearchAttributes) {
 		
 		if (actNode.getNodeType() == Node.ELEMENT_NODE) {
 			String textContent = actNode.getTextContent();
 			if (textContent != null &&
 					(
-					textContent.toLowerCase().startsWith("http://") || 
+					textContent.toLowerCase().trim().startsWith("http://") || 
 					//uriCheck additional uri-schemes
-					textContent.toLowerCase().startsWith("https://") ||
-					textContent.toLowerCase().startsWith("ftp://")
+					textContent.toLowerCase().trim().startsWith("https://") ||
+					textContent.toLowerCase().trim().startsWith("ftp://")
 //					textContent.toLowerCase().startsWith("mailto://") ||
 //					textContent.toLowerCase().startsWith("file://") ||
 //					textContent.toLowerCase().startsWith("data://")
@@ -374,7 +377,7 @@ public class Qc_base implements Qc_interface {
 //				
 //			}
 			
-			if (actNode.getAttributes() != null && actNode.getAttributes().getLength() > 0)
+			if (actNode.getAttributes() != null && bSearchAttributes == true && actNode.getAttributes().getLength() > 0)
 			{
 				NamedNodeMap attributes = actNode.getAttributes();
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
@@ -382,8 +385,8 @@ public class Qc_base implements Qc_interface {
 					String value = attribute.getNodeValue();
 					if (value != null && !value.isEmpty() && 
 							(value.toLowerCase().startsWith("http://") || 
-									 value.toLowerCase().startsWith("https://") || 
-									 value.toLowerCase().startsWith("ftp://")
+									 value.toLowerCase().trim().startsWith("https://") || 
+									 value.toLowerCase().trim().startsWith("ftp://")
 //									 value.toLowerCase().startsWith("mailto://") ||
 //									 value.toLowerCase().startsWith("file://") ||
 //									 value.toLowerCase().startsWith("data://")									
@@ -422,7 +425,7 @@ public class Qc_base implements Qc_interface {
 			{
 				for (int i = 0; i < actNode.getChildNodes().getLength(); i++) {
 					Node actNodeChild = actNode.getChildNodes().item(i);
-					nReturn = countAccessibleLinks(nReturn, actNodeChild);
+					nReturn = countAccessibleLinks(nReturn, actNodeChild, bSearchAttributes);
 				}
 			}
 		}

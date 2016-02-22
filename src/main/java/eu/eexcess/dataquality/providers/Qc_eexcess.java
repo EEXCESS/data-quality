@@ -17,7 +17,20 @@ limitations under the License.
  */
 package eu.eexcess.dataquality.providers;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.providers.Qc_base.SearchType;
@@ -27,8 +40,14 @@ public class Qc_eexcess extends Qc_base {
 	{
 		recordSeparator = "/*[local-name()='RDF']/*[local-name()='Proxy']";
 		dataProvider = DataProvider.EEXCESS;
-		notProviderCondition = "<eexcess:Agent rdf:about"; 
+		notProviderCondition = "<eexcess:Agent rdf:about";
+		
+		// Blacklist entries:
+		lsBlackList.add("ore:proxyFor");
+		lsBlackList.add("ore:proxyIn");
 	}
+	
+	ArrayList<String> lsBlackList = new ArrayList<String>();
 	
 	// Counts dataFields
 	public void countDataFields(SearchType searchType) {
@@ -51,6 +70,74 @@ public class Qc_eexcess extends Qc_base {
 	
 	private int countDataFieldsNode(Node cNode, SearchType searchType) {
 		int nReturn = 0;
+		if (cNode != null)
+		{
+			NodeList nodeChilds = cNode.getChildNodes();
+			if (searchType == SearchType.allDataFields || searchType == SearchType.notEmptyDataFields)
+			{
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					if (nodeChilds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						if (lsBlackList.contains(nodeChilds.item(i).getNodeName()) == false)
+						{
+							nReturn++;
+						}
+						else if (nodeChilds.item(i).getNodeName() == "ore:proxyIn")
+						{
+							if (nodeChilds.item(i).hasAttributes() && nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource") != null)
+							{
+								System.out.println(nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource").getNodeValue());
+								String linkAggr = nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource").getNodeValue();
+								String oreAggregation = "/*[local-name()='RDF']/*[local-name()='Aggregation']";
+								NodeList nodeAggr = this.getNodesListByXPath(oreAggregation);
+								if (nodeAggr.getLength() > 0)
+								{
+									for (int j=0; j<nodeAggr.getLength(); j++)
+									{
+										if (nodeToString(nodeAggr.item(j),linkAggr) == true)
+										{
+											nReturn += countDataFieldsNode(nodeAggr.item(j), searchType);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			else if (searchType == SearchType.linkDataFields) {
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					nReturn = countLinksInNodes(nReturn, nodeChilds.item(i), false);
+				}
+			}
+			else if (searchType == SearchType.uriDataFields) {
+				for (int i = 0; i < nodeChilds.getLength(); i++) {
+					nReturn = countAccessibleLinks(nReturn, nodeChilds.item(i), false);
+				}
+			}
+		}
 		return nReturn;
 	}
+	
+
+
+private boolean nodeToString(Node node, String sAttribute) {
+	boolean bFound = false;
+	if (node != null)
+	{
+		NamedNodeMap attr = node.getAttributes();
+		for (int i=0; i<attr.getLength();i++)
+		{
+			System.out.println("1:" + attr.item(i).getNodeValue());
+			System.out.println("2:" + sAttribute);
+			if (attr.item(i).getNodeValue().equals(sAttribute))
+			{
+				bFound = true;
+				break;
+			}
+		}
+	}
+    return bFound;
+}
+
+
 }

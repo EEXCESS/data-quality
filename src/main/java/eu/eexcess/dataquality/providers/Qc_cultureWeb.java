@@ -58,13 +58,13 @@ public class Qc_cultureWeb extends Qc_base {
 		} else if (searchType == SearchType.linkDataFields) {
 			for (int i = 0; i < nodeChilds.getLength(); i++) {
 				Node actNode = nodeChilds.item(i);
-				nReturn = countLinksInNodes(nReturn, actNode);
+				nReturn = countLinksInNodes(nReturn, actNode, true);
 			}
 		}//uriCheck
 		else if (searchType == SearchType.uriDataFields) {
 			for (int i = 0; i < nodeChilds.getLength(); i++) {
 				Node actNode = nodeChilds.item(i);
-				nReturn = countAccessibleLinks(nReturn, actNode);
+				nReturn = countAccessibleLinks(nReturn, actNode, true);
 			}
 		}
 		return nReturn;
