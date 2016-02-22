@@ -578,25 +578,30 @@ public class Qc_dataprovider {
 	            StructureRecResult result = fieldResult.getValue();
 	            // write Histogramm for value length
 				try {
-					htmlReport +="<h5>Histogram for value length</h5>";
-					htmlReport += "<table><tr><td><b>length:</b></td>";
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value length histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
 					for (int i = 0; i < result.getLengthHistogram().length; i++) {
-						htmlReport += "<td>"+i+"</td>";
 						writerStatisticRecords.write( i + STATISTIC_FILE_FIELD_SEPERATOR);
 					}
-					htmlReport += "</tr><tr><td><b>number:</b></td>";
 					writerStatisticRecords.newLine();
 					for (int i = 0; i < result.getLengthHistogram().length; i++) {
-						htmlReport += "<td>"+result.getLengthHistogram()[i]+"</td>";
 						writerStatisticRecords.write(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
 					}
 					writerStatisticRecords.newLine();
-					htmlReport += "</tr></table>";
-					
 					writerStatisticRecords.close();
+
+					htmlReport +="<h5>Histogram for value length</h5>";
+					htmlReport += "<table><tr><td><b>length:</b></td>";
+					htmlReport += "<td><b>number:</b></td></tr>";
+					
+					for (int i = 0; i < result.getLengthHistogram().length; i++) {
+						if (result.getLengthHistogram()[i] > 0) {
+							htmlReport += "<tr><td>"+i+"</td>";
+							htmlReport += "<td>"+result.getLengthHistogram()[i]+"</td></tr>";
+						}
+					}
+					htmlReport += "</table>";
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -606,29 +611,37 @@ public class Qc_dataprovider {
 				
 				// write histogram for pattern
 				try {
-					htmlReport +="<h5>Histogram for pattern</h5>";
-					htmlReport += "<table><tr><td><b>pattern:</b></td>";
+					
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value pattern histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-					
-					
-			        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
-			        while (iteratorPatternHashMap.hasNext()) {
-			             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-						writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
-						htmlReport += "<td>"+pattern.getKey()+"</td>";
-			        }
-					htmlReport += "</tr><tr><td><b>number:</b></td>";
-					writerStatisticRecords.newLine();
-			        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
-			        while (iteratorPatternHashMap.hasNext()) {
-			             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-						writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
-						htmlReport += "<td>"+pattern.getValue()+"</td>";
-			        }
-					htmlReport += "</tr></table>";
+					{					
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+							writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+						writerStatisticRecords.newLine();
+				        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+							writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+					}
 					writerStatisticRecords.newLine();
 					writerStatisticRecords.close();
+
+					{					
+						htmlReport +="<h5>Histogram for pattern</h5>";
+						htmlReport += "<table><tr><td><b>pattern:</b></td>";
+						htmlReport += "<td><b>number:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td></tr>";
+				        }
+				    	htmlReport += "</table>";
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

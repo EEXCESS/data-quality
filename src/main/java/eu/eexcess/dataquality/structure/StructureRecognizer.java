@@ -1,5 +1,6 @@
 package eu.eexcess.dataquality.structure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StructureRecognizer {
@@ -18,9 +19,20 @@ public class StructureRecognizer {
 //		System.out.println("records:"+result.records + " with " + result.getValuesPatternHashMap().size() + " different patterns");
 //		double value = result.records / result.getValuesPatternHashMap().size();
 //		System.out.println(value);
+//		result = trimLengthHistogramm(result);
 		return result;
 	}
 	
+	private StructureRecResult trimLengthHistogramm(StructureRecResult result) {
+		ArrayList<Integer> tempLengthHistogramm = new ArrayList<Integer>();
+		for (int i = 0; i < result.getLengthHistogram().length; i++) {
+			if (result.getLengthHistogram()[i] > 0 )
+				tempLengthHistogramm.add(new Integer(result.getLengthHistogram()[i]));
+		}
+		
+		return null;
+	}
+
 	protected StructureRecResult calcLengths(List<String> values, StructureRecResult result) {
 		boolean firstLoop = true;
 		for (String actValue : values) {

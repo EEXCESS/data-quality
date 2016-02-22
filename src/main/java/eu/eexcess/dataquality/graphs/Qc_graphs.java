@@ -354,7 +354,8 @@ public final class Qc_graphs {
 		
 		for (int i=0;i<result.getLengthHistogram().length; i++)
 		{
-			dataset.addValue(result.getLengthHistogram()[i], dataprovider +" "+fieldname,i+"");
+			if (result.getLengthHistogram()[i] > 0)
+				dataset.addValue(result.getLengthHistogram()[i], dataprovider +" "+fieldname,i+"");
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value length histogram", "length", "number ", dataset);
