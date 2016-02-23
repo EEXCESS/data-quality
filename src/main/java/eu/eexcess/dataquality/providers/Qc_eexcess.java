@@ -85,7 +85,7 @@ public class Qc_eexcess extends Qc_base {
 						{
 							if (nodeChilds.item(i).hasAttributes() && nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource") != null)
 							{
-								System.out.println(nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource").getNodeValue());
+								// System.out.println(nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource").getNodeValue());
 								String linkAggr = nodeChilds.item(i).getAttributes().getNamedItem("rdf:resource").getNodeValue();
 								String oreAggregation = "/*[local-name()='RDF']/*[local-name()='Aggregation']";
 								NodeList nodeAggr = this.getNodesListByXPath(oreAggregation);
@@ -96,6 +96,7 @@ public class Qc_eexcess extends Qc_base {
 										if (nodeToString(nodeAggr.item(j),linkAggr) == true)
 										{
 											nReturn += countDataFieldsNode(nodeAggr.item(j), searchType);
+											break;
 										}
 									}
 								}
@@ -118,26 +119,4 @@ public class Qc_eexcess extends Qc_base {
 		return nReturn;
 	}
 	
-
-
-private boolean nodeToString(Node node, String sAttribute) {
-	boolean bFound = false;
-	if (node != null)
-	{
-		NamedNodeMap attr = node.getAttributes();
-		for (int i=0; i<attr.getLength();i++)
-		{
-			System.out.println("1:" + attr.item(i).getNodeValue());
-			System.out.println("2:" + sAttribute);
-			if (attr.item(i).getNodeValue().equals(sAttribute))
-			{
-				bFound = true;
-				break;
-			}
-		}
-	}
-    return bFound;
-}
-
-
 }

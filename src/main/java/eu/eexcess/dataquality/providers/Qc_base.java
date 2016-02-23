@@ -121,7 +121,7 @@ public class Qc_base implements Qc_interface {
 		this.nodelistRecords = nodelistRecords;
 	}
 	
-	private boolean isProviderRecordCheckAdditional(Document doc)
+	protected boolean isProviderRecordCheckAdditional(Document doc)
 	{
 		StringWriter sw = new StringWriter();
 		
@@ -506,5 +506,22 @@ public class Qc_base implements Qc_interface {
 	        return xpath;
 	    }
 	    return getXPath(parent, "/" + elementName + xpath);
+	}
+	
+	public boolean nodeToString(Node node, String sAttribute) {
+		boolean bFound = false;
+		if (node != null)
+		{
+			NamedNodeMap attr = node.getAttributes();
+			for (int i=0; i<attr.getLength();i++)
+			{
+				if (attr.item(i).getNodeValue().equals(sAttribute))
+				{
+					bFound = true;
+					break;
+				}
+			}
+		}
+	    return bFound;
 	}
 }

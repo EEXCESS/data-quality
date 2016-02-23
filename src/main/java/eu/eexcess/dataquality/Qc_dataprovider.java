@@ -287,7 +287,7 @@ public class Qc_dataprovider {
 	// try to check from which partner the XML file is.
 	private void checkDataProviderFile(String xmlFile) {
 
-		System.out.println(xmlFile);
+		// System.out.println(xmlFile);
 		
 		File f = new File(xmlFile);
 		if (f.exists() == true && f.isDirectory() == false) {
@@ -339,7 +339,7 @@ public class Qc_dataprovider {
 					if (currentProvider.isProviderRecord() == true) {
 						currentProvider.getDataProvider();
 						
-						System.out.println("Records Count: " + currentProvider.getRecordsCount());
+						// System.out.println("Records Count: " + currentProvider.getRecordsCount());
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
 						currentProvider.countDataFields(SearchType.linkDataFields);
@@ -348,7 +348,7 @@ public class Qc_dataprovider {
 						Qc_params param = currentProvider.getParam();
 						paramDataList.addParam(param);
 						
-						System.out.println(currentProvider + " " + xmlFile);
+						// System.out.println(currentProvider + " " + xmlFile);
 						
 						break;
 					}
@@ -542,15 +542,15 @@ public class Qc_dataprovider {
 		        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
 		        String dataprovider = entry.getKey();
 		        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
-	            System.out.println("Dataprovider:" + dataprovider);
+	            // System.out.println("Dataprovider:" + dataprovider);
 		        
 		        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 		        while (iteratorByDataprovider.hasNext()) {
 		            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 		            String field = fieldResult.getKey();
 		            StructureRecResult result = fieldResult.getValue();
-		            System.out.println("field:"+field);
-		            System.out.println("result:\n"+result.toString());
+		            // System.out.println("field:"+field);
+		            // System.out.println("result:\n"+result.toString());
 		        }
 		    }
 		}
@@ -563,7 +563,7 @@ public class Qc_dataprovider {
 	        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
 	        String dataprovider = entry.getKey();
 	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
-            System.out.println("Dataprovider:" + dataprovider);
+            // System.out.println("Dataprovider:" + dataprovider);
             htmlReport += "<h3>" + dataprovider +"</h3>";
             
 	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
