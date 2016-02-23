@@ -73,6 +73,13 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppTransformedEnrichedZBWEnriched()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-ZBW-enriched"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppTransformedEnrichedEuropeana()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-Europeana"};
@@ -80,6 +87,35 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppTransformedEnrichedZBWKIMEuropeana()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-ZBW-KIM-Europeana"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppTransformedEnrichedZBWKIMMoreEnriched()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal-ZBW-more-objects-enriched"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppTransformedEnrichedKIMPortalSingleEnriched()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal-single-enriched"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppTransformedEnrichedKIMPortalMoreEnriched()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal-more-objects-enriched"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    
     public void testAppDebugKIMCollectSimpleExample()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\simple-example"};
