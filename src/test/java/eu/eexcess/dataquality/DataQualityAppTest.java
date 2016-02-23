@@ -52,9 +52,30 @@ public class DataQualityAppTest
         return new TestSuite( DataQualityAppTest.class );
     }
     
-    public void testAppDebugEEXCESS()
+    public void testAppTransformedEnrichedKIMPortal()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppTransformedEnrichedKIMPortalII()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal-II"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppTransformedEnrichedZBW()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-ZBW"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppTransformedEnrichedEuropeana()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-Europeana"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
