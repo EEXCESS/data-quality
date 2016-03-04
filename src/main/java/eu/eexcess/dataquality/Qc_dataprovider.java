@@ -164,7 +164,9 @@ public class Qc_dataprovider {
 					"accessible links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"#links"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"#accessible links");					
-			htmlReportInputDataStatisticsResults += "<tr><td>file</td><td>provider</td><td>#records</td><td>mean fields/record</td><td>min fields/record</td><td>max fields/record</td><td>mean non empty fields/record</td><td>mean non empty fields per datafields/record</td><td>mean empty fields/record</td><td>mean empty fields per datafields/record</td><td>links/record</td><td>accessible links/record</td><td>#links</td><td>#accessible links</td></tr>";
+			htmlReportInputDataStatisticsResults += "<tr><th>file</th><th>provider</th><th>#records</th><th>mean fields/record</th><th>min fields/record</th>"+
+					"<th>max fields/record</th><th>mean non empty fields/record</th><th>mean non empty fields per datafields/record</th><th>mean empty fields/record</th>"+
+					"<th>mean empty fields per datafields/record</th><th>links/record</th><th>accessible links/record</th><th>#links</th><th>#accessible links</th></tr>";
 			
 			for (int i = 0; i < paramDataList.size(); i++) {
 				Qc_params param = paramDataList.get(i);
@@ -200,9 +202,7 @@ public class Qc_dataprovider {
 								+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ "</td><td>"
 								+ formatNumber(param.getNumberOfAllLinkDataFields())+ "</td><td>"
 								+ formatNumber(param.getNumberOfAllAccessibleLinks())
-								+ "<td></tr>"
-								;
-				
+								+ "</td></tr>";
 						
 				writerStatisticRecords.write(param.getXmlFileName() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ param.getProvider().toString() + STATISTIC_FILE_FIELD_SEPERATOR
@@ -244,17 +244,17 @@ public class Qc_dataprovider {
 						"#links"+STATISTIC_FILE_FIELD_SEPERATOR+
 						"#accessible links");											
 			writerStatisticRecords.newLine();
-			htmlReportInputDataStatisticsDataprovider += "<tr><td>"+"provider"+"</td><td>"+"#records"+"</td><td>"+"mean fields/record"+"</td><td>"+"min fields/record"+"</td><td>"+"max fields/record"+"</td><td>"+
-			"mean non empty fields/record"+"</td><td>"+
-			"mean non empty fields per datafields/record"+"</td><td>"+
-			"mean empty fields/record"+"</td><td>"+
-			"mean empty fields per datafields/record"+"</td><td>"+
-			//uriCheck
-			//"mean links/record");
-			"mean links/record"+"</td><td>"+
-			"mean accessible links/record"+"</td><td>"+
-			"#links"+"</td><td>"+
-			"#accessible links</td></tr>";
+			htmlReportInputDataStatisticsDataprovider += "<tr><th>"+"provider"+"</th><th>"+"#records"+"</th><th>"+"mean fields/record"+"</th><th>"+"min fields/record"+"</th><th>"+"max fields/record"+"</th><th>"+
+					"mean non empty fields/record"+"</th><th>"+
+					"mean non empty fields per datafields/record"+"</th><th>"+
+					"mean empty fields/record"+"</th><th>"+
+					"mean empty fields per datafields/record"+"</th><th>"+
+					//uriCheck
+					//"mean links/record");
+					"mean links/record"+"</th><th>"+
+					"mean accessible links/record"+"</th><th>"+
+					"#links"+"</th><th>"+
+					"#accessible links</th></tr>";
 			
 			for (int i=0;i<DataProvider.values().length; i++)
 			{
@@ -784,8 +784,11 @@ public class Qc_dataprovider {
 	private void printInputDataInfoReport(String htmlReportGeneral) {
 		
 		String htmlReport = htmlReportGeneral;
+		htmlReport += "<h2>Inputdata</h2>";
+		htmlReport += "<h3>Statistics by dataprovider</h3>";
 		htmlReport += this.htmlReportInputDataStatisticsDataprovider;
 		
+		htmlReport += "<h3>Statistics by input file</h3>";
 		htmlReport += this.htmlReportInputDataStatisticsResults;
 		
 		try {

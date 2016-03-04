@@ -50,9 +50,14 @@ table {
     margin:10px;
 }
 
+th {
+    font-style: bold;
+}
+
 th, td {
     text-align: left;
     padding: 8px;
+    border: 1px grey solid;
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
