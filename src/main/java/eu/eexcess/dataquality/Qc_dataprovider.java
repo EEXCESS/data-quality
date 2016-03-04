@@ -403,8 +403,10 @@ public class Qc_dataprovider {
 			ArrayList<String> fileNameByDataProvider = new ArrayList<String>();
 			for (Iterator<String> iteratorFileNames = fileNames.iterator(); iteratorFileNames.hasNext();) {
 				String actFileName = (String) iteratorFileNames.next();
-				if (actFileName.contains(actDataProvider))
-					fileNameByDataProvider.add(actFileName);
+				if (!actFileName.contains("enrichment") && !actFileName.contains("done-transform")) {
+					if (actFileName.contains(actDataProvider))
+						fileNameByDataProvider.add(actFileName);
+				}
 			}
 			filesNameByDataproviderHashMap.put(actDataProvider, fileNameByDataProvider);
 /*
