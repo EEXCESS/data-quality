@@ -376,7 +376,7 @@ public final class Qc_graphs {
 		chart.removeLegend();
 		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
 	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
-	    if (result.getLengthHistogram().length > 10 )
+	    if (result.getLengthHistogram().length > 20 )
 	    	domainAxis.setVisible(false);
 	      
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
@@ -398,8 +398,11 @@ public final class Qc_graphs {
         while (iteratorPatternHashMap.hasNext()) {
             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
             String patternString = pattern.getKey();
-            if (patternString.isEmpty()) patternString = "[empty]";
- 			dataset.addValue(pattern.getValue(), dataprovider +" "+fieldname,patternString);
+            // old
+            //if (patternString.isEmpty()) patternString = "[empty]";
+ 			//dataset.addValue(pattern.getValue(), dataprovider +" "+fieldname,patternString);
+            if (! patternString.isEmpty()) 
+            	dataset.addValue(pattern.getValue(), dataprovider +" "+fieldname,patternString);
         }
 		
 		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value pattern histogram", "pattern", "number ", dataset);

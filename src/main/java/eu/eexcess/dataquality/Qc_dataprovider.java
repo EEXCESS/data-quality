@@ -687,13 +687,15 @@ public class Qc_dataprovider {
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-							writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
 				        }
 						writerStatisticRecords.newLine();
 				        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-							writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
 				        }
 					}
 					writerStatisticRecords.newLine();
