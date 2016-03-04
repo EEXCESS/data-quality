@@ -722,17 +722,31 @@ public class Qc_dataprovider {
 						htmlReport += "<td><b>Source:</b></td></tr>";
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternSourceHashMap().entrySet().iterator();
+				        int helpCount = 0;
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
 							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
 							htmlReport += "<td>"+pattern.getValue()+"</td>";
-							htmlReport += "<td><ul>";
+							htmlReport += "<td>";
+							
+							
+				            htmlReport += "<div id=\""+dataprovider+field+"PatternSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider+field+"PatternSource"+helpCount+"Panel\" class=\"panel\">";
+
+				            htmlReportJavascript += "$(\"#"+dataprovider+field+"PatternSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"PatternSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript +="});";
+
+							
+							
+				            htmlReport += "<ul>";
 							ArrayList<PatternSource> sources = patternSource.getValue();
 							for (int i = 0; i < sources.size(); i++) {
 								htmlReport += "<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>";
 							}
-							htmlReport += "</ul></td></tr>";
+							htmlReport += "</ul></div></div></td></tr>";
+							helpCount++;
 				        }
 				    	htmlReport += "</table>";
 					}
