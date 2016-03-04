@@ -188,7 +188,7 @@ public class Qc_dataprovider {
 						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 						+ formatNumber(param.getNumberOfAllAccessibleLinks()));		
-				htmlReportInputDataStatisticsResults += "<tr><td>" + param.getXmlFileName() + "</td><td>"
+				htmlReportInputDataStatisticsResults += "<tr><td><a href=\".\\input\\"+param.getXmlFileName()+"\">" + param.getXmlFileName() + "</a></td><td>"
 								+ param.getProvider().toString() + "</td><td>"
 								+ param.getRecordCount() + "</td><td>"
 								+ formatNumber(param.getDataFieldsPerRecord()) + "</td><td>"
@@ -857,6 +857,7 @@ public class Qc_dataprovider {
 	private void copyResources() {
 		copyResourcesCSS();
 	    copyResourcesJQplot();
+	    copyResourcesInputXML();
 	}
 
 	private void copyResourcesCSS() {
@@ -893,6 +894,20 @@ public class Qc_dataprovider {
 	    try{
 	    	File destDir = new File(Qc_dataprovider.outputDir + "jqplot/");
             File srcDir = new File("./resources/jqplot");
+	    	FileUtils.copyDirectory(srcDir, destDir);
+	    }
+	    catch (FileNotFoundException ex){
+	      System.out.println("File not found: " + ex);
+	    }
+	    catch (IOException ex){
+	    	System.out.println(ex);
+	    }
+	}
+	
+	private void copyResourcesInputXML() {
+	    try{
+	    	File destDir = new File(Qc_dataprovider.outputDir + "input/");
+            File srcDir = new File(this.inputDirs.get(0));
 	    	FileUtils.copyDirectory(srcDir, destDir);
 	    }
 	    catch (FileNotFoundException ex){
