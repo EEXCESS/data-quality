@@ -104,11 +104,13 @@ public class Qc_dataprovider {
 	}
 
 	public void process(String[] sParams) {
+		inputDirs = new ArrayList<String>();
 		for (int i = 0; i < sParams.length; i++) {
 			File f = new File(sParams[i]);
 			if (f.isFile() == true && f.isDirectory() == false) {
 				checkDataProviderFile(sParams[i]);
 			} else if (f.isDirectory() == true) {
+				inputDirs.add(f.getPath());
 				File[] files = f.listFiles(new FilenameFilter() {
 					public boolean accept(File dir, String name) {
 						return name.toLowerCase().endsWith(".xml");
@@ -552,6 +554,7 @@ public class Qc_dataprovider {
 	public static String DATAPROVIDER_ZBW ="ZBW";
 	protected String htmlReportInputDataStatisticsResults;
 	protected String htmlReportInputDataStatisticsDataprovider;
+	protected ArrayList<String> inputDirs;
 	
 	public Qc_base createProviderQC(String dataprovider){
 		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
@@ -741,7 +744,11 @@ public class Qc_dataprovider {
         htmlReportGeneral += htmlReportJavascriptGeneral;
         
         htmlReportGeneral += "<h3>Input Data</h3>";
-        htmlReportGeneral += "This report was generated using the files located at:" ;
+        htmlReportGeneral += "This report was generated using the files located at:<ul>" ;
+        for (int i = 0; i < this.inputDirs.size(); i++) {
+            htmlReportGeneral += "<li>"+this.inputDirs.get(i)+"</li>" ;
+		}
+        htmlReportGeneral += "</ul>";
         htmlReportGeneral += "More details on the input data is provided in the <a href=\"dataquality-report-inputdata.html\">Inputdata report</a>";
         
         htmlReportGeneral += "<h3>All datafields</h3>";
@@ -785,6 +792,11 @@ public class Qc_dataprovider {
 		
 		String htmlReport = htmlReportGeneral;
 		htmlReport += "<h2>Inputdata</h2>";
+		htmlReport += "This report was generated using the files located at:<ul>" ;
+        for (int i = 0; i < this.inputDirs.size(); i++) {
+        	htmlReport += "<li>"+this.inputDirs.get(i)+"</li>" ;
+		}
+        htmlReport += "</ul>";
 		htmlReport += "<h3>Statistics by dataprovider</h3>";
 		htmlReport += this.htmlReportInputDataStatisticsDataprovider;
 		
