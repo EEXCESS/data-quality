@@ -70,8 +70,10 @@ import eu.eexcess.dataquality.providers.Qc_europeana;
 import eu.eexcess.dataquality.providers.Qc_kimcollect;
 import eu.eexcess.dataquality.providers.Qc_mendeley;
 import eu.eexcess.dataquality.providers.Qc_wissenmedia;
+import eu.eexcess.dataquality.structure.PatternSource;
 import eu.eexcess.dataquality.structure.StructureRecResult;
 import eu.eexcess.dataquality.structure.StructureRecognizer;
+import eu.eexcess.dataquality.structure.ValueSource;
 
 // Check for data provider
 public class Qc_dataprovider {
@@ -522,7 +524,7 @@ public class Qc_dataprovider {
 			for (int i = 0; i < fieldXPaths.size(); i++) {
 				// for earch field
 				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
-				ArrayList<String> values = new ArrayList<String>();
+				ArrayList<ValueSource> values = new ArrayList<ValueSource>();
 //				System.out.println(fieldXPaths.get(i));
 				for (String actFileName : actProviderFileList) {
 					// for each file
@@ -531,7 +533,7 @@ public class Qc_dataprovider {
 					for (int count = 0; count < nodes.getLength(); count++) {
 						if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 //							System.out.println(nodes.item(count).getTextContent());
-							values.add(nodes.item(count).getTextContent());
+							values.add(new ValueSource(nodes.item(count).getTextContent(),new File(actFileName).getName()));
 						}
 					}
 				}
@@ -710,6 +712,27 @@ public class Qc_dataprovider {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
 							htmlReport += "<td>"+pattern.getValue()+"</td></tr>";
+				        }
+				    	htmlReport += "</table>";
+					}
+					{					
+						htmlReport +="<h5>Histogram for pattern - Sourcen</h5>";
+						htmlReport += "<table><tr><td><b>pattern:</b></td>";
+						htmlReport += "<td><b>number:</b></td>";
+						htmlReport += "<td><b>Source:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternSourceHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td>";
+							htmlReport += "<td><ul>";
+							ArrayList<PatternSource> sources = patternSource.getValue();
+							for (int i = 0; i < sources.size(); i++) {
+								htmlReport += "<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>";
+							}
+							htmlReport += "</ul></td></tr>";
 				        }
 				    	htmlReport += "</table>";
 					}

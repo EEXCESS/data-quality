@@ -1,5 +1,6 @@
 package eu.eexcess.dataquality.structure;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -41,14 +42,31 @@ public class StructureRecResult {
 	}
 	
 	protected HashMap<String, Integer> valuesPatternHashMap =  new HashMap<String, Integer>();
+
+	protected HashMap<String, ArrayList<PatternSource>> valuesPatternSourceHashMap =  new HashMap<String, ArrayList<PatternSource>>();
 	
-	public void addValuePatternToHashMap(String value) {
-		value = value.trim();
-		if (!valuesPatternHashMap.containsKey(value)) {
-			valuesPatternHashMap.put(value, 1);
+	public void addValuePatternToHashMap(String pattern, String value, String filename) {
+		pattern = pattern.trim();
+		if (!valuesPatternHashMap.containsKey(pattern)) {
+			valuesPatternHashMap.put(pattern, 1);
+			ArrayList<PatternSource> list = new ArrayList<PatternSource>();
+			list.add(new PatternSource(value, filename));
+			valuesPatternSourceHashMap.put(pattern, list);
 		} else {
-			valuesPatternHashMap.put(value, valuesPatternHashMap.get(value) + 1);
+			valuesPatternHashMap.put(pattern, valuesPatternHashMap.get(pattern) + 1);
+			ArrayList<PatternSource> list = valuesPatternSourceHashMap.get(pattern);
+			list.add(new PatternSource(value, filename));
+			valuesPatternSourceHashMap.put(pattern, list);
 		}
+	}
+
+	public HashMap<String, ArrayList<PatternSource>> getValuesPatternSourceHashMap() {
+		return valuesPatternSourceHashMap;
+	}
+
+	public void setValuesPatternSourceHashMap(
+			HashMap<String, ArrayList<PatternSource>> valuesPatternSourceHashMap) {
+		this.valuesPatternSourceHashMap = valuesPatternSourceHashMap;
 	}
 
 	public void addValueLengthHistogram(int length) {

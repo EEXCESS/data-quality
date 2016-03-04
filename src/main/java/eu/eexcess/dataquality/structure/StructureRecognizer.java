@@ -6,7 +6,7 @@ import java.util.List;
 public class StructureRecognizer {
 
 	
-	public StructureRecResult analyse(List<String> values) {
+	public StructureRecResult analyse(List<ValueSource> values) {
 		StructureRecResult result = new StructureRecResult();
 		result = calcLengths(values, result);
 		if (result.getRecords() == 0) {
@@ -33,28 +33,29 @@ public class StructureRecognizer {
 		return null;
 	}
 
-	protected StructureRecResult calcLengths(List<String> values, StructureRecResult result) {
+	protected StructureRecResult calcLengths(List<ValueSource> values, StructureRecResult result) {
 		boolean firstLoop = true;
-		for (String actValue : values) {
+		for (ValueSource actValue : values) {
 			result.records++;
 			if (actValue != null ) {
-				if( actValue.length() > result.getLengthMax())
-					result.setLengthMax(actValue.length());
-				if( actValue.length() <= result.getLengthMin() || firstLoop)
-					result.setLengthMin(actValue.length());
-				actValue = actValue.trim();
-				if( actValue.length() > result.getLengthMaxTrimmed())
-					result.setLengthMaxTrimmed(actValue.length());
-				if( actValue.length() <= result.getLengthMinTrimmed() || firstLoop)
-					result.setLengthMinTrimmed(actValue.length());
+				if( actValue.getValue().length() > result.getLengthMax())
+					result.setLengthMax(actValue.getValue().length());
+				if( actValue.getValue().length() <= result.getLengthMin() || firstLoop)
+					result.setLengthMin(actValue.getValue().length());
+				String actValueString = actValue.getValue().trim();
+				if( actValueString.length() > result.getLengthMaxTrimmed())
+					result.setLengthMaxTrimmed(actValueString.length());
+				if( actValueString.length() <= result.getLengthMinTrimmed() || firstLoop)
+					result.setLengthMinTrimmed(actValueString.length());
 				firstLoop = false;
 			}			
 		}
 		return result;
 	}
 	
-	protected StructureRecResult calcLengthHistogramm(List<String> values, StructureRecResult result) {
-		for (String actValue : values) {
+	protected StructureRecResult calcLengthHistogramm(List<ValueSource> values, StructureRecResult result) {
+		for (ValueSource actValueObject : values) {
+			String actValue = actValueObject.getValue();
 			if (actValue != null ) {
 				actValue = actValue.trim();
 				result.addValueLengthHistogram(actValue.length());
@@ -63,8 +64,9 @@ public class StructureRecognizer {
 		return result;
 	}
 	
-	protected StructureRecResult calcValuesHashmap(List<String> values, StructureRecResult result) {
-		for (String actValue : values) {
+	protected StructureRecResult calcValuesHashmap(List<ValueSource> values, StructureRecResult result) {
+		for (ValueSource actValueObject : values) {
+			String actValue = actValueObject.getValue();
 			if (actValue != null ) {
 				actValue = actValue.trim();
 				result.addValueToHashMap(actValue);
@@ -73,11 +75,12 @@ public class StructureRecognizer {
 		return result;
 	}
 	
-	protected StructureRecResult calcValuesPatternHashmap(List<String> values, StructureRecResult result) {
-		for (String actValue : values) {
+	protected StructureRecResult calcValuesPatternHashmap(List<ValueSource> values, StructureRecResult result) {
+		for (ValueSource actValueObject : values) {
+			String actValue = actValueObject.getValue();
 			if (actValue != null ) {
 				actValue = actValue.trim();
-				result.addValuePatternToHashMap(calcPattern(actValue));
+				result.addValuePatternToHashMap(calcPattern(actValue),actValue,actValueObject.getFilename());
 			}			
 		}
 		return result;
