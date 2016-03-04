@@ -103,7 +103,7 @@ public class Qc_dataprovider {
 		KIMCollect, ZBW, Europeana, Wissenmedia, Mendeley, EEXCESS, EEXCESS_enriched, DDB, cultureWeb, unknown
 	}
 
-	public void InputParams(String[] sParams) {
+	public void process(String[] sParams) {
 		for (int i = 0; i < sParams.length; i++) {
 			File f = new File(sParams[i]);
 			if (f.isFile() == true && f.isDirectory() == false) {
@@ -123,8 +123,8 @@ public class Qc_dataprovider {
 		checkStructuredness(sParams);
 		// output results
 		copyResources();
-		printStatistics();
-		printStructuredness();
+		printStatisticsCharts();
+		printReports();
 		printRDFXMLVisWithJQPlot();
 		
 	}
@@ -135,7 +135,9 @@ public class Qc_dataprovider {
 		return numberFormater.format(number);
 	}
 	
-	private void printStatistics() {
+	private void printStatisticsCharts() {
+		htmlReportInputDataStatisticsResults = "<table>";
+		
 		try {
 			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "statistics-results.csv");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
@@ -162,6 +164,7 @@ public class Qc_dataprovider {
 					"accessible links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"#links"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"#accessible links");					
+			htmlReportInputDataStatisticsResults += "<tr><td>file</td><td>provider</td><td>#records</td><td>mean fields/record</td><td>min fields/record</td><td>max fields/record</td><td>mean non empty fields/record</td><td>mean non empty fields per datafields/record</td><td>mean empty fields/record</td><td>mean empty fields per datafields/record</td><td>links/record</td><td>accessible links/record</td><td>#links</td><td>#accessible links</td></tr>";
 			
 			for (int i = 0; i < paramDataList.size(); i++) {
 				Qc_params param = paramDataList.get(i);
@@ -180,7 +183,27 @@ public class Qc_dataprovider {
 						+ formatNumber(param.getLinkDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getNumberOfAllAccessibleLinks()));						
+						+ formatNumber(param.getNumberOfAllAccessibleLinks()));		
+				htmlReportInputDataStatisticsResults += "<tr><td>" + param.getXmlFileName() + "</td><td>"
+								+ param.getProvider().toString() + "</td><td>"
+								+ param.getRecordCount() + "</td><td>"
+								+ formatNumber(param.getDataFieldsPerRecord()) + "</td><td>"
+								+ formatNumber(param.getMinDataFieldsPerRecord()) + "</td><td>"
+								+ formatNumber(param.getMaxDataFieldsPerRecord()) + "</td><td>"
+								+ formatNumber(param.getNonEmptyDataFieldsPerRecord()) + "</td><td>"
+								+ formatNumber(param.getNonEmptyDataFieldsPerRecordPerDatafields()) + "</td><td>"
+								+ formatNumber(param.getEmptyDataFieldsPerRecord())+ "</td><td>"
+								+ formatNumber(param.getEmptyDataFieldsPerRecordPerDatafields())+ "</td><td>"
+		//uriCheck						
+//								+ formatNumber(param.getLinkDataFieldsPerRecord()));
+								+ formatNumber(param.getLinkDataFieldsPerRecord())+ "</td><td>"
+								+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ "</td><td>"
+								+ formatNumber(param.getNumberOfAllLinkDataFields())+ "</td><td>"
+								+ formatNumber(param.getNumberOfAllAccessibleLinks())
+								+ "<td></tr>"
+								;
+				
+						
 				writerStatisticRecords.write(param.getXmlFileName() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ param.getProvider().toString() + STATISTIC_FILE_FIELD_SEPERATOR
 						+ formatNumber(param.getRecordCount()) + STATISTIC_FILE_FIELD_SEPERATOR
@@ -203,6 +226,9 @@ public class Qc_dataprovider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		htmlReportInputDataStatisticsResults += "</table>";
+		htmlReportInputDataStatisticsDataprovider = "<table>";
+
 		try {
 			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "statistics-dataprovider.csv");
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
@@ -218,6 +244,17 @@ public class Qc_dataprovider {
 						"#links"+STATISTIC_FILE_FIELD_SEPERATOR+
 						"#accessible links");											
 			writerStatisticRecords.newLine();
+			htmlReportInputDataStatisticsDataprovider += "<tr><td>"+"provider"+"</td><td>"+"#records"+"</td><td>"+"mean fields/record"+"</td><td>"+"min fields/record"+"</td><td>"+"max fields/record"+"</td><td>"+
+			"mean non empty fields/record"+"</td><td>"+
+			"mean non empty fields per datafields/record"+"</td><td>"+
+			"mean empty fields/record"+"</td><td>"+
+			"mean empty fields per datafields/record"+"</td><td>"+
+			//uriCheck
+			//"mean links/record");
+			"mean links/record"+"</td><td>"+
+			"mean accessible links/record"+"</td><td>"+
+			"#links"+"</td><td>"+
+			"#accessible links</td></tr>";
 			
 			for (int i=0;i<DataProvider.values().length; i++)
 			{
@@ -239,12 +276,31 @@ public class Qc_dataprovider {
 						+ formatNumber(paramDataList.getNumberOfAccesibleLinksPerProvider(DataProvider.values()[i]))
 						);
 				writerStatisticRecords.newLine();
+				htmlReportInputDataStatisticsDataprovider += "<tr><td>"				
+						+ DataProvider.values()[i].toString() + "</td><td>"
+						+ formatNumber(paramDataList.getRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ formatNumber(paramDataList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ paramDataList.getMinDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) + "</td><td>"
+						+ paramDataList.getMaxDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) + "</td><td>"
+						+ formatNumber(paramDataList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ formatNumber(paramDataList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ formatNumber(paramDataList.getEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ formatNumber(paramDataList.getEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+		
+						//uriCheck+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+						+ formatNumber(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ formatNumber(paramDataList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
+						+ formatNumber(paramDataList.getNumberOfLinkDataFieldsPerProvider(DataProvider.values()[i]))+ "</td><td>"
+						+ formatNumber(paramDataList.getNumberOfAccesibleLinksPerProvider(DataProvider.values()[i]))
+						+ "</td></tr>";
+
 			}
 			writerStatisticRecords.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		htmlReportInputDataStatisticsDataprovider += "</table>";
+
 		DataQualityVocabularyRDFWriter dQVRDFWriter = new DataQualityVocabularyRDFWriter();
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
@@ -494,6 +550,8 @@ public class Qc_dataprovider {
 	public static String DATAPROVIDER_MENDELEY ="Mendeley";
 	public static String DATAPROVIDER_WISSENMEDIA ="Wissenmedia";
 	public static String DATAPROVIDER_ZBW ="ZBW";
+	protected String htmlReportInputDataStatisticsResults;
+	protected String htmlReportInputDataStatisticsDataprovider;
 	
 	public Qc_base createProviderQC(String dataprovider){
 		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
@@ -516,9 +574,10 @@ public class Qc_dataprovider {
 		return null;
 	}
 	
-	private void printStructuredness() {
+	private void printReports() {
 		new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_IMG_DIR).mkdirs();
 		new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR).mkdirs();
+		
 		String htmlReportJavascriptGeneral = new String();
 		htmlReportJavascriptGeneral += "<script>$(document).ready(function(){";
 		
@@ -530,7 +589,7 @@ public class Qc_dataprovider {
 		htmlReportGeneral += " <body>";
 		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		htmlReportGeneral += "<h1>EEXCESS Data Quality Report</h1><br/><h2>generated at:" +dt.format(new Date(System.currentTimeMillis()))+"</h2>";
-		
+		String htmlReportGeneralHeader = htmlReportGeneral;
 		htmlReportGeneral += "<p>Portals providing access to different data provider more and more face the problem of \"data quality\". Data providers and aggregators are asked to do more quality checks on data they deliver. This clearly calls for more automation of the quality assessment process. In EEXCESS we decided to implement and include easy to handle features and analysis methods to provide feedback to the data provider regarding the data quality. Therefore, questions regarding the metadata provenance, the referencing of terms from relevant online vocabularies or the usage of open multilingual vocabularies and last but not least the very important questions regarding metadata rights that indicate the options for reusing the published resources have been stressed.</p>"; 
 		htmlReportGeneral += "<p>We determine measure about the structuredness of values, for example of fields containing dates, names or dimensions of objects. The aim is not only to make a binary decision whether they are structured, but also whether the format the field can be inferred.</p>";
 		htmlReportGeneral += "<p>This report gives feedback based on the data provider’s datasets. On field level the data provider gets feedback regarding the structuredness, number of data provided and vocabulary accessibility.</p>";
@@ -557,6 +616,9 @@ public class Qc_dataprovider {
 		    }
 		}
 	    
+		
+		printInputDataInfoReport(htmlReportGeneralHeader);
+
 		String htmlReportGeneralDataproviders = "<ul>";
 		Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
 	    while (iteratorDataprovider.hasNext()) {
@@ -678,6 +740,10 @@ public class Qc_dataprovider {
         htmlReportJavascriptGeneral += "});</script>";
         htmlReportGeneral += htmlReportJavascriptGeneral;
         
+        htmlReportGeneral += "<h3>Input Data</h3>";
+        htmlReportGeneral += "This report was generated using the files located at:" ;
+        htmlReportGeneral += "More details on the input data is provided in the <a href=\"dataquality-report-inputdata.html\">Inputdata report</a>";
+        
         htmlReportGeneral += "<h3>All datafields</h3>";
         htmlReportGeneral += "<p>The chart shows how many datafields are provided by dataprovider.</p>";
         htmlReportGeneral += "<img src=\"all_datafields_bar_chart_1600x1200.png\" style=\"width:1000px;\"/>"; 
@@ -713,6 +779,25 @@ public class Qc_dataprovider {
 			e.printStackTrace();
 		}
 	    
+	}
+
+	private void printInputDataInfoReport(String htmlReportGeneral) {
+		
+		String htmlReport = htmlReportGeneral;
+		htmlReport += this.htmlReportInputDataStatisticsDataprovider;
+		
+		htmlReport += this.htmlReportInputDataStatisticsResults;
+		
+		try {
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report-inputdata.html");
+			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+			
+			writerStatisticRecords.write(htmlReport);
+			writerStatisticRecords.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void printRDFXMLVisWithJQPlot() {

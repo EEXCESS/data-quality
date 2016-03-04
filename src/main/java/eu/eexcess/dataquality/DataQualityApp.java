@@ -23,6 +23,6 @@ public class DataQualityApp
     public static void main( String[] args )
     {
         Qc_dataprovider provider = new Qc_dataprovider();
-        provider.InputParams(args);
+        provider.process(args);
     }
 }
