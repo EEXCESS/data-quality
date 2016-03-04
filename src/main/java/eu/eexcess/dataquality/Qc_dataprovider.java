@@ -228,7 +228,7 @@ public class Qc_dataprovider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		htmlReportInputDataStatisticsResults += "</table><p><a href=\".\\statistics-results.csv\">CSV</a></p>";
+		htmlReportInputDataStatisticsResults += "</table><p><a href=\".\\statistics-results.csv\">data as CSV</a></p>";
 		htmlReportInputDataStatisticsDataprovider = "<table>";
 
 		try {
@@ -301,7 +301,7 @@ public class Qc_dataprovider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		htmlReportInputDataStatisticsDataprovider += "</table><p><a href=\".\\statistics-dataprovider.csv\">CSV</a></p>";
+		htmlReportInputDataStatisticsDataprovider += "</table><p><a href=\".\\statistics-dataprovider.csv\">data as CSV</a></p>";
 
 		DataQualityVocabularyRDFWriter dQVRDFWriter = new DataQualityVocabularyRDFWriter();
 		for (int i=0;i<DataProvider.values().length; i++)
