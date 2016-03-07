@@ -88,6 +88,7 @@ public class StructureRecognizer {
 	
 	protected String calcPattern(String value) {
 		if (value == null) return null;
+		value = value.replaceAll("\\r\\n|\\r|\\n", " ");
 		value = value.replaceAll("\\p{L}", "a");
 		value = value.replaceAll("\\d", "0");
 		value = value.replaceAll("\\s\\s+", " ");
