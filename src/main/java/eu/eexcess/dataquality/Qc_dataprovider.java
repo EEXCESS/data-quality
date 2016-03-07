@@ -106,6 +106,7 @@ public class Qc_dataprovider {
 	}
 
 	public void process(String[] sParams) {
+		long timestampStart = System.currentTimeMillis();
 		inputDirs = new ArrayList<String>();
 		for (int i = 0; i < sParams.length; i++) {
 			File f = new File(sParams[i]);
@@ -130,7 +131,12 @@ public class Qc_dataprovider {
 		printStatisticsCharts();
 		printReports();
 		printRDFXMLVisWithJQPlot();
-		
+		long timestampEnd = System.currentTimeMillis();
+		long timespanMS = timestampEnd - timestampStart;
+		double timespanS = timespanMS / 1000;
+		double timespanM = timespanS / 60;
+		System.out.println("\nElapsed time for processing: " + (timestampEnd - timestampStart) + "ms. ("+timespanS+"s or "+timespanM+"m)");
+
 	}
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
