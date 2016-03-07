@@ -756,6 +756,8 @@ public class Qc_dataprovider {
 				        }
 				    	htmlReport += "</table>";
 					}
+
+				
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -765,7 +767,84 @@ public class Qc_dataprovider {
 				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
+				
+				// write histogram for date pattern
+				try {
+					
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value date pattern histogram.csv");
+					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+					{					
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+						writerStatisticRecords.newLine();
+				        iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+					}
+					writerStatisticRecords.newLine();
+					writerStatisticRecords.close();
+
+					{					
+						htmlReport +="<h5>Histogram for date patterns</h5>";
+						htmlReport += "<table><tr><td><b>pattern:</b></td>";
+						htmlReport += "<td><b>number:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td></tr>";
+				        }
+				    	htmlReport += "</table>";
+					}
+					{					
+						htmlReport +="<h5>Histogram for date pattern - Sourcen</h5>";
+						htmlReport += "<table><tr><td><b>date pattern:</b></td>";
+						htmlReport += "<td><b>number:</b></td>";
+						htmlReport += "<td><b>Source:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesDateformatSourceHashMap().entrySet().iterator();
+				        int helpCount = 0;
+				        while (iteratorPatternHashMap.hasNext()) {
+				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td>";
+							htmlReport += "<td>";
+							
+							
+				            htmlReport += "<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">";
+
+				            htmlReportJavascript += "$(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript +="});";
+
+							
+							
+				            htmlReport += "<ul>";
+							ArrayList<PatternSource> sources = patternSource.getValue();
+							for (int i = 0; i < sources.size(); i++) {
+								htmlReport += "<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>";
+							}
+							htmlReport += "</ul></div></div></td></tr>";
+							helpCount++;
+				        }
+				    	htmlReport += "</table>";
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				
 				htmlReport += "</div>";
+
 
 	        }
 	        htmlReportJavascript += "});</script>";

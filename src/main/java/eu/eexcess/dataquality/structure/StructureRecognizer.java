@@ -1,6 +1,9 @@
 package eu.eexcess.dataquality.structure;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StructureRecognizer {
@@ -13,6 +16,8 @@ public class StructureRecognizer {
 			return result;
 		}
 		result.initLengthHistogramm(result.getLengthMaxTrimmed());
+		result = dateFormatCheck(values, result);
+		
 		result = calcLengthHistogramm(values, result);
 		result = calcValuesHashmap(values, result);
 		result = calcValuesPatternHashmap(values, result);
@@ -23,6 +28,55 @@ public class StructureRecognizer {
 		return result;
 	}
 	
+	private StructureRecResult dateFormatCheck(List<ValueSource> values,
+			StructureRecResult result) {
+		for (ValueSource actValueObject : values) {
+			String actValue = actValueObject.getValue();
+			if (actValue != null ) {
+				actValue = actValue.trim();
+				String format = this.parseDate(actValue);
+				if (!format.isEmpty()) {
+					result.addValueDatePatternToHashMap(format, actValue, actValueObject.getFilename());
+					//TODO increase date found and, if possible add the date format string found
+					//result.addValuePatternToHashMap(calcPattern(actValue),actValue,actValueObject.getFilename());
+				}
+			}			
+		}
+		return result;
+	}
+	
+	
+	private String parseDate(String strDate) {
+		ArrayList<String> inputFormatList = new ArrayList<String>();
+		inputFormatList.add("yyyy-MM-dd");
+		inputFormatList.add("yyyy-MM");
+		inputFormatList.add("yyyy");
+		// TODO add more
+//		M/d/yyyy
+//      M/d/yy
+//      MM/dd/yy
+//      MM/dd/yyyy
+//      yy/MM/dd
+//      yyyy-MM-dd
+//      dd-MMM-yy
+		String detecedFormat = "";
+		for (int i = 0; i < inputFormatList.size(); i++) {
+			SimpleDateFormat inputFormat = new SimpleDateFormat(inputFormatList.get(i));
+			inputFormat.setLenient(true);
+			try {
+				Date javaDate = inputFormat.parse(strDate);
+				if (javaDate.getYear() < 3000) {
+					detecedFormat = inputFormatList.get(i); 
+					break;
+				}
+			}
+			catch (ParseException e) {
+			}
+		}
+		return detecedFormat;
+	}
+
+
 	private StructureRecResult trimLengthHistogramm(StructureRecResult result) {
 		ArrayList<Integer> tempLengthHistogramm = new ArrayList<Integer>();
 		for (int i = 0; i < result.getLengthHistogram().length; i++) {
@@ -91,7 +145,7 @@ public class StructureRecognizer {
 		value = value.replaceAll("\\r\\n|\\r|\\n", " ");
 		value = value.replaceAll("\\p{L}", "a");
 		value = value.replaceAll("\\d", "0");
-		value = value.replaceAll("\\s\\s+", " ");
+		value = value.replaceAll("\\s+", " ");
 		return value;
 	}
 }

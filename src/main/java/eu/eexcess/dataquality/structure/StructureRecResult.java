@@ -9,7 +9,7 @@ public class StructureRecResult {
 
 	protected boolean structureDetected = false;
 	
-	protected String pattern ="";
+	//protected String pattern ="";
 	
 	protected int records=0;
 	
@@ -23,6 +23,34 @@ public class StructureRecResult {
 
 	protected int[] lengthHistogram;
 	
+	protected int datesFound = 0 ;
+	
+	public int getDatesFound() {
+		return datesFound;
+	}
+
+	public void setDatesFound(int datesFound) {
+		this.datesFound = datesFound;
+	}
+
+	public HashMap<String, Integer> getValuesDateformatHashMap() {
+		return valuesDateformatHashMap;
+	}
+
+	public void setValuesDateformatHashMap(
+			HashMap<String, Integer> valuesDateformatHashMap) {
+		this.valuesDateformatHashMap = valuesDateformatHashMap;
+	}
+
+	public HashMap<String, ArrayList<PatternSource>> getValuesDateformatSourceHashMap() {
+		return valuesDateformatSourceHashMap;
+	}
+
+	public void setValuesDateformatSourceHashMap(
+			HashMap<String, ArrayList<PatternSource>> valuesDateformatSourceHashMap) {
+		this.valuesDateformatSourceHashMap = valuesDateformatSourceHashMap;
+	}
+
 	public void initLengthHistogramm(int size) {
 		this.lengthHistogram = new int[size+1];
 		for (int i = 0; i < lengthHistogram.length; i++) {
@@ -57,6 +85,25 @@ public class StructureRecResult {
 			ArrayList<PatternSource> list = valuesPatternSourceHashMap.get(pattern);
 			list.add(new PatternSource(value, filename));
 			valuesPatternSourceHashMap.put(pattern, list);
+		}
+	}
+
+	protected HashMap<String, Integer> valuesDateformatHashMap =  new HashMap<String, Integer>();
+
+	protected HashMap<String, ArrayList<PatternSource>> valuesDateformatSourceHashMap =  new HashMap<String, ArrayList<PatternSource>>();
+
+	public void addValueDatePatternToHashMap(String dateformat, String value, String filename) {
+		dateformat = dateformat.trim();
+		if (!valuesDateformatHashMap.containsKey(dateformat)) {
+			valuesDateformatHashMap.put(dateformat, 1);
+			ArrayList<PatternSource> list = new ArrayList<PatternSource>();
+			list.add(new PatternSource(value, filename));
+			valuesDateformatSourceHashMap.put(dateformat, list);
+		} else {
+			valuesDateformatHashMap.put(dateformat, valuesDateformatHashMap.get(dateformat) + 1);
+			ArrayList<PatternSource> list = valuesDateformatSourceHashMap.get(dateformat);
+			list.add(new PatternSource(value, filename));
+			valuesDateformatSourceHashMap.put(dateformat, list);
 		}
 	}
 
@@ -105,13 +152,13 @@ public class StructureRecResult {
 		this.structureDetected = structureDetected;
 	}
 
-	public String getPattern() {
-		return pattern;
-	}
-
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
-	}
+//	public String getPattern() {
+//		return pattern;
+//	}
+//
+//	public void setPattern(String pattern) {
+//		this.pattern = pattern;
+//	}
 
 	public int getRecords() {
 		return records;
@@ -151,7 +198,7 @@ public class StructureRecResult {
 			out += pair.getKey() + " \t" + pair.getValue() + "\n";
 		}
 		out += "\n";
-		out += "pattern:" + pattern + "\n";
+//		out += "pattern:" + pattern + "\n";
 		out += "structureDetected:" + structureDetected + "\n";
 		return out;
 	}
