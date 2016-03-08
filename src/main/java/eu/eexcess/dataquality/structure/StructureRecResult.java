@@ -107,6 +107,43 @@ public class StructureRecResult {
 		}
 	}
 
+	protected HashMap<String, Integer> valuesUrlformatHashMap =  new HashMap<String, Integer>();
+
+	protected HashMap<String, ArrayList<PatternSource>> valuesUrlformatSourceHashMap =  new HashMap<String, ArrayList<PatternSource>>();
+
+	public void addValueURLPatternToHashMap(String urlFormat, String value, String filename) {
+		urlFormat = urlFormat.trim();
+		if (!valuesUrlformatHashMap.containsKey(urlFormat)) {
+			valuesUrlformatHashMap.put(urlFormat, 1);
+			ArrayList<PatternSource> list = new ArrayList<PatternSource>();
+			list.add(new PatternSource(value, filename));
+			valuesUrlformatSourceHashMap.put(urlFormat, list);
+		} else {
+			valuesUrlformatHashMap.put(urlFormat, valuesUrlformatHashMap.get(urlFormat) + 1);
+			ArrayList<PatternSource> list = valuesUrlformatSourceHashMap.get(urlFormat);
+			list.add(new PatternSource(value, filename));
+			valuesUrlformatSourceHashMap.put(urlFormat, list);
+		}
+	}
+
+	public HashMap<String, Integer> getValuesUrlformatHashMap() {
+		return valuesUrlformatHashMap;
+	}
+
+	public void setValuesUrlformatHashMap(
+			HashMap<String, Integer> valuesUrlformatHashMap) {
+		this.valuesUrlformatHashMap = valuesUrlformatHashMap;
+	}
+
+	public HashMap<String, ArrayList<PatternSource>> getValuesUrlformatSourceHashMap() {
+		return valuesUrlformatSourceHashMap;
+	}
+
+	public void setValuesUrlformatSourceHashMap(
+			HashMap<String, ArrayList<PatternSource>> valuesUrlformatSourceHashMap) {
+		this.valuesUrlformatSourceHashMap = valuesUrlformatSourceHashMap;
+	}
+
 	public HashMap<String, ArrayList<PatternSource>> getValuesPatternSourceHashMap() {
 		return valuesPatternSourceHashMap;
 	}

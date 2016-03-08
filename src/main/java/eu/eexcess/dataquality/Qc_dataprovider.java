@@ -769,6 +769,9 @@ public class Qc_dataprovider {
 				
 				
 				// write histogram for date pattern
+				htmlReport +="<h5>date patterns</h5>";
+				htmlReport +="<p>date patterns detected:<b>"+result.getValuesDateformatHashMap().size()+"</b></p>";
+
 				try {
 					
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value date pattern histogram.csv");
@@ -790,12 +793,68 @@ public class Qc_dataprovider {
 					}
 					writerStatisticRecords.newLine();
 					writerStatisticRecords.close();
-
+					if (result.getValuesDateformatHashMap().size() > 0) {
+						{					
+							htmlReport +="<h4>Histogram for date patterns</h4>";
+							htmlReport += "<table><tr><td><b>pattern:</b></td>";
+							htmlReport += "<td><b>number:</b></td></tr>";
+					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+								htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+								htmlReport += "<td>"+pattern.getValue()+"</td></tr>";
+					        }
+					    	htmlReport += "</table>";
+						}
+						{					
+							htmlReport +="<h4>Histogram for date pattern - Sourcen</h4>";
+							htmlReport += "<table><tr><td><b>date pattern:</b></td>";
+							htmlReport += "<td><b>number:</b></td>";
+							htmlReport += "<td><b>Source:</b></td></tr>";
+					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+					        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesDateformatSourceHashMap().entrySet().iterator();
+					        int helpCount = 0;
+					        while (iteratorPatternHashMap.hasNext()) {
+					            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
+								htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+								htmlReport += "<td>"+pattern.getValue()+"</td>";
+								htmlReport += "<td>";
+								
+								
+					            htmlReport += "<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+					            htmlReport +="<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">";
+	
+					            htmlReportJavascript += "$(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Header\").click(function(){";
+					            htmlReportJavascript += "    $(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+					            htmlReportJavascript +="});";
+	
+								
+								
+					            htmlReport += "<ul>";
+								ArrayList<PatternSource> sources = patternSource.getValue();
+								for (int i = 0; i < sources.size(); i++) {
+									htmlReport += "<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>";
+								}
+								htmlReport += "</ul></div></div></td></tr>";
+								helpCount++;
+					        }
+					    	htmlReport += "</table>";
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				htmlReport +="<h5>URL patterns</h5>";
+				htmlReport +="<p>URL patterns detected:<b>"+result.getValuesUrlformatHashMap().size()+"</b></p>";
+				if (result.getValuesUrlformatHashMap().size() > 0)
+				{
 					{					
-						htmlReport +="<h5>Histogram for date patterns</h5>";
+						htmlReport +="<h4>Histogram for URL patterns</h4>";
 						htmlReport += "<table><tr><td><b>pattern:</b></td>";
 						htmlReport += "<td><b>number:</b></td></tr>";
-				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesUrlformatHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
@@ -804,12 +863,12 @@ public class Qc_dataprovider {
 				    	htmlReport += "</table>";
 					}
 					{					
-						htmlReport +="<h5>Histogram for date pattern - Sourcen</h5>";
-						htmlReport += "<table><tr><td><b>date pattern:</b></td>";
+						htmlReport +="<h4>Histogram for URL pattern - Sourcen</h4>";
+						htmlReport += "<table><tr><td><b>URL pattern:</b></td>";
 						htmlReport += "<td><b>number:</b></td>";
 						htmlReport += "<td><b>Source:</b></td></tr>";
-				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
-				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesDateformatSourceHashMap().entrySet().iterator();
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesUrlformatHashMap().entrySet().iterator();
+				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesUrlformatSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
@@ -819,11 +878,11 @@ public class Qc_dataprovider {
 							htmlReport += "<td>";
 							
 							
-				            htmlReport += "<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
-				            htmlReport +="<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">";
+				            htmlReport += "<div id=\""+dataprovider+field+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider+field+"UrlFormatSource"+helpCount+"Panel\" class=\"panel\">";
 
-				            htmlReportJavascript += "$(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript += "$(\"#"+dataprovider+field+"UrlFormatSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"UrlFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
 				            htmlReportJavascript +="});";
 
 							
@@ -838,10 +897,7 @@ public class Qc_dataprovider {
 				        }
 				    	htmlReport += "</table>";
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
-				
 				
 				htmlReport += "</div>";
 
