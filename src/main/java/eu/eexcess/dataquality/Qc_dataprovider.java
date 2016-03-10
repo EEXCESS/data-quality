@@ -607,12 +607,12 @@ public class Qc_dataprovider {
 		htmlReportGeneral += "<p>On field level the report provides feedback regarding the field length and field pattern. Having similar field length over the records and having less and similar patterns leads to the conclusion of better data quality and therefore, better recommendations and better visibility.</p>";
 		htmlReportGeneral += "<p>To detect patterns in the values of the datasets, we replace all letters with \"a\", all numbers with \"0\" and multiple whitespaces with single whitespaces.</p>";
 		htmlReportGeneral += "<p>By clicking on one data field the histogram sections of this report are opened so that the data provider gets the result of the quality checks.</p>";
-		
+		/*
 		{
 			Iterator<Entry<String, HashMap<String, StructureRecResult>>> iteratorDataprovider = structurednessResults.entrySet().iterator();
 		    while (iteratorDataprovider.hasNext()) {
 		        Entry<String, HashMap<String, StructureRecResult>> entry = iteratorDataprovider.next();
-		        String dataprovider = entry.getKey();
+		        //String dataprovider = entry.getKey();
 		        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
 	            // System.out.println("Dataprovider:" + dataprovider);
 		        
@@ -626,7 +626,7 @@ public class Qc_dataprovider {
 		        }
 		    }
 		}
-	    
+	    */
 		
 		printInputDataInfoReport(htmlReportGeneralHeader);
 
@@ -682,8 +682,7 @@ public class Qc_dataprovider {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
-				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
 				// write histogram for pattern
@@ -755,6 +754,8 @@ public class Qc_dataprovider {
 							helpCount++;
 				        }
 				    	htmlReport += "</table>";
+						htmlReport += "<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+fileStatisticRecords.getName()+"\">data as CSV</a></p>";
+
 					}
 
 				
@@ -763,10 +764,93 @@ public class Qc_dataprovider {
 				}
 				
 				
-				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
-				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+//				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
+				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, "pattern", CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
+				
+				// write histogram for pattern RegEx
+				try {
+					
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value pattern regex histogram.csv");
+					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+					{					
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+						writerStatisticRecords.newLine();
+				        iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+					}
+					writerStatisticRecords.newLine();
+					writerStatisticRecords.close();
+
+					{					
+						htmlReport +="<h5>Histogram for pattern(RegEx)</h5>";
+						htmlReport += "<table><tr><td><b>pattern:</b></td>";
+						htmlReport += "<td><b>number:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td></tr>";
+				        }
+				    	htmlReport += "</table>";
+					}
+					{					
+						htmlReport +="<h5>Histogram for pattern(RegEx) - Sourcen</h5>";
+						htmlReport += "<table><tr><td><b>pattern:</b></td>";
+						htmlReport += "<td><b>number:</b></td>";
+						htmlReport += "<td><b>Source:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternRegExSourceHashMap().entrySet().iterator();
+				        int helpCount = 0;
+				        while (iteratorPatternHashMap.hasNext()) {
+				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td>";
+							htmlReport += "<td>";
+							
+							
+				            htmlReport += "<div id=\""+dataprovider+field+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider+field+"PatternRegExSource"+helpCount+"Panel\" class=\"panel\">";
+
+				            htmlReportJavascript += "$(\"#"+dataprovider+field+"PatternRegExSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"PatternRegExSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript +="});";
+
+							
+							
+				            htmlReport += "<ul>";
+							ArrayList<PatternSource> sources = patternSource.getValue();
+							for (int i = 0; i < sources.size(); i++) {
+								htmlReport += "<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>";
+							}
+							htmlReport += "</ul></div></div></td></tr>";
+							helpCount++;
+				        }
+				    	htmlReport += "</table>";
+						htmlReport += "<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+fileStatisticRecords.getName()+"\">data as CSV</a></p>";
+					}
+
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
+				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field,"pattern RegEx", CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
+				
+
 				
 				// write histogram for date pattern
 				htmlReport +="<h5>date patterns</h5>";
@@ -1007,26 +1091,21 @@ public class Qc_dataprovider {
         	xformer.transform(source, result);
         	
         			
-        			File filePlot = new File(Qc_dataprovider.outputDir+ DATAQUALITY_REPORT_PLOT_HTML_FILENAME);
-        			BufferedWriter writerPlot = new BufferedWriter(new FileWriter(filePlot));
-        			
-        			writerPlot.write(getStringFromDocument((Document)result.getNode()));
-        			writerPlot.close();
+			File filePlot = new File(Qc_dataprovider.outputDir+ DATAQUALITY_REPORT_PLOT_HTML_FILENAME);
+			BufferedWriter writerPlot = new BufferedWriter(new FileWriter(filePlot));
+			
+			writerPlot.write(getStringFromDocument((Document)result.getNode()));
+			writerPlot.close();
 
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

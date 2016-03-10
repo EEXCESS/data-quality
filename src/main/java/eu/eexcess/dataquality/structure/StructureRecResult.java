@@ -88,6 +88,25 @@ public class StructureRecResult {
 		}
 	}
 
+	protected HashMap<String, Integer> valuesPatternRegExHashMap =  new HashMap<String, Integer>();
+
+	protected HashMap<String, ArrayList<PatternSource>> valuesPatternRegExSourceHashMap =  new HashMap<String, ArrayList<PatternSource>>();
+	
+	public void addValuePatternRegExToHashMap(String pattern, String value, String filename) {
+		pattern = pattern.trim();
+		if (!valuesPatternRegExHashMap.containsKey(pattern)) {
+			valuesPatternRegExHashMap.put(pattern, 1);
+			ArrayList<PatternSource> list = new ArrayList<PatternSource>();
+			list.add(new PatternSource(value, filename));
+			valuesPatternRegExSourceHashMap.put(pattern, list);
+		} else {
+			valuesPatternRegExHashMap.put(pattern, valuesPatternRegExHashMap.get(pattern) + 1);
+			ArrayList<PatternSource> list = valuesPatternRegExSourceHashMap.get(pattern);
+			list.add(new PatternSource(value, filename));
+			valuesPatternRegExSourceHashMap.put(pattern, list);
+		}
+	}
+
 	protected HashMap<String, Integer> valuesDateformatHashMap =  new HashMap<String, Integer>();
 
 	protected HashMap<String, ArrayList<PatternSource>> valuesDateformatSourceHashMap =  new HashMap<String, ArrayList<PatternSource>>();
@@ -179,6 +198,24 @@ public class StructureRecResult {
 
 	public int[] getLengthHistogram() {
 		return lengthHistogram;
+	}
+
+	public HashMap<String, Integer> getValuesPatternRegExHashMap() {
+		return valuesPatternRegExHashMap;
+	}
+
+	public void setValuesPatternRegExHashMap(
+			HashMap<String, Integer> valuesPatternRegExHashMap) {
+		this.valuesPatternRegExHashMap = valuesPatternRegExHashMap;
+	}
+
+	public HashMap<String, ArrayList<PatternSource>> getValuesPatternRegExSourceHashMap() {
+		return valuesPatternRegExSourceHashMap;
+	}
+
+	public void setValuesPatternRegExSourceHashMap(
+			HashMap<String, ArrayList<PatternSource>> valuesPatternRegExSourceHashMap) {
+		this.valuesPatternRegExSourceHashMap = valuesPatternRegExSourceHashMap;
 	}
 
 	public void setLengthHistogram(int[] lengthHistogram) {

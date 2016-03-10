@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,10 +25,8 @@ public class StructureRecognizer {
 		result = calcLengthHistogramm(values, result);
 		result = calcValuesHashmap(values, result);
 		result = calcValuesPatternHashmap(values, result);
-//		System.out.println("records:"+result.records + " with " + result.getValuesPatternHashMap().size() + " different patterns");
-//		double value = result.records / result.getValuesPatternHashMap().size();
-//		System.out.println(value);
-//		result = trimLengthHistogramm(result);
+		result = calcValuesPatternRegExHashmap(values, result);
+		
 		return result;
 	}
 	
@@ -73,12 +72,14 @@ public class StructureRecognizer {
 		inputFormatList.add("MM/dd/yy");
 		inputFormatList.add("MM/dd/yyyy");
 		String detecedFormat = "";
+		Calendar calendar = Calendar.getInstance();
 		for (int i = 0; i < inputFormatList.size(); i++) {
 			SimpleDateFormat inputFormat = new SimpleDateFormat(inputFormatList.get(i));
 			inputFormat.setLenient(true);
 			try {
 				Date javaDate = inputFormat.parse(strDate);
-				if (javaDate.getYear() < 3000) {
+				calendar.setTime(javaDate);
+				if (calendar.get(Calendar.YEAR) < 3000) {
 					detecedFormat = inputFormatList.get(i); 
 					break;
 				}
@@ -99,16 +100,6 @@ public class StructureRecognizer {
 		} catch (MalformedURLException e) {
 			return "";
 		}
-	}
-
-	private StructureRecResult trimLengthHistogramm(StructureRecResult result) {
-		ArrayList<Integer> tempLengthHistogramm = new ArrayList<Integer>();
-		for (int i = 0; i < result.getLengthHistogram().length; i++) {
-			if (result.getLengthHistogram()[i] > 0 )
-				tempLengthHistogramm.add(new Integer(result.getLengthHistogram()[i]));
-		}
-		
-		return null;
 	}
 
 	protected StructureRecResult calcLengths(List<ValueSource> values, StructureRecResult result) {
@@ -164,11 +155,31 @@ public class StructureRecognizer {
 		return result;
 	}
 	
+	protected StructureRecResult calcValuesPatternRegExHashmap(List<ValueSource> values, StructureRecResult result) {
+		for (ValueSource actValueObject : values) {
+			String actValue = actValueObject.getValue();
+			if (actValue != null ) {
+				actValue = actValue.trim();
+				result.addValuePatternRegExToHashMap(calcPatternRegEx(actValue),actValue,actValueObject.getFilename());
+			}			
+		}
+		return result;
+	}
+	
 	protected String calcPattern(String value) {
 		if (value == null) return null;
 		value = value.replaceAll("\\r\\n|\\r|\\n", " ");
 		value = value.replaceAll("\\p{L}", "a");
 		value = value.replaceAll("\\d", "0");
+		value = value.replaceAll("\\s+", " ");
+		return value;
+	}
+
+	protected String calcPatternRegEx(String value) {
+		if (value == null) return null;
+		value = value.replaceAll("\\r\\n|\\r|\\n", " ");
+		value = value.replaceAll("\\p{L}+", "a+");
+		value = value.replaceAll("\\d+", "0+");
 		value = value.replaceAll("\\s+", " ");
 		return value;
 	}

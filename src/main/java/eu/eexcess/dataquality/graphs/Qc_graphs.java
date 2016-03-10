@@ -390,7 +390,7 @@ public final class Qc_graphs {
 		return outputfile.getName();
 	}
 
-	public static String struturendnessDataproviderFieldValuePatternHistrogramm(String dataprovider, String fieldname, int nWidth, int nHeight, StructureRecResult result) {
+	public static String struturendnessDataproviderFieldValuePatternHistrogramm(String dataprovider, String fieldname, String diagrammType, int nWidth, int nHeight, StructureRecResult result) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
@@ -427,7 +427,7 @@ public final class Qc_graphs {
 	    	domainAxis.setVisible(false);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-"+ fieldname + "-value pattern histogram"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-"+ fieldname + "-value "+diagrammType+" histogram"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
