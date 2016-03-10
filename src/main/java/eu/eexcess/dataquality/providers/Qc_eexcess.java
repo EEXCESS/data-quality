@@ -17,23 +17,12 @@ limitations under the License.
  */
 package eu.eexcess.dataquality.providers;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
-import eu.eexcess.dataquality.providers.Qc_base.SearchType;
 
 public class Qc_eexcess extends Qc_base {
 	public Qc_eexcess()

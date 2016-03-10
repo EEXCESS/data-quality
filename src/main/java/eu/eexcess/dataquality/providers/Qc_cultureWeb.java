@@ -7,7 +7,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
-import eu.eexcess.dataquality.providers.Qc_base.SearchType;
 
 public class Qc_cultureWeb extends Qc_base {
 	public Qc_cultureWeb() {

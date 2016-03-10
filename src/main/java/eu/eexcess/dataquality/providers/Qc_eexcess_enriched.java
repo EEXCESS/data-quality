@@ -34,9 +34,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import eu.eexcess.dataquality.Qc_params;
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
-import eu.eexcess.dataquality.providers.Qc_base.SearchType;
+import eu.eexcess.dataquality.Qc_params;
 
 public class Qc_eexcess_enriched extends Qc_base {
 	
