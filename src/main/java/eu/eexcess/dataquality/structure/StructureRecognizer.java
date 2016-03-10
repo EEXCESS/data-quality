@@ -62,6 +62,10 @@ public class StructureRecognizer {
 	
 	private String parseDate(String strDate) {
 		ArrayList<String> inputFormatList = new ArrayList<String>();
+		inputFormatList.add("yyyy-MM-dd'T'HH:mm:ss");
+		inputFormatList.add("yyyy/MM/dd'T'HH:mm:ss");
+		inputFormatList.add("yyyy-MM-dd'T'HH:mm");
+		inputFormatList.add("yyyy/MM/dd'T'HH:mm");
 		inputFormatList.add("yyyy-MM-dd");
 		inputFormatList.add("yyyy/MM/dd");
 		inputFormatList.add("yyyy-MM");
