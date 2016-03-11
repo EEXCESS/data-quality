@@ -394,7 +394,11 @@ public final class Qc_graphs {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
-        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+        Iterator<Entry<String, Integer>> iteratorPatternHashMap;
+        if (diagrammType.contains("RegEx"))
+        	iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+        else 
+        	iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
         while (iteratorPatternHashMap.hasNext()) {
             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
             String patternString = pattern.getKey();
@@ -405,7 +409,7 @@ public final class Qc_graphs {
             	dataset.addValue(pattern.getValue(), dataprovider +" "+fieldname,patternString);
         }
 		
-		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value pattern histogram", "pattern", "number ", dataset);
+		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value "+diagrammType+" histogram", diagrammType, "number ", dataset);
         
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
