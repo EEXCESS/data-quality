@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -432,6 +433,50 @@ public final class Qc_graphs {
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
 		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-"+ fieldname + "-value "+diagrammType+" histogram"+nWidth+"x"+nHeight+".png");
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return outputfile.getName();
+	}
+	
+	public static String struturendnessDataproviderResultOverview(String dataprovider, int nWidth, int nHeight, HashMap<String, StructureRecResult> result) {
+		
+		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
+		
+        Iterator<Entry<String, StructureRecResult>> iteratorFieldsHashMap = result.entrySet().iterator();
+        while (iteratorFieldsHashMap.hasNext()) {
+            Entry<String, StructureRecResult> fieldResult = iteratorFieldsHashMap.next();
+           	dataset.addValue(fieldResult.getValue().getResultMedian(), "Median",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultDistinctFracComplement(), "DistinctFracComplement",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultCdfl05(), "cdfl 0.5",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultCdfl075(), "cdfl 0.75",fieldResult.getKey());
+        }
+		
+		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" overview", "fields", "number ", dataset);
+        
+		chart.setAntiAlias(true);
+		chart.setBackgroundPaint(Color.white);
+		// get a reference to the plot for further customisation... 
+		final CategoryPlot plot = chart.getCategoryPlot(); 
+		plot.setDrawingSupplier(new ChartDrawingSupplier());
+//        Plot plot = chart.getPlot();
+//        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+//        plot.setNoDataMessage("No data available");
+//        plot.setIgnoreZeroValues(true);
+//        plot.setCircular(false);
+//        plot.setLabelGap(0.02);
+		setupFonts(chart, plot); 
+//		chart.removeLegend();
+		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
+	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
+	    
+//	    if (result.getValuesPatternHashMap().size() > 10 )
+//	    	domainAxis.setVisible(false);
+        BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-overview-"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {

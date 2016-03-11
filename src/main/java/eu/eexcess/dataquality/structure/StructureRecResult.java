@@ -25,6 +25,46 @@ public class StructureRecResult {
 	
 	protected int datesFound = 0 ;
 	
+	protected double resultDistinctFracComplement;
+	
+	protected double resultMedian;
+
+	protected double resultCdfl05;
+	
+	public double getResultDistinctFracComplement() {
+		return resultDistinctFracComplement;
+	}
+
+	public void setResultDistinctFracComplement(double resultDistinctFracComplement) {
+		this.resultDistinctFracComplement = resultDistinctFracComplement;
+	}
+
+	public double getResultMedian() {
+		return resultMedian;
+	}
+
+	public void setResultMedian(double resultMedian) {
+		this.resultMedian = resultMedian;
+	}
+
+	public double getResultCdfl05() {
+		return resultCdfl05;
+	}
+
+	public void setResultCdfl05(double resultCdfl05) {
+		this.resultCdfl05 = resultCdfl05;
+	}
+
+	public double getResultCdfl075() {
+		return resultCdfl075;
+	}
+
+	public void setResultCdfl075(double resultCdfl075) {
+		this.resultCdfl075 = resultCdfl075;
+	}
+
+	protected double resultCdfl075;
+	
 	public int getDatesFound() {
 		return datesFound;
 	}

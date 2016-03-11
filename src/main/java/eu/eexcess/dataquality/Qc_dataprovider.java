@@ -106,7 +106,7 @@ public class Qc_dataprovider {
 	}
 
 	public void process(String[] sParams) {
-		long timestampStart = System.currentTimeMillis();
+		timestampStart = System.currentTimeMillis();
 		inputDirs = new ArrayList<String>();
 		for (int i = 0; i < sParams.length; i++) {
 			File f = new File(sParams[i]);
@@ -129,8 +129,8 @@ public class Qc_dataprovider {
 		// output results
 		copyResources();
 		printStatisticsCharts();
-		printReports();
 		printRDFXMLVisWithJQPlot();
+		printReports();
 		long timestampEnd = System.currentTimeMillis();
 		long timespanMS = timestampEnd - timestampStart;
 		double timespanS = timespanMS / 1000;
@@ -563,6 +563,7 @@ public class Qc_dataprovider {
 	protected String htmlReportInputDataStatisticsResults;
 	protected String htmlReportInputDataStatisticsDataprovider;
 	protected ArrayList<String> inputDirs;
+	protected long timestampStart;
 	
 	public Qc_base createProviderQC(String dataprovider){
 		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
@@ -641,7 +642,29 @@ public class Qc_dataprovider {
             // System.out.println("Dataprovider:" + dataprovider);
             htmlReport += "<h3>" + dataprovider +"</h3>";
             
+            htmlReport += "<h4>Overview</h4>";
 	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+	        htmlReport += "<table>";
+	        htmlReport += "<tr><td><b>fieldname</b></td><td><b>median</b></td><td><b>distinct frac complement</b></td><td><b>cdfl 0.5</b></td><td><b>cdfl 0.75</b></td></tr>";
+	        while (iteratorByDataprovider.hasNext()) {
+	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
+	            String field = fieldResult.getKey();
+	            StructureRecResult fieldResultValues = fieldResult.getValue();
+	            htmlReport += "<tr>";
+	            htmlReport += "<td>"+field+"</td>";
+	            htmlReport += "<td>"+fieldResultValues.getResultMedian()+"</td>";
+	            htmlReport += "<td>"+fieldResultValues.getResultDistinctFracComplement()+"</td>";
+	            htmlReport += "<td>"+fieldResultValues.getResultCdfl05()+"</td>";
+	            htmlReport += "<td>"+fieldResultValues.getResultCdfl075()+"</td>";
+	            htmlReport += "</tr>";
+	        }
+	        htmlReport += "</table>";
+	        
+			String filename = Qc_graphs.struturendnessDataproviderResultOverview(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
+			htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
+
+	        
+	        iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
@@ -682,7 +705,7 @@ public class Qc_dataprovider {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
 				// write histogram for pattern
@@ -1039,6 +1062,18 @@ public class Qc_dataprovider {
         
         htmlReportGeneral += "<h3>Reports for single Dataproviders</h3>";
         htmlReportGeneral += htmlReportGeneralDataproviders;
+        
+        htmlReportGeneral += "<h3>Stats of the report generation</h3>";
+		long timestampEnd = System.currentTimeMillis();
+		long timespanMS = timestampEnd - timestampStart;
+		double timespanS = timespanMS / 1000;
+		double timespanM = timespanS / 60;
+        htmlReportGeneral += "<p>Report generation </br>"+
+        					"started  at:"+dt.format(new Date(timestampStart))+"</br>" +
+        					"finished at:"+dt.format(new Date(System.currentTimeMillis()))+"</br>";
+        
+        htmlReportGeneral += "Elapsed time for processing: " + (timestampEnd - timestampStart) + "ms. ("+timespanS+"s or "+timespanM+"m)</p>";
+
         htmlReportGeneral += "</body></html>";
 		try {
 			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report.html");

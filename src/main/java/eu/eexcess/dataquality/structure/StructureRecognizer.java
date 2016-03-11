@@ -6,8 +6,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class StructureRecognizer {
 
@@ -27,8 +37,117 @@ public class StructureRecognizer {
 		result = calcValuesPatternHashmap(values, result);
 		result = calcValuesPatternRegExHashmap(values, result);
 		
+		result = calcMetrics(values, result);
 		return result;
 	}
+	
+	/*
+function metrics = calcStructMetrics(data);
+
+nrValidSamples = sum(data); % number of samples with non-empty value
+nrDistinctValues = length(data)-1; % number of distinct values (patterns) of samples
+   % note: subtract one, as there is an empty cell at the end of the line
+
+distinctFracComplement = 1 - nrDistinctValues/nrValidSamples;
+
+sortedData = sort(data,'descend'); % sort values descendingly
+cumulative = sortedData;
+for i=2:size(cumulative,2)
+   cumulative(i)=cumulative(i)+cumulative(i-1);
+end
+cumulative = cumulative ./ nrValidSamples; % normalise
+
+med = median(data) / nrValidSamples;
+
+metrics(1) = distinctFracComplement; % distinctValue Complement
+metrics(2) = med; % median
+metrics(3) = cumulative(floor(size(cumulative,2)*0.5+1)); % cumulative distribution at 0.5 
+metrics(4) = cumulative(floor(size(cumulative,2)*0.75+1));  % cumulative distribution at 0.75
+http://commons.apache.org/proper/commons-math/userguide/stat.html
+
+	 */
+	private StructureRecResult calcMetrics(List<ValueSource> values,
+			StructureRecResult result) {
+		HashMap<String, Integer> myData = result.getValuesPatternRegExHashMap();
+
+		int nrValidSamples = 0; 
+		// number of samples with non-empty value
+        Iterator<Entry<String, Integer>> iteratorHashMap = myData.entrySet().iterator();
+        while (iteratorHashMap.hasNext()) {
+            Entry<String, Integer> entry = iteratorHashMap.next();
+            nrValidSamples += entry.getValue();
+        }
+
+        int nrDistinctValues = myData.size()-1; // number of distinct values (patterns) of samples
+        // note: subtract one, as there is an empty cell at the end of the line
+
+        double distinctFracComplement = 1 - nrDistinctValues/nrValidSamples;
+
+        HashMap myDataSorted = sortByValues(myData); //% sort values descendingly
+
+        ArrayList<Double> myCumulativeData = new ArrayList<Double>();
+        ArrayList<Double> mySortedData = new ArrayList<Double>();
+        Iterator<Entry<String, Integer>> iteratorMySortedDataHashMap = myDataSorted.entrySet().iterator();
+        while (iteratorMySortedDataHashMap.hasNext()) {
+            Entry<String, Integer> entry = iteratorMySortedDataHashMap.next();
+            myCumulativeData.add(new Double(entry.getValue()));
+            mySortedData.add(new Double(entry.getValue()));
+        }
+
+        for (int j = 1; j < myCumulativeData.size(); j++) {
+        	myCumulativeData.set(j, myCumulativeData.get(j) + myCumulativeData.get(j)-1);
+		}
+
+        for (int j = 0; j < myCumulativeData.size(); j++) {
+        	myCumulativeData.set(j, myCumulativeData.get(j)/nrValidSamples);
+		}
+        
+        SummaryStatistics stats = new SummaryStatistics();
+
+        // Read data from an input stream,
+        // adding values and updating sums, counters, etc.
+        for (int j = 0; j < mySortedData.size(); j++) {
+            stats.addValue(mySortedData.get(j));
+        }
+
+	    // Compute the statistics
+	    double med = stats.getMean();
+	    double std = stats.getStandardDeviation();
+
+	    med = med/ nrValidSamples;
+	    
+	    double cdfl05= myCumulativeData.get((int) Math.floor(myCumulativeData.size()*0.5+1)-1); //% cumulative distribution at 0.5
+	    
+	    double cdfl075= myCumulativeData.get((int) Math.floor(myCumulativeData.size()*0.75+1)-1); //% cumulative distribution at 0.5
+	    
+	    result.setResultMedian(med);
+	    result.setResultDistinctFracComplement(distinctFracComplement);
+	    result.setResultCdfl05(cdfl05);
+	    result.setResultCdfl075(cdfl075);
+        return result;
+	}
+
+	
+	private HashMap sortByValues(HashMap map) { 
+	       List list = new LinkedList(map.entrySet());
+	       // Defined Custom Comparator here
+	       Collections.sort(list, new Comparator() {
+	            public int compare(Object o1, Object o2) {
+	               return ((Comparable) ((Map.Entry) (o1)).getValue())
+	                  .compareTo(((Map.Entry) (o2)).getValue());
+	            }
+	       });
+
+	       // Here I am copying the sorted list in HashMap
+	       // using LinkedHashMap to preserve the insertion order
+	       HashMap sortedHashMap = new LinkedHashMap();
+	       for (Iterator it = list.iterator(); it.hasNext();) {
+	              Map.Entry entry = (Map.Entry) it.next();
+	              sortedHashMap.put(entry.getKey(), entry.getValue());
+	       } 
+	       return sortedHashMap;
+	  }
+	
 	
 	private StructureRecResult dateFormatCheck(List<ValueSource> values,
 			StructureRecResult result) {
