@@ -708,6 +708,59 @@ public class Qc_dataprovider {
 				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 				
+				//////
+				
+				// write histogram for values
+				try {
+					
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value histogram.csv");
+					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+					{					
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+						writerStatisticRecords.newLine();
+				        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+				             if ( ! pattern.getKey().isEmpty())
+				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+				        }
+					}
+					writerStatisticRecords.newLine();
+					writerStatisticRecords.close();
+
+					{					
+						htmlReport +="<h5>Histogram for values</h5>";
+						htmlReport += "<table><tr><td><b>values:</b></td>";
+						htmlReport += "<td><b>number:</b></td></tr>";
+				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesHashMap().entrySet().iterator();
+				        while (iteratorPatternHashMap.hasNext()) {
+				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+							htmlReport += "<tr><td>"+pattern.getKey()+"</td>";
+							htmlReport += "<td>"+pattern.getValue()+"</td></tr>";
+				        }
+				    	htmlReport += "</table>";
+						htmlReport += "<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+fileStatisticRecords.getName()+"\">data as CSV</a></p>";
+
+					}
+
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
+//				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
+				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, "values", CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
+				
+				//////
+				
+				
 				// write histogram for pattern
 				try {
 					
