@@ -41,31 +41,6 @@ public class StructureRecognizer {
 		return result;
 	}
 	
-	/*
-function metrics = calcStructMetrics(data);
-
-nrValidSamples = sum(data); % number of samples with non-empty value
-nrDistinctValues = length(data)-1; % number of distinct values (patterns) of samples
-   % note: subtract one, as there is an empty cell at the end of the line
-
-distinctFracComplement = 1 - nrDistinctValues/nrValidSamples;
-
-sortedData = sort(data,'descend'); % sort values descendingly
-cumulative = sortedData;
-for i=2:size(cumulative,2)
-   cumulative(i)=cumulative(i)+cumulative(i-1);
-end
-cumulative = cumulative ./ nrValidSamples; % normalise
-
-med = median(data) / nrValidSamples;
-
-metrics(1) = distinctFracComplement; % distinctValue Complement
-metrics(2) = med; % median
-metrics(3) = cumulative(floor(size(cumulative,2)*0.5+1)); % cumulative distribution at 0.5 
-metrics(4) = cumulative(floor(size(cumulative,2)*0.75+1));  % cumulative distribution at 0.75
-http://commons.apache.org/proper/commons-math/userguide/stat.html
-
-	 */
 	private StructureRecResult calcMetrics(List<ValueSource> values,
 			StructureRecResult result) {
 		HashMap<String, Integer> myData = result.getValuesPatternRegExHashMap();
@@ -78,7 +53,7 @@ http://commons.apache.org/proper/commons-math/userguide/stat.html
             nrValidSamples += entry.getValue();
         }
 
-        int nrDistinctValues = myData.size()-1; // number of distinct values (patterns) of samples
+        int nrDistinctValues = myData.size();//-1; // number of distinct values (patterns) of samples
         // note: subtract one, as there is an empty cell at the end of the line
 
         double distinctFracComplement = 1 - nrDistinctValues/nrValidSamples;
@@ -95,7 +70,7 @@ http://commons.apache.org/proper/commons-math/userguide/stat.html
         }
 
         for (int j = 1; j < myCumulativeData.size(); j++) {
-        	myCumulativeData.set(j, myCumulativeData.get(j) + myCumulativeData.get(j)-1);
+        	myCumulativeData.set(j, myCumulativeData.get(j) + myCumulativeData.get(j-1));
 		}
 
         for (int j = 0; j < myCumulativeData.size(); j++) {
@@ -119,6 +94,9 @@ http://commons.apache.org/proper/commons-math/userguide/stat.html
 	    double cdfl05= myCumulativeData.get((int) Math.floor(myCumulativeData.size()*0.5+1)-1); //% cumulative distribution at 0.5
 	    
 	    double cdfl075= myCumulativeData.get((int) Math.floor(myCumulativeData.size()*0.75+1)-1); //% cumulative distribution at 0.5
+	    
+	    
+	    
 	    
 	    result.setResultMedian(med);
 	    result.setResultDistinctFracComplement(distinctFracComplement);
