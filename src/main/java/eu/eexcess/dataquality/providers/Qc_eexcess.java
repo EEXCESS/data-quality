@@ -28,7 +28,7 @@ public class Qc_eexcess extends Qc_base {
 	public Qc_eexcess()
 	{
 		recordSeparator = "/*[local-name()='RDF']/*[local-name()='Proxy']";
-		dataProvider = DataProvider.EEXCESS;
+		dataProvider = DataProvider.unknown;
 		notProviderCondition = "<eexcess:Agent rdf:about";
 		
 		// Blacklist entries:

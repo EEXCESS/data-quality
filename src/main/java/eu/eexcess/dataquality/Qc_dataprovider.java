@@ -102,7 +102,14 @@ public class Qc_dataprovider {
 
 	// XML files of known partners
 	public enum DataProvider {
-		KIMCollect, ZBW, Europeana, Wissenmedia, Mendeley, EEXCESS, EEXCESS_enriched, DDB, cultureWeb, unknown
+		KIMCollect, KIMCollect_EEXCESS, KIMCollect_enriched,
+		ZBW, ZBW_EEXCESS, ZBW_enriched,
+		Wissenmedia, Wissenmedia_EEXCESS, Wissenmedia_enriched,
+		Mendeley, Mendeley_EEXCESS, Mendeley_enriched,
+		DDB, DDB_EEXCESS, DDB_enriched,
+		cultureWeb, cultureWeb_EEXCESS, cultureWeb_enriched,
+		Europeana, Europeana_EEXCESS, Europeana_enriched,
+		unknown
 	}
 
 	public void process(String[] sParams) {
@@ -124,6 +131,8 @@ public class Qc_dataprovider {
 				}
 			}
 		}
+		// check enrichment
+		checkEnrichment();
 		// check structuredness
 		checkStructuredness(sParams);
 		// output results
@@ -137,6 +146,16 @@ public class Qc_dataprovider {
 		double timespanM = timespanS / 60;
 		System.out.println("\nElapsed time for processing: " + (timestampEnd - timestampStart) + "ms. ("+timespanS+"s or "+timespanM+"m)");
 
+	}
+	
+	// check enrichment
+	private void checkEnrichment()
+	{
+		for (int i=0;i<paramDataList.size();i++)
+		{
+			
+			System.out.println(paramDataList.get(i).recordCount + " # " + paramDataList.get(i).provider.name() + " # " + paramDataList.get(i).xmlFileName);
+		}
 	}
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
@@ -383,11 +402,23 @@ public class Qc_dataprovider {
 					currentProvider = new Qc_kimcollect();
 					break;
 					
-				case EEXCESS_enriched:
+				case cultureWeb_enriched:
+				case KIMCollect_enriched:
+				case Wissenmedia_enriched:
+				case Mendeley_enriched:
+				case Europeana_enriched:
+				case DDB_enriched:
+				case ZBW_enriched:
 					currentProvider = new Qc_eexcess_enriched();
 					break;
 
-				case EEXCESS:
+				case cultureWeb_EEXCESS:
+				case KIMCollect_EEXCESS:
+				case Wissenmedia_EEXCESS:
+				case Mendeley_EEXCESS:
+				case Europeana_EEXCESS:
+				case DDB_EEXCESS:
+				case ZBW_EEXCESS:
 					currentProvider = new Qc_eexcess();
 					break;
 
@@ -414,7 +445,7 @@ public class Qc_dataprovider {
 						Qc_params param = currentProvider.getParam();
 						paramDataList.addParam(param);
 						
-						// System.out.println(currentProvider + " " + xmlFile);
+						// System.out.println(currentProvider + " " + param.provider.name());
 						
 						break;
 					}

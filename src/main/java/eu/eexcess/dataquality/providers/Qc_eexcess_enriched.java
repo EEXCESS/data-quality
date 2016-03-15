@@ -42,7 +42,7 @@ public class Qc_eexcess_enriched extends Qc_base {
 	public Qc_eexcess_enriched()
 	{
 		recordSeparator = "/*[local-name()='RDF']/*[local-name()='Proxy']";
-		dataProvider = DataProvider.EEXCESS_enriched;
+		dataProvider = DataProvider.unknown;
 		additionalProviderCondition = "<eexcess:Agent rdf:about"; 
 		
 		// Blacklist entries:
@@ -126,6 +126,19 @@ public class Qc_eexcess_enriched extends Qc_base {
 		boolean bReturn = false;
 		if (xmlFileName.length() > 0) {
 			try {
+				if (xmlFileName.contains("KIMPortal-Enrichment-done") == true)
+				{
+					dataProvider = DataProvider.KIMCollect_enriched;
+				}
+				else if (xmlFileName.contains("Europeana-Enrichment-done") == true)
+				{
+					dataProvider = DataProvider.Europeana_enriched;
+				}
+				else if (xmlFileName.contains("ZBW-Enrichment-done") == true)
+				{
+					dataProvider = DataProvider.ZBW_enriched;
+				}
+				
 				File f = new File(xmlFileName);
 				if (f.exists() == true && f.isDirectory() == false) {
 					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
