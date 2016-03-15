@@ -97,7 +97,7 @@ public class StructureRecognizer {
 	    
 	    
 	    
-	    
+	    result.setResultDistinctValues(nrDistinctValues);
 	    result.setResultMedian(med);
 	    result.setResultDistinctFracComplement(distinctFracComplement);
 	    result.setResultCdfl05(cdfl05);

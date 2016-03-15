@@ -28,6 +28,16 @@ public class StructureRecResult {
 	protected double resultDistinctFracComplement;
 	
 	protected double resultMedian;
+	
+	protected int resultDistinctValues;
+
+	public int getResultDistinctValues() {
+		return resultDistinctValues;
+	}
+
+	public void setResultDistinctValues(int resultDistinctValues) {
+		this.resultDistinctValues = resultDistinctValues;
+	}
 
 	protected double resultCdfl05;
 	

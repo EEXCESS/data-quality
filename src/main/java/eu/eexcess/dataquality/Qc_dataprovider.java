@@ -642,16 +642,23 @@ public class Qc_dataprovider {
             // System.out.println("Dataprovider:" + dataprovider);
             htmlReport += "<h3>" + dataprovider +"</h3>";
             
-            htmlReport += "<h4>Overview</h4>";
+            htmlReport += "<h4>Overview (using RegEx Pattners)</h4>";
 	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        htmlReport += "<table>";
-	        htmlReport += "<tr><td><b>fieldname</b></td><td><b>median</b></td><td><b>distinct frac complement</b></td><td><b>cdfl 0.5</b></td><td><b>cdfl 0.75</b></td></tr>";
+	        htmlReport += "<tr><td><b>fieldname</b></td>";
+	        htmlReport += "<td><b>distinct values</b></td>";
+	        htmlReport += "<td><b>median</b></td>";
+	        htmlReport += "<td><b>distinct frac complement</b></td>";
+	        htmlReport += "<td><b>cdfl 0.5</b></td>";
+	        htmlReport += "<td><b>cdfl 0.75</b></td>";
+	        htmlReport += "</tr>";
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
 	            StructureRecResult fieldResultValues = fieldResult.getValue();
 	            htmlReport += "<tr>";
 	            htmlReport += "<td>"+field+"</td>";
+	            htmlReport += "<td>"+fieldResultValues.getResultDistinctValues()+"</td>";
 	            htmlReport += "<td>"+fieldResultValues.getResultMedian()+"</td>";
 	            htmlReport += "<td>"+fieldResultValues.getResultDistinctFracComplement()+"</td>";
 	            htmlReport += "<td>"+fieldResultValues.getResultCdfl05()+"</td>";
