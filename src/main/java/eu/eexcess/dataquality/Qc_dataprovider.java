@@ -151,11 +151,8 @@ public class Qc_dataprovider {
 	// check enrichment
 	private void checkEnrichment()
 	{
-		for (int i=0;i<paramDataList.size();i++)
-		{
-			
-			System.out.println(paramDataList.get(i).recordCount + " # " + paramDataList.get(i).provider.name() + " # " + paramDataList.get(i).xmlFileName);
-		}
+		CheckEnrichment enrichment = new CheckEnrichment();
+		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH);
 	}
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
