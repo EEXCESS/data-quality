@@ -136,6 +136,13 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputStructurednessTestbedRandom100Small4DevelopmentOutliers()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-outliers"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputStructurednessTestbedRandom100Small4DevelopmentDatePatterns()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-date-patterns"};

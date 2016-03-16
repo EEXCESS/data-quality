@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -648,10 +650,19 @@ public class Qc_dataprovider {
 	        htmlReport += "<tr><td><b>fieldname</b></td>";
 	        htmlReport += "<td><b>distinct values</b></td>";
 	        htmlReport += "<td><b>median</b></td>";
+	        htmlReport += "<td><b>median by valid samples</b></td>";
+	        htmlReport += "<td><b>standard deviation</b></td>";
 	        htmlReport += "<td><b>distinct frac complement</b></td>";
 	        htmlReport += "<td><b>cdfl 0.5</b></td>";
 	        htmlReport += "<td><b>cdfl 0.75</b></td>";
+	        htmlReport += "<td><b>lower frac</b></td>";
+	        htmlReport += "<td><b>upper frac</b></td>";
+	        htmlReport += "<td><b>weighted frac</b></td>";
 	        htmlReport += "</tr>";
+	        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+	        decimalFormatSymbols.setDecimalSeparator('.');
+	        decimalFormatSymbols.setGroupingSeparator(',');
+	        DecimalFormat decimalFormat = new DecimalFormat("#,##0.000", decimalFormatSymbols);
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
@@ -659,10 +670,15 @@ public class Qc_dataprovider {
 	            htmlReport += "<tr>";
 	            htmlReport += "<td>"+field+"</td>";
 	            htmlReport += "<td>"+fieldResultValues.getResultDistinctValues()+"</td>";
-	            htmlReport += "<td>"+fieldResultValues.getResultMedian()+"</td>";
-	            htmlReport += "<td>"+fieldResultValues.getResultDistinctFracComplement()+"</td>";
-	            htmlReport += "<td>"+fieldResultValues.getResultCdfl05()+"</td>";
-	            htmlReport += "<td>"+fieldResultValues.getResultCdfl075()+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultMedian())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultMedianPerVaildSamples())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultSigma())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultDistinctFracComplement())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultCdfl05())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultCdfl075())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultFracOutLower())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultFracOutUpper())+"</td>";
+	            htmlReport += "<td>"+decimalFormat.format(fieldResultValues.getResultFracOutWeighted())+"</td>";
 	            htmlReport += "</tr>";
 	        }
 	        htmlReport += "</table>";
@@ -670,6 +686,8 @@ public class Qc_dataprovider {
 			String filename = Qc_graphs.struturendnessDataproviderResultOverview(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
 			htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 
+			filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
+			htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 	        
 	        iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {

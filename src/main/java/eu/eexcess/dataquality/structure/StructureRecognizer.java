@@ -48,9 +48,12 @@ public class StructureRecognizer {
 		int nrValidSamples = 0; 
 		// number of samples with non-empty value
         Iterator<Entry<String, Integer>> iteratorHashMap = myData.entrySet().iterator();
+        ArrayList<Integer> myDataArrayList = new ArrayList<Integer>();
+
         while (iteratorHashMap.hasNext()) {
             Entry<String, Integer> entry = iteratorHashMap.next();
             nrValidSamples += entry.getValue();
+            myDataArrayList.add(entry.getValue());
         }
 
         int nrDistinctValues = myData.size();//-1; // number of distinct values (patterns) of samples
@@ -86,22 +89,44 @@ public class StructureRecognizer {
         }
 
 	    // Compute the statistics
-	    double med = stats.getMean();
-	    double std = stats.getStandardDeviation();
+	    double median = stats.getMean();
+	    double sigma = stats.getStandardDeviation();
 
-	    med = med/ nrValidSamples;
+	    double medPerVaildSamples = median/ nrValidSamples;
 	    
 	    double cdfl05= myCumulativeData.get((int) Math.floor(myCumulativeData.size()*0.5+1)-1); //% cumulative distribution at 0.5
 	    
 	    double cdfl075= myCumulativeData.get((int) Math.floor(myCumulativeData.size()*0.75+1)-1); //% cumulative distribution at 0.5
 	    
-	    
+        ArrayList<Double> out_upper = new ArrayList<Double>();
+        for (int i = 0; i < myDataArrayList.size(); i++) {
+			if (myDataArrayList.get(i) > (median + 2*sigma))
+				out_upper.add(new Double(myDataArrayList.get(i)));
+		}
+
+        ArrayList<Double> out_lower = new ArrayList<Double>();
+        for (int i = 0; i < myDataArrayList.size(); i++) {
+			if (myDataArrayList.get(i) < (median - 2*sigma))
+				out_lower.add(new Double(myDataArrayList.get(i)));
+		}
+
+	    double fracOutUpper = new Double(out_upper.size())/nrDistinctValues; //% fraction upper outliers
+	    double fracOutLower = new Double(out_lower.size())/nrDistinctValues; //% fration lower outliers
+
+	    double fracOutWeighted = fracOutUpper*(1-distinctFracComplement)+fracOutLower*distinctFracComplement;
+
 	    
 	    result.setResultDistinctValues(nrDistinctValues);
-	    result.setResultMedian(med);
+	    result.setResultMedian(median);
+	    result.setResultMedianPerVaildSamples(medPerVaildSamples);
+	    result.setResultSigma(sigma);
 	    result.setResultDistinctFracComplement(distinctFracComplement);
 	    result.setResultCdfl05(cdfl05);
 	    result.setResultCdfl075(cdfl075);
+	    
+	    result.setResultFracOutLower(fracOutLower);
+	    result.setResultFracOutUpper(fracOutUpper);
+	    result.setResultFracOutWeighted(fracOutWeighted);
         return result;
 	}
 

@@ -28,7 +28,55 @@ public class StructureRecResult {
 	protected double resultDistinctFracComplement;
 	
 	protected double resultMedian;
+	protected double resultMedianPerVaildSamples;
 	
+	protected double resultFracOutUpper;
+	protected double resultFracOutLower;
+	protected double resultFracOutWeighted;
+	
+	
+	
+	public double getResultFracOutUpper() {
+		return resultFracOutUpper;
+	}
+
+	public void setResultFracOutUpper(double resultFracOutUpper) {
+		this.resultFracOutUpper = resultFracOutUpper;
+	}
+
+	public double getResultFracOutLower() {
+		return resultFracOutLower;
+	}
+
+	public void setResultFracOutLower(double resultFracOutLower) {
+		this.resultFracOutLower = resultFracOutLower;
+	}
+
+	public double getResultFracOutWeighted() {
+		return resultFracOutWeighted;
+	}
+
+	public void setResultFracOutWeighted(double resultFracOutWeighted) {
+		this.resultFracOutWeighted = resultFracOutWeighted;
+	}
+
+	public double getResultMedianPerVaildSamples() {
+		return resultMedianPerVaildSamples;
+	}
+
+	public void setResultMedianPerVaildSamples(double resultMedianPerVaildSamples) {
+		this.resultMedianPerVaildSamples = resultMedianPerVaildSamples;
+	}
+
+	protected double resultSigma;
+	public double getResultSigma() {
+		return resultSigma;
+	}
+
+	public void setResultSigma(double resultSigma) {
+		this.resultSigma = resultSigma;
+	}
+
 	protected int resultDistinctValues;
 
 	public int getResultDistinctValues() {
