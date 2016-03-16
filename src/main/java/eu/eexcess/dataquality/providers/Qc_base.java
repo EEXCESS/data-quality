@@ -170,6 +170,20 @@ public class Qc_base implements Qc_interface {
 		if (xmlFileName.length() > 0) {
 			try {
 				File f = new File(xmlFileName);
+				
+				if (xmlFileName.contains("KIMPortalTransformer-done") == true)
+				{
+					dataProvider = DataProvider.KIMCollect_EEXCESS;
+				}
+				else if (xmlFileName.contains("EuropeanaTransformer-done") == true)
+				{
+					dataProvider = DataProvider.Europeana_EEXCESS;
+				}
+				else if (xmlFileName.contains("ZBWTransformer-done") == true)
+				{
+					dataProvider = DataProvider.ZBW_EEXCESS;
+				}
+				
 				if (f.exists() == true && f.isDirectory() == false) {
 					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 					DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

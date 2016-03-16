@@ -104,7 +104,14 @@ public class Qc_dataprovider {
 
 	// XML files of known partners
 	public enum DataProvider {
-		KIMCollect, ZBW, Europeana, Wissenmedia, Mendeley, EEXCESS, EEXCESS_enriched, DDB, cultureWeb, unknown
+		KIMCollect, KIMCollect_EEXCESS, KIMCollect_enriched,
+		ZBW, ZBW_EEXCESS, ZBW_enriched,
+		Wissenmedia, Wissenmedia_EEXCESS, Wissenmedia_enriched,
+		Mendeley, Mendeley_EEXCESS, Mendeley_enriched,
+		DDB, DDB_EEXCESS, DDB_enriched,
+		cultureWeb, cultureWeb_EEXCESS, cultureWeb_enriched,
+		Europeana, Europeana_EEXCESS, Europeana_enriched,
+		unknown
 	}
 
 	public void process(String[] sParams) {
@@ -126,6 +133,8 @@ public class Qc_dataprovider {
 				}
 			}
 		}
+		// check enrichment
+		checkEnrichment();
 		// check structuredness
 		checkStructuredness(sParams);
 		// output results
@@ -139,6 +148,13 @@ public class Qc_dataprovider {
 		double timespanM = timespanS / 60;
 		System.out.println("\nElapsed time for processing: " + (timestampEnd - timestampStart) + "ms. ("+timespanS+"s or "+timespanM+"m)");
 
+	}
+	
+	// check enrichment
+	private void checkEnrichment()
+	{
+		CheckEnrichment enrichment = new CheckEnrichment();
+		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH);
 	}
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
@@ -385,11 +401,23 @@ public class Qc_dataprovider {
 					currentProvider = new Qc_kimcollect();
 					break;
 					
-				case EEXCESS_enriched:
+				case cultureWeb_enriched:
+				case KIMCollect_enriched:
+				case Wissenmedia_enriched:
+				case Mendeley_enriched:
+				case Europeana_enriched:
+				case DDB_enriched:
+				case ZBW_enriched:
 					currentProvider = new Qc_eexcess_enriched();
 					break;
 
-				case EEXCESS:
+				case cultureWeb_EEXCESS:
+				case KIMCollect_EEXCESS:
+				case Wissenmedia_EEXCESS:
+				case Mendeley_EEXCESS:
+				case Europeana_EEXCESS:
+				case DDB_EEXCESS:
+				case ZBW_EEXCESS:
 					currentProvider = new Qc_eexcess();
 					break;
 
@@ -407,7 +435,9 @@ public class Qc_dataprovider {
 					if (currentProvider.isProviderRecord() == true) {
 						currentProvider.getDataProvider();
 						
+						System.out.println(currentProvider + " " + currentProvider.getDataProvider().name());
 						// System.out.println("Records Count: " + currentProvider.getRecordsCount());
+						
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
 						currentProvider.countDataFields(SearchType.linkDataFields);
@@ -416,7 +446,7 @@ public class Qc_dataprovider {
 						Qc_params param = currentProvider.getParam();
 						paramDataList.addParam(param);
 						
-						// System.out.println(currentProvider + " " + xmlFile);
+						// System.out.println(currentProvider + " " + param.provider.name());
 						
 						break;
 					}
@@ -1132,6 +1162,10 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>The chart shows how many links are accessible.</p>";
         htmlReportGeneral += "<img src=\"links_accessible_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         
+        htmlReportGeneral += "<h3>enrichment statistics</h3>";
+        htmlReportGeneral += "<p>The chart shows the number of datafields during the enrichment process.</p>";
+        htmlReportGeneral += "<img src=\"enrichment-overview-1600x1200.png\" style=\"width:1000px;\"/>";
+
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";
         htmlReportGeneral += "<li><a target=\"_blank\" href=\""+DATAQUALITY_REPORT_PLOT_HTML_FILENAME+"\">Data Quality Report with JQPlot </a></li>";

@@ -27,8 +27,8 @@ import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 
 public class Qc_ZBW extends Qc_base {
 	public Qc_ZBW() {
-		recordSeparator = "/doc/hits/hit";
-		this.xpathsToFieldsFromRecordSeparator = "/book";
+		recordSeparator = "/doc/record";
+		this.xpathsToFieldsFromRecordSeparator = "";
 		dataProvider = DataProvider.ZBW;
 	}
 
@@ -59,19 +59,11 @@ public class Qc_ZBW extends Qc_base {
 		if (searchType == SearchType.allDataFields) {
 			NodeList listFirstChild = cNode.getChildNodes();
 			if (listFirstChild.getLength() > 0) {
-				for (int j = 0; j < listFirstChild.getLength(); j++) {
-					NodeList listDataChilds = listFirstChild.item(j)
-							.getChildNodes();
-
+				for (int j = 0; j < listFirstChild.getLength(); j++) {					
 					if (listFirstChild.item(j).getNodeType() == Node.ELEMENT_NODE) {
-						for (int i = 0; i < listDataChilds.getLength(); i++) {
-							if (sNodeNames.contains(listDataChilds.item(i)
-									.getNodeName()) == false) {
-
-								sNodeNames.add(listDataChilds.item(i)
-										.getNodeName());
-								nReturn++;
-							}
+						if (sNodeNames.contains(listFirstChild.item(j).getNodeName()) == false) {
+							sNodeNames.add(listFirstChild.item(j).getNodeName());
+							nReturn++;
 						}
 					}
 				}
@@ -81,17 +73,10 @@ public class Qc_ZBW extends Qc_base {
 			NodeList listFirstChild = cNode.getChildNodes();
 			if (listFirstChild.getLength() > 0) {
 				for (int j = 0; j < listFirstChild.getLength(); j++) {
-					NodeList listDataChilds = listFirstChild.item(j)
-							.getChildNodes();
-					for (int i = 0; i < listDataChilds.getLength(); i++) {
-						if (sNodeNames.contains(listDataChilds.item(i)
-								.getNodeName()) == false) {
-							if (listDataChilds.item(i).getTextContent()
-									.length() > 0) {
-								sNodeNames.add(listDataChilds.item(i)
-										.getNodeName());
-								nReturn++;
-							}
+					if (sNodeNames.contains(listFirstChild.item(j).getNodeName()) == false) {
+						if (listFirstChild.item(j).getTextContent().length() > 0) {
+							sNodeNames.add(listFirstChild.item(j).getNodeName());
+							nReturn++;
 						}
 					}
 				}
