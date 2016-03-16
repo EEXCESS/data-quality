@@ -433,7 +433,9 @@ public class Qc_dataprovider {
 					if (currentProvider.isProviderRecord() == true) {
 						currentProvider.getDataProvider();
 						
+						System.out.println(currentProvider + " " + currentProvider.getDataProvider().name());
 						// System.out.println("Records Count: " + currentProvider.getRecordsCount());
+						
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
 						currentProvider.countDataFields(SearchType.linkDataFields);
@@ -1135,6 +1137,10 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>The chart shows how many links are accessible.</p>";
         htmlReportGeneral += "<img src=\"links_accessible_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         
+        htmlReportGeneral += "<h3>enrichment statistics</h3>";
+        htmlReportGeneral += "<p>The chart shows the number of datafields during the enrichment process.</p>";
+        htmlReportGeneral += "<img src=\"enrichment-overview-1600x1200.png\" style=\"width:1000px;\"/>";
+
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";
         htmlReportGeneral += "<li><a target=\"_blank\" href=\""+DATAQUALITY_REPORT_PLOT_HTML_FILENAME+"\">Data Quality Report with JQPlot </a></li>";

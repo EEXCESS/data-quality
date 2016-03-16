@@ -1,6 +1,9 @@
 package eu.eexcess.dataquality;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -14,7 +17,13 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RectangleAnchor;
+import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.graphs.ChartDrawingSupplier;
@@ -53,11 +62,6 @@ public class CheckEnrichment {
 		}
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
-		
-		for (int i=0; i<lprovider.size();i++) {
-			
-           	
-        }
         
 		if (lprovider.indexOf(DataProvider.KIMCollect)>=0)
 		{
@@ -108,22 +112,62 @@ public class CheckEnrichment {
 		}
 		
 		
-		JFreeChart chart = ChartFactory.createLineChart("Check Enrichment", "transformation", "datafields", dataset);
+		JFreeChart chart = ChartFactory.createLineChart("check enrichment", "transformation", "datafields", dataset);
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
 		// get a reference to the plot for further customization... 
 		final CategoryPlot plot = chart.getCategoryPlot(); 
 		plot.setDrawingSupplier(new ChartDrawingSupplier());
+		
 		// CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
 	    // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
-	    
+		setupFonts(chart, plot);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ "enrichment" +"-overview-"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" +"-overview-"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	private static void setupFonts(JFreeChart chart, final CategoryPlot plot) {
+		Font fontTitle = new Font("Tahoma", Font.BOLD, 32); 
+        chart.getTitle().setFont(fontTitle);
+        
+        chart.removeLegend();
+        LegendTitle legend = new LegendTitle(plot.getRenderer());
+		Font fontLegend = new Font("Tahoma", Font.PLAIN, 29);// 29 or 34
+        legend.setItemFont(fontLegend); 
+        legend.setPosition(RectangleEdge.BOTTOM); 
+        legend.setItemLabelPadding(new RectangleInsets(2, 2, 2, 50));
+      
+//        legend.setLegendItemGraphicPadding(new RectangleInsets(10, 1, 1, 10));
+        legend.setLegendItemGraphicLocation(RectangleAnchor.CENTER);
+        legend.setLegendItemGraphicAnchor(RectangleAnchor.CENTER);
+        legend.setLegendItemGraphicEdge(RectangleEdge.LEFT);
+        legend.setMargin(0, 10, 0, 20);
+        chart.addLegend(legend);
+		Font fontRangeAxis = new Font("Tahoma", Font.PLAIN, 29); 
+        plot.getRangeAxis().setTickLabelFont(fontRangeAxis);
+        plot.getRangeAxis().setLabelFont(fontRangeAxis);
+		Font fontDomainAxis = new Font("Tahoma", Font.PLAIN, 29); 
+        plot.getDomainAxis().setLabelFont(fontDomainAxis);
+        plot.getDomainAxis().setTickLabelFont(fontDomainAxis);
+        
+        int i=0;
+        try
+        {
+        	while (i<100)
+	        {
+	        	plot.getRenderer().setSeriesStroke(i, new BasicStroke(5.0f));
+	        	i++;
+	        }
+        }
+        catch (Exception e)
+        {
+        	
+        }
 	}
 }
