@@ -156,6 +156,15 @@ public class DataQualityAppTest
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
+    
+    
+    public void testAppInputStructurednessTestbedSomeDataprovidersSmall()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+    
 
     public void testAppInputStructurednessKIMCollect()
     {
