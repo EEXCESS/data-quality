@@ -165,6 +165,12 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
     
+    public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
 
     public void testAppInputStructurednessKIMCollect()
     {

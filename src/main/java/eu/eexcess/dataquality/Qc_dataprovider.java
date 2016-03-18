@@ -513,7 +513,7 @@ public class Qc_dataprovider {
 				String string = (String) iterator.next();
 				System.out.println(string);
 			}
-	*/		
+*/
 		}
 		Iterator<Entry<String, ArrayList<String>>> filesNameByDataproviderHashMapIterator = filesNameByDataproviderHashMap.entrySet().iterator();
 	    while (filesNameByDataproviderHashMapIterator.hasNext()) {
@@ -589,6 +589,7 @@ public class Qc_dataprovider {
 	public static String DATAPROVIDER_KIMPORTAL ="KIMPortal";
 	public static String DATAPROVIDER_EUROPEANA ="Europeana";
 	public static String DATAPROVIDER_DDB ="DeutscheDigitaleBibliothek";
+	public static String DATAPROVIDER_D_D_B ="Deutsche Digitale Bibliothek";
 	public static String DATAPROVIDER_MENDELEY ="Mendeley";
 	public static String DATAPROVIDER_WISSENMEDIA ="Wissenmedia";
 	public static String DATAPROVIDER_ZBW ="ZBW";
@@ -600,7 +601,7 @@ public class Qc_dataprovider {
 	public Qc_base createProviderQC(String dataprovider){
 		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
 			return new Qc_wissenmedia();
-		if (dataprovider.equals(DATAPROVIDER_DDB))
+		if (dataprovider.equals(DATAPROVIDER_DDB) || dataprovider.equals(DATAPROVIDER_D_D_B))
 			return new Qc_DDB();
 		if (dataprovider.equals(DATAPROVIDER_EUROPEANA))
 			return new Qc_europeana();
