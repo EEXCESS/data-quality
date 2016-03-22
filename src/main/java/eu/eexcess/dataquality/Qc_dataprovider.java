@@ -1209,6 +1209,16 @@ public class Qc_dataprovider {
         	htmlReport += "<li>"+this.inputDirs.get(i)+"</li>" ;
 		}
         htmlReport += "</ul>";
+        
+        htmlReport += "<p>";
+        int numberRecords = 0;
+		for (int i=0;i<DataProvider.values().length; i++)
+		{
+			numberRecords +=paramDataList.getRecordsPerProvider(DataProvider.values()[i]);
+		}
+        htmlReport += "The dataset includes <b>"+numberRecords + "</b> records in <b>"+paramDataList.size() + "</b> files.";
+        htmlReport += "</p>";
+        
 		htmlReport += "<h3>Statistics by dataprovider</h3>";
 		htmlReport += this.htmlReportInputDataStatisticsDataprovider;
 		
