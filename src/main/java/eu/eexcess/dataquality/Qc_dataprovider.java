@@ -370,9 +370,6 @@ public class Qc_dataprovider {
 
 	// try to check from which partner the XML file is.
 	private void checkDataProviderFile(String xmlFile) {
-
-		// System.out.println(xmlFile);
-		
 		File f = new File(xmlFile);
 		if (f.exists() == true && f.isDirectory() == false) {
 			for (int i = 0; i < DataProvider.values().length; i++) {
@@ -435,8 +432,7 @@ public class Qc_dataprovider {
 					if (currentProvider.isProviderRecord() == true) {
 						currentProvider.getDataProvider();
 						
-						System.out.println(currentProvider + " " + currentProvider.getDataProvider().name());
-						// System.out.println("Records Count: " + currentProvider.getRecordsCount());
+						// System.out.println(currentProvider + " " + currentProvider.getDataProvider().name());
 						
 						currentProvider.countDataFields(SearchType.allDataFields);
 						currentProvider.countDataFields(SearchType.notEmptyDataFields);
@@ -525,37 +521,38 @@ public class Qc_dataprovider {
 			
 			// calc all XPaths for all fields in all file from a data provider
 			ArrayList<String> fieldXPaths = new ArrayList<String>();
-			for (String actFileName : actProviderFileList) {
-				//System.out.println(actFileName);
-				qcBase.setXmlFileName(actFileName);
-				NodeList nodes = qcBase.getNodesListByXPath(qcBase.getRecordSeparator() + qcBase.getXpathsToFieldsFromRecordSeparator());
-				for (int countRecords = 0; countRecords < nodes.getLength(); countRecords++) {
-					//iterate over records
-					if (nodes.item(countRecords).hasChildNodes())
-					{
-						for (int countFields = 0; countFields < nodes.item(countRecords).getChildNodes().getLength(); countFields++) {
-							Node actNodeField = nodes.item(countRecords).getChildNodes().item(countFields);
-							if (actNodeField.getNodeType() == Node.ELEMENT_NODE) {
-								String tempFieldXpath = qcBase.getXPath(actNodeField);
-								if (!fieldXPaths.contains(tempFieldXpath))
-									fieldXPaths.add(tempFieldXpath);
-							} else {
-								if (actNodeField.hasChildNodes()) {
-									for (int countSubFields = 0; countSubFields < actNodeField.getChildNodes().getLength(); countSubFields++) {
-										Node actNodeSubField = actNodeField.getChildNodes().item(countSubFields);
-										if (actNodeSubField.getNodeType() == Node.ELEMENT_NODE) {
-											String tempFieldXpath = qcBase.getXPath(actNodeSubField);
-											if (!fieldXPaths.contains(tempFieldXpath))
-												fieldXPaths.add(tempFieldXpath);
+			if (qcBase != null)
+			{
+				for (String actFileName : actProviderFileList) {
+					//System.out.println(actFileName);
+					qcBase.setXmlFileName(actFileName);
+					NodeList nodes = qcBase.getNodesListByXPath(qcBase.getRecordSeparator() + qcBase.getXpathsToFieldsFromRecordSeparator());
+					for (int countRecords = 0; countRecords < nodes.getLength(); countRecords++) {
+						//iterate over records
+						if (nodes.item(countRecords).hasChildNodes())
+						{
+							for (int countFields = 0; countFields < nodes.item(countRecords).getChildNodes().getLength(); countFields++) {
+								Node actNodeField = nodes.item(countRecords).getChildNodes().item(countFields);
+								if (actNodeField.getNodeType() == Node.ELEMENT_NODE) {
+									String tempFieldXpath = qcBase.getXPath(actNodeField);
+									if (!fieldXPaths.contains(tempFieldXpath))
+										fieldXPaths.add(tempFieldXpath);
+								} else {
+									if (actNodeField.hasChildNodes()) {
+										for (int countSubFields = 0; countSubFields < actNodeField.getChildNodes().getLength(); countSubFields++) {
+											Node actNodeSubField = actNodeField.getChildNodes().item(countSubFields);
+											if (actNodeSubField.getNodeType() == Node.ELEMENT_NODE) {
+												String tempFieldXpath = qcBase.getXPath(actNodeSubField);
+												if (!fieldXPaths.contains(tempFieldXpath))
+													fieldXPaths.add(tempFieldXpath);
+											}
 										}
 									}
 								}
 							}
 						}
 					}
-
 				}
-				
 			}
 			// now we have a list of all XPaths to fields for this data provider
 			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
@@ -590,6 +587,7 @@ public class Qc_dataprovider {
 	public static String DATAPROVIDER_EUROPEANA ="Europeana";
 	public static String DATAPROVIDER_DDB ="DeutscheDigitaleBibliothek";
 	public static String DATAPROVIDER_D_D_B ="Deutsche Digitale Bibliothek";
+
 	public static String DATAPROVIDER_MENDELEY ="Mendeley";
 	public static String DATAPROVIDER_WISSENMEDIA ="Wissenmedia";
 	public static String DATAPROVIDER_ZBW ="ZBW";
@@ -737,24 +735,30 @@ public class Qc_dataprovider {
 					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field+"-value length histogram.csv");
 					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
-					for (int i = 0; i < result.getLengthHistogram().length; i++) {
-						writerStatisticRecords.write( i + STATISTIC_FILE_FIELD_SEPERATOR);
+					if (result.getLengthHistogram() != null)
+					{
+						for (int i = 0; i < result.getLengthHistogram().length; i++) {
+							writerStatisticRecords.write( i + STATISTIC_FILE_FIELD_SEPERATOR);
+						}
+						writerStatisticRecords.newLine();
+						for (int i = 0; i < result.getLengthHistogram().length; i++) {
+							writerStatisticRecords.write(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
+						}
+						writerStatisticRecords.newLine();
+						writerStatisticRecords.close();
 					}
-					writerStatisticRecords.newLine();
-					for (int i = 0; i < result.getLengthHistogram().length; i++) {
-						writerStatisticRecords.write(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
-					}
-					writerStatisticRecords.newLine();
-					writerStatisticRecords.close();
-
+					
 					htmlReport +="<h5>Histogram for value length</h5>";
 					htmlReport += "<table><tr><td><b>length:</b></td>";
 					htmlReport += "<td><b>number:</b></td></tr>";
 					
-					for (int i = 0; i < result.getLengthHistogram().length; i++) {
-						if (result.getLengthHistogram()[i] > 0) {
-							htmlReport += "<tr><td>"+i+"</td>";
-							htmlReport += "<td>"+result.getLengthHistogram()[i]+"</td></tr>";
+					if (result.getLengthHistogram() != null)
+					{
+						for (int i = 0; i < result.getLengthHistogram().length; i++) {
+							if (result.getLengthHistogram()[i] > 0) {
+								htmlReport += "<tr><td>"+i+"</td>";
+								htmlReport += "<td>"+result.getLengthHistogram()[i]+"</td></tr>";
+							}
 						}
 					}
 					htmlReport += "</table>";

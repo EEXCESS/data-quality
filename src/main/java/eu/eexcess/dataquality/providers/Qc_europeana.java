@@ -23,7 +23,7 @@ public class Qc_europeana extends Qc_base {
 	
 	public Qc_europeana()
 	{
-		recordSeparator = "/o/object";
+		recordSeparator = "/o/object/aggregations/e";
 		dataProvider = DataProvider.Europeana;
 	}
 }

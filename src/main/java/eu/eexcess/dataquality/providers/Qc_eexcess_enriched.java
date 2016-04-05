@@ -138,6 +138,18 @@ public class Qc_eexcess_enriched extends Qc_base {
 				{
 					dataProvider = DataProvider.ZBW_enriched;
 				}
+				else if (xmlFileName.contains("Deutsche Digitale Bibliothek-Enrichment-done") == true)
+				{
+					dataProvider = DataProvider.DDB_enriched;
+				}
+				else if (xmlFileName.contains("Mendeley-Enrichment-done") == true)
+				{
+					dataProvider = DataProvider.Mendeley_enriched;
+				}
+				else
+				{
+					System.out.println(xmlFileName);
+				}
 				
 				File f = new File(xmlFileName);
 				if (f.exists() == true && f.isDirectory() == false) {

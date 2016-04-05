@@ -22,7 +22,7 @@ import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 public class Qc_DDB extends Qc_base {
 	
 	public Qc_DDB() {
-		recordSeparator = "/o/results/e/docs/e";
+		recordSeparator = "/cortex/edm/ns3RDF";
 		dataProvider = DataProvider.DDB;
 	}
 
