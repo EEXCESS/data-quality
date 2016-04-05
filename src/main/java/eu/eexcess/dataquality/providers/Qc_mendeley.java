@@ -23,7 +23,8 @@ public class Qc_mendeley extends Qc_base {
 
 	public Qc_mendeley()
 	{
-		recordSeparator = "/o/documents/e";
+		recordSeparator = "/o";
 		dataProvider = DataProvider.Mendeley;
+		notProviderCondition = "aggregations";
 	}
 }

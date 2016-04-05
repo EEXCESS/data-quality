@@ -183,6 +183,14 @@ public class Qc_base implements Qc_interface {
 				{
 					dataProvider = DataProvider.ZBW_EEXCESS;
 				}
+				else if (xmlFileName.contains("DDBTransformer-done") == true)
+				{
+					dataProvider = DataProvider.DDB_EEXCESS;
+				}
+				else if (xmlFileName.contains("MendeleyTransformer-done") == true)
+				{
+					dataProvider = DataProvider.Mendeley_EEXCESS;
+				}
 				
 				if (f.exists() == true && f.isDirectory() == false) {
 					DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

@@ -353,10 +353,13 @@ public final class Qc_graphs {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
-		for (int i=0;i<result.getLengthHistogram().length; i++)
+		if (result.getLengthHistogram() != null)
 		{
-			if (result.getLengthHistogram()[i] > 0)
-				dataset.addValue(result.getLengthHistogram()[i], dataprovider +" "+fieldname,i+"");
+			for (int i=0;i<result.getLengthHistogram().length; i++)
+			{
+				if (result.getLengthHistogram()[i] > 0)
+					dataset.addValue(result.getLengthHistogram()[i], dataprovider +" "+fieldname,i+"");
+			}
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" "+ fieldname + " value length histogram", "length", "number ", dataset);
@@ -377,8 +380,11 @@ public final class Qc_graphs {
 		chart.removeLegend();
 		CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
 	    domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
-	    if (result.getLengthHistogram().length > 20 )
-	    	domainAxis.setVisible(false);
+	    if (result.getLengthHistogram() != null)
+	    {
+		    if (result.getLengthHistogram().length > 20 )
+		    	domainAxis.setVisible(false);
+	    }
 	      
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		

@@ -111,6 +111,38 @@ public class CheckEnrichment {
 			}
 		}
 		
+		if (lprovider.indexOf(DataProvider.DDB)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.DDB);
+			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.DDB_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.DDB_EEXCESS);
+				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.DDB_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.DDB_enriched);
+				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"enriched");
+			}
+		}
+		
+		if (lprovider.indexOf(DataProvider.Mendeley)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.Mendeley);
+			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.Mendeley_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.Mendeley_EEXCESS);
+				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.Mendeley_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.Mendeley_enriched);
+				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"enriched");
+			}
+		}
+		
 		
 		JFreeChart chart = ChartFactory.createLineChart("check enrichment", "transformation", "datafields", dataset);
 		chart.setAntiAlias(true);
