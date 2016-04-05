@@ -165,9 +165,23 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
     
+    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppInputStructurednessTestbedSomeDataprovidersBigD44V2()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-v2"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
