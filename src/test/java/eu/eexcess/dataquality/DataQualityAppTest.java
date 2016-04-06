@@ -186,6 +186,15 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    
+    public void testAppInputStructurednessTestbedSomeDataprovidersBigD44Keywords2000()
+    {
+    	String[] args = new String[]{ "\\\\dig-file\\DIG_IIS\\project\\EEXCESS\\data-quality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-200-keywords"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+    
+    
     public void testAppInputStructurednessKIMCollect()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\kimcollect"};
