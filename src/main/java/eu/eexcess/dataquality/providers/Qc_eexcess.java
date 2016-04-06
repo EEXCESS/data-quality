@@ -82,6 +82,9 @@ public class Qc_eexcess extends Qc_base {
 								{
 									for (int j=0; j<nodeAggr.getLength(); j++)
 									{
+										// here count also the links
+										param.addLinkDataFieldsPerRecord(countLinksInNodes(0, nodeAggr.item(j), true));
+										
 										if (nodeToString(nodeAggr.item(j),linkAggr) == true)
 										{
 											nReturn += countDataFieldsNode(nodeAggr.item(j), searchType);
@@ -96,12 +99,12 @@ public class Qc_eexcess extends Qc_base {
 			}
 			else if (searchType == SearchType.linkDataFields) {
 				for (int i = 0; i < nodeChilds.getLength(); i++) {
-					nReturn = countLinksInNodes(nReturn, nodeChilds.item(i), false);
+					nReturn = countLinksInNodes(nReturn, nodeChilds.item(i), true);
 				}
 			}
 			else if (searchType == SearchType.uriDataFields) {
 				for (int i = 0; i < nodeChilds.getLength(); i++) {
-					nReturn = countAccessibleLinks(nReturn, nodeChilds.item(i), false);
+					nReturn = countAccessibleLinks(nReturn, nodeChilds.item(i), true);
 				}
 			}
 		}

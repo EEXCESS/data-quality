@@ -54,7 +54,7 @@ public class DataQualityAppTest
     
     public void testAppTransformedEnrichedKIMPortal()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small"};
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }

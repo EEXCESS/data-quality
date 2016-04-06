@@ -133,6 +133,7 @@ public final class Qc_graphs {
 		}
 	}
 */
+	@SuppressWarnings("incomplete-switch")
 	public static void allProviderDataFieldsPerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
@@ -140,8 +141,18 @@ public final class Qc_graphs {
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
 			if (paramList.hasProviderData(DataProvider.values()[i]))
-				if (DataProvider.values()[i] != DataProvider.unknown)
+				switch (DataProvider.values()[i])
+				{
+					case KIMCollect:
+					case ZBW:
+					case Wissenmedia:
+					case Mendeley:
+					case DDB:
+					case cultureWeb:
+					case Europeana:
 					dataset.addValue(paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+					break;
+				}
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("mean data fields / record / provider", "provider", "mean data fields / record ", dataset);
@@ -169,6 +180,7 @@ public final class Qc_graphs {
 		}
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	public static void allProviderLinksPerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
@@ -176,8 +188,18 @@ public final class Qc_graphs {
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
 			if (paramList.hasProviderData(DataProvider.values()[i]))
-				if (DataProvider.values()[i] != DataProvider.unknown)
-					dataset.addValue(paramList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+				switch (DataProvider.values()[i])
+				{
+					case KIMCollect:
+					case ZBW:
+					case Wissenmedia:
+					case Mendeley:
+					case DDB:
+					case cultureWeb:
+					case Europeana:
+						dataset.addValue(paramList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+				}
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("mean links / record / provider", "provider", "mean links / record ", dataset);
@@ -206,6 +228,7 @@ public final class Qc_graphs {
 	}
 
 	
+	@SuppressWarnings("incomplete-switch")
 	public static void allProviderLinksNotAccessiblePerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
@@ -213,8 +236,18 @@ public final class Qc_graphs {
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
 			if (paramList.hasProviderData(DataProvider.values()[i]))
-				if (DataProvider.values()[i] != DataProvider.unknown)
-					dataset.addValue(paramList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+				switch (DataProvider.values()[i])
+				{
+					case KIMCollect:
+					case ZBW:
+					case Wissenmedia:
+					case Mendeley:
+					case DDB:
+					case cultureWeb:
+					case Europeana:
+						dataset.addValue(paramList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+				}
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("mean links accessible / record / provider", "provider", "mean links accessible / record ", dataset);
@@ -273,14 +306,25 @@ public final class Qc_graphs {
 		}
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public static void allProviderNonEmptyDataFieldsPerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
 			if (paramList.hasProviderData(DataProvider.values()[i]))
-				if (DataProvider.values()[i] != DataProvider.unknown)
-					dataset.addValue(paramList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+				switch (DataProvider.values()[i])
+				{
+					case KIMCollect:
+					case ZBW:
+					case Wissenmedia:
+					case Mendeley:
+					case DDB:
+					case cultureWeb:
+					case Europeana:
+						dataset.addValue(paramList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+				}
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("mean non empty data fields / record / provider","provider", "mean non empty data fields / record", dataset);
@@ -309,14 +353,25 @@ public final class Qc_graphs {
 		}
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	public static void allProviderNonEmptyDataFieldsPerDatafieldsPerRecordsBarChart (int nWidth, int nHeight, Qc_paramDataList paramList) {
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
 			if (paramList.hasProviderData(DataProvider.values()[i]))
-				if (DataProvider.values()[i] != DataProvider.unknown)
-					dataset.addValue(paramList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+				switch (DataProvider.values()[i])
+				{
+					case KIMCollect:
+					case ZBW:
+					case Wissenmedia:
+					case Mendeley:
+					case DDB:
+					case cultureWeb:
+					case Europeana:
+						dataset.addValue(paramList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+				}
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("mean non empty data fields / record / provider","provider", "mean non empty data fields / record", dataset);
@@ -358,7 +413,9 @@ public final class Qc_graphs {
 			for (int i=0;i<result.getLengthHistogram().length; i++)
 			{
 				if (result.getLengthHistogram()[i] > 0)
+				{
 					dataset.addValue(result.getLengthHistogram()[i], dataprovider +" "+fieldname,i+"");
+				}
 			}
 		}
 		

@@ -33,7 +33,8 @@ public class CheckEnrichment {
 
 	ArrayList<DataProvider> lprovider = new ArrayList<DataProvider>();
 	ArrayList<Integer> lrecordCount = new ArrayList<Integer>();
-	ArrayList<Integer> ldatafieldCount = new ArrayList<Integer>();
+	ArrayList<Integer> ldatafieldNonEmptyCount = new ArrayList<Integer>();
+	ArrayList<Integer> ldatafieldLinkCount = new ArrayList<Integer>();
 	
 	public void CalcEnrichment(Qc_paramDataList paramDataList, int nWidth, int nHeight)
 	{
@@ -41,114 +42,118 @@ public class CheckEnrichment {
 		{
 			DataProvider provider = paramDataList.get(i).provider;
 			int recordCount = paramDataList.get(i).recordCount;
+			int recordLinkCount = (int)paramDataList.get(i).getLinkDataFieldsPerRecord();
 			if (recordCount == 0)
 			{
-				recordCount=1;
+				recordCount = 1;
 			}
-			int datafieldCount = (int) paramDataList.get(i).getDataFieldsPerRecord();
+			int datafieldNonEmptyCount = (int) paramDataList.get(i).getNonEmptyDataFieldsPerRecord();
 			
 			if (lprovider.contains(provider) == false)
 			{
 				lprovider.add(provider);
 				lrecordCount.add(recordCount);
-				ldatafieldCount.add(datafieldCount);
+				ldatafieldNonEmptyCount.add(datafieldNonEmptyCount);
+				ldatafieldLinkCount.add(recordLinkCount);
 			}
 			else
 			{
 				int nIndex = lprovider.indexOf(provider);
 				lrecordCount.set(nIndex, lrecordCount.get(nIndex)+recordCount);
-				ldatafieldCount.set(nIndex, ldatafieldCount.get(nIndex)+datafieldCount);
+				ldatafieldNonEmptyCount.set(nIndex, ldatafieldNonEmptyCount.get(nIndex) + datafieldNonEmptyCount);
+				ldatafieldLinkCount.set(nIndex, ldatafieldLinkCount.get(nIndex)+recordLinkCount);
 			}
 		}
 		
+		// - - - - - - - - - - - - - - - - - - - - - - enrichment overview - - - - - - - - - - - - - - - - - - - - - - - - - -
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
         
 		if (lprovider.indexOf(DataProvider.KIMCollect)>=0)
 		{
 			int i = lprovider.indexOf(DataProvider.KIMCollect);
-			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"before transform");
+			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"before transform");
 			if (lprovider.indexOf(DataProvider.KIMCollect_EEXCESS)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.KIMCollect_EEXCESS);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"done transform");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"done transform");
 			}
 			if (lprovider.indexOf(DataProvider.KIMCollect_enriched)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.KIMCollect_enriched);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"enriched");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"enriched");
 			}
 		}
 		
 		if (lprovider.indexOf(DataProvider.Europeana)>=0)
 		{
 			int i = lprovider.indexOf(DataProvider.Europeana);
-			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"before transform");
+			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"before transform");
 			if (lprovider.indexOf(DataProvider.Europeana_EEXCESS)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.Europeana_EEXCESS);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"done transform");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"done transform");
 			}
 			if (lprovider.indexOf(DataProvider.Europeana_enriched)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.Europeana_enriched);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"enriched");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"enriched");
 			}
 		}
 		
 		if (lprovider.indexOf(DataProvider.ZBW)>=0)
 		{
 			int i = lprovider.indexOf(DataProvider.ZBW);
-			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"before transform");
+			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"before transform");
 			if (lprovider.indexOf(DataProvider.ZBW_EEXCESS)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.ZBW_EEXCESS);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"done transform");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"done transform");
 			}
 			if (lprovider.indexOf(DataProvider.ZBW_enriched)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.ZBW_enriched);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"enriched");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"enriched");
 			}
 		}
 		
 		if (lprovider.indexOf(DataProvider.DDB)>=0)
 		{
 			int i = lprovider.indexOf(DataProvider.DDB);
-			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"before transform");
+			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"before transform");
 			if (lprovider.indexOf(DataProvider.DDB_EEXCESS)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.DDB_EEXCESS);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"done transform");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"done transform");
 			}
 			if (lprovider.indexOf(DataProvider.DDB_enriched)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.DDB_enriched);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"enriched");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"enriched");
 			}
 		}
 		
 		if (lprovider.indexOf(DataProvider.Mendeley)>=0)
 		{
 			int i = lprovider.indexOf(DataProvider.Mendeley);
-			dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"before transform");
+			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"before transform");
 			if (lprovider.indexOf(DataProvider.Mendeley_EEXCESS)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.Mendeley_EEXCESS);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"done transform");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"done transform");
 			}
 			if (lprovider.indexOf(DataProvider.Mendeley_enriched)>=0)
 			{
 				i = lprovider.indexOf(DataProvider.Mendeley_enriched);
-				dataset.addValue(ldatafieldCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"enriched");
+				dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"enriched");
 			}
 		}
 		
 		
-		JFreeChart chart = ChartFactory.createLineChart("check enrichment", "transformation", "datafields", dataset);
+		JFreeChart chart = ChartFactory.createLineChart("check enrichment: datafields / record", "transformation", "non empty datafields / record", dataset);
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
 		// get a reference to the plot for further customization... 
-		final CategoryPlot plot = chart.getCategoryPlot(); 
+		CategoryPlot plot = chart.getCategoryPlot(); 
 		plot.setDrawingSupplier(new ChartDrawingSupplier());
 		
 		// CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
@@ -157,6 +162,110 @@ public class CheckEnrichment {
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
 		File outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" +"-overview-"+nWidth+"x"+nHeight+".png");
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
+		// - - - - - - - - - - - - - - - - - - - - - - enrichment links - - - - - - - - - - - - - - - - - - - - - - - - - -
+		dataset = new DefaultCategoryDataset ();
+        
+		if (lprovider.indexOf(DataProvider.KIMCollect)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.KIMCollect);
+			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.KIMCollect_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.KIMCollect_EEXCESS);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.KIMCollect_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.KIMCollect_enriched);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"enriched");
+			}
+		}
+		
+		if (lprovider.indexOf(DataProvider.Europeana)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.Europeana);
+			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.Europeana_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.Europeana_EEXCESS);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.Europeana_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.Europeana_enriched);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"enriched");
+			}
+		}
+		
+		if (lprovider.indexOf(DataProvider.ZBW)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.ZBW);
+			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.ZBW_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.ZBW_EEXCESS);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.ZBW_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.ZBW_enriched);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"enriched");
+			}
+		}
+		
+		if (lprovider.indexOf(DataProvider.DDB)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.DDB);
+			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.DDB_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.DDB_EEXCESS);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.DDB_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.DDB_enriched);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"enriched");
+			}
+		}
+		
+		if (lprovider.indexOf(DataProvider.Mendeley)>=0)
+		{
+			int i = lprovider.indexOf(DataProvider.Mendeley);
+			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"before transform");
+			if (lprovider.indexOf(DataProvider.Mendeley_EEXCESS)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.Mendeley_EEXCESS);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"done transform");
+			}
+			if (lprovider.indexOf(DataProvider.Mendeley_enriched)>=0)
+			{
+				i = lprovider.indexOf(DataProvider.Mendeley_enriched);
+				dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"enriched");
+			}
+		}
+		
+		
+		chart = ChartFactory.createLineChart("check enrichment: links / record", "transformation", "links / record", dataset);
+		chart.setAntiAlias(true);
+		chart.setBackgroundPaint(Color.white);
+		// get a reference to the plot for further customization... 
+		plot = chart.getCategoryPlot(); 
+		plot.setDrawingSupplier(new ChartDrawingSupplier());
+		
+		// CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
+	    // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
+		setupFonts(chart, plot);
+        img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+		outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" +"-link-"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {

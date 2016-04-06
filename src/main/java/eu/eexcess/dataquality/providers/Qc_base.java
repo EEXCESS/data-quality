@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -290,7 +291,8 @@ public class Qc_base implements Qc_interface {
 		}
 		return nReturn;
 	}
-
+	
+	ArrayList<String> lUniqueLinks = new ArrayList<String>();
 	/*
 	 * count Links in nodes
 	 * */
@@ -309,7 +311,11 @@ public class Qc_base implements Qc_interface {
 //					actNodeTextContent.toLowerCase().startsWith("data://")
 					)
 				){
-				nReturn++;
+				if (lUniqueLinks.contains(actNodeTextContent.toLowerCase().trim()) == false)
+				{
+					lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
+					nReturn++;
+				}
 			} 
 			
 			if (actNode.getAttributes() != null && bSearchAttributes == true && actNode.getAttributes().getLength() > 0)
@@ -318,7 +324,9 @@ public class Qc_base implements Qc_interface {
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
 					Node attribute = attributes.item(attributesIndex);
 					String value = attribute.getNodeValue();
-					if (value != null && !value.isEmpty() && 
+					String nodeName = attribute.getNodeName();
+					
+					if (value != null && !value.isEmpty() && !nodeName.startsWith("xmlns:") &&
 							(value.toLowerCase().trim().startsWith("http://") || 
 							 value.toLowerCase().trim().startsWith("https://") || 
 							 value.toLowerCase().trim().startsWith("ftp://")
@@ -327,7 +335,14 @@ public class Qc_base implements Qc_interface {
 //							 value.toLowerCase().startsWith("data://")									
 							)
 						){
-						nReturn++;
+						if (lUniqueLinks.contains(actNodeTextContent.toLowerCase().trim()) == false &&
+								!value.toLowerCase().trim().endsWith("/enrichedproxy/") &&
+								!value.toLowerCase().trim().endsWith("/aggregation/") &&
+								!value.toLowerCase().trim().endsWith("/proxy/"))
+						{
+							lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
+							nReturn++;
+						}
 					}
 				}
 			}

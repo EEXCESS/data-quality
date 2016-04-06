@@ -80,14 +80,13 @@ public class Qc_eexcess_enriched extends Qc_base {
 			{
 				for (int i = 0; i < nodeChilds.getLength(); i++) {
 					if (nodeChilds.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						System.out.println(nodeChilds.item(i).getNodeName());
+						// System.out.println(nodeChilds.item(i).getNodeName());
 						if (lsBlackList.contains(nodeChilds.item(i).getNodeName()) == false)
 						{
 							nReturn++;
 						}
 						else if (nodeChilds.item(i).getNodeName() == "ore:proxyIn")
 						{
-							
 							if (nodeChilds.item(i).hasChildNodes())
 							{
 								NodeList nodeListAggr = nodeChilds.item(i).getChildNodes();
@@ -97,7 +96,7 @@ public class Qc_eexcess_enriched extends Qc_base {
 									{
 										if (nodeListAggr.item(j).getNodeName() == "ore:Aggregation")
 										{
-											System.out.println(nodeListAggr.item(j).getNodeName());
+											// System.out.println(nodeListAggr.item(j).getNodeName());
 											nReturn += countDataFieldsNode(nodeListAggr.item(j), searchType);
 										}
 									}
@@ -109,12 +108,12 @@ public class Qc_eexcess_enriched extends Qc_base {
 			}
 			else if (searchType == SearchType.linkDataFields) {
 				for (int i = 0; i < nodeChilds.getLength(); i++) {
-					nReturn = countLinksInNodes(nReturn, nodeChilds.item(i), false);
+					nReturn = countLinksInNodes(nReturn, nodeChilds.item(i), true);
 				}
 			}
 			else if (searchType == SearchType.uriDataFields) {
 				for (int i = 0; i < nodeChilds.getLength(); i++) {
-					nReturn = countAccessibleLinks(nReturn, nodeChilds.item(i), false);
+					nReturn = countAccessibleLinks(nReturn, nodeChilds.item(i), true);
 				}
 			}
 		}
@@ -148,7 +147,7 @@ public class Qc_eexcess_enriched extends Qc_base {
 				}
 				else
 				{
-					System.out.println(xmlFileName);
+					// System.out.println(xmlFileName);
 				}
 				
 				File f = new File(xmlFileName);
