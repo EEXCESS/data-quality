@@ -151,10 +151,26 @@ public class Qc_dataprovider {
 	}
 	
 	// check enrichment
+	@SuppressWarnings("incomplete-switch")
 	private void checkEnrichment()
 	{
 		CheckEnrichment enrichment = new CheckEnrichment();
-		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH);
+		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, null);
+		for (int i=0; i<paramDataList.size();i++)
+		{
+			switch (paramDataList.get(i).getProvider())
+			{
+				case ZBW:
+				case Wissenmedia:
+				case Mendeley:
+				case DDB:
+				case cultureWeb:
+				case Europeana:
+				case KIMCollect:
+					enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH,paramDataList.get(i).getProvider());
+					break;
+			}
+		}
 	}
 
 	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
@@ -718,6 +734,11 @@ public class Qc_dataprovider {
 			filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
 			htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 	        
+			htmlReport += "<p>...--...</p>";
+			
+			// TODO print out graphic
+			// htmlReport += "<img src=\""+Qc_dataprovider.outputDir + "enrichment" +"-link-" + dataprovider.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\">";
+			
 	        iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();

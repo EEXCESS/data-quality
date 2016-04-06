@@ -36,7 +36,7 @@ public class CheckEnrichment {
 	ArrayList<Integer> ldatafieldNonEmptyCount = new ArrayList<Integer>();
 	ArrayList<Integer> ldatafieldLinkCount = new ArrayList<Integer>();
 	
-	public void CalcEnrichment(Qc_paramDataList paramDataList, int nWidth, int nHeight)
+	public void CalcEnrichment(Qc_paramDataList paramDataList, int nWidth, int nHeight, DataProvider providerSelected)
 	{
 		for (int i=0; i<paramDataList.size();i++)
 		{
@@ -68,7 +68,7 @@ public class CheckEnrichment {
 		// - - - - - - - - - - - - - - - - - - - - - - enrichment overview - - - - - - - - - - - - - - - - - - - - - - - - - -
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
         
-		if (lprovider.indexOf(DataProvider.KIMCollect)>=0)
+		if (lprovider.indexOf(DataProvider.KIMCollect)>=0 && (providerSelected == null || providerSelected == DataProvider.KIMCollect))
 		{
 			int i = lprovider.indexOf(DataProvider.KIMCollect);
 			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"before transform");
@@ -84,7 +84,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.Europeana)>=0)
+		if (lprovider.indexOf(DataProvider.Europeana)>=0 && (providerSelected == null || providerSelected == DataProvider.Europeana))
 		{
 			int i = lprovider.indexOf(DataProvider.Europeana);
 			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"before transform");
@@ -100,7 +100,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.ZBW)>=0)
+		if (lprovider.indexOf(DataProvider.ZBW)>=0 && (providerSelected == null || providerSelected == DataProvider.ZBW))
 		{
 			int i = lprovider.indexOf(DataProvider.ZBW);
 			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"before transform");
@@ -116,7 +116,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.DDB)>=0)
+		if (lprovider.indexOf(DataProvider.DDB)>=0 && (providerSelected == null || providerSelected == DataProvider.DDB))
 		{
 			int i = lprovider.indexOf(DataProvider.DDB);
 			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"before transform");
@@ -132,7 +132,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.Mendeley)>=0)
+		if (lprovider.indexOf(DataProvider.Mendeley)>=0 && (providerSelected == null || providerSelected == DataProvider.Mendeley))
 		{
 			int i = lprovider.indexOf(DataProvider.Mendeley);
 			dataset.addValue(ldatafieldNonEmptyCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"before transform");
@@ -161,7 +161,15 @@ public class CheckEnrichment {
 		setupFonts(chart, plot);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" +"-overview-"+nWidth+"x"+nHeight+".png");
+        File outputfile = null;
+        if (providerSelected == null)
+        {
+        	outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" +"-overview-"+nWidth+"x"+nHeight+".png");
+        }
+        else
+        {
+        	outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" + "-" + providerSelected.toString() + "-"+nWidth+"x"+nHeight+".png");
+        }
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
@@ -172,7 +180,7 @@ public class CheckEnrichment {
 		// - - - - - - - - - - - - - - - - - - - - - - enrichment links - - - - - - - - - - - - - - - - - - - - - - - - - -
 		dataset = new DefaultCategoryDataset ();
         
-		if (lprovider.indexOf(DataProvider.KIMCollect)>=0)
+		if (lprovider.indexOf(DataProvider.KIMCollect)>=0 && (providerSelected == null || providerSelected == DataProvider.KIMCollect))
 		{
 			int i = lprovider.indexOf(DataProvider.KIMCollect);
 			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.KIMCollect.name(),"before transform");
@@ -188,7 +196,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.Europeana)>=0)
+		if (lprovider.indexOf(DataProvider.Europeana)>=0 && (providerSelected == null || providerSelected == DataProvider.Europeana))
 		{
 			int i = lprovider.indexOf(DataProvider.Europeana);
 			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Europeana.name(),"before transform");
@@ -204,7 +212,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.ZBW)>=0)
+		if (lprovider.indexOf(DataProvider.ZBW)>=0 && (providerSelected == null || providerSelected == DataProvider.ZBW))
 		{
 			int i = lprovider.indexOf(DataProvider.ZBW);
 			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.ZBW.name(),"before transform");
@@ -220,7 +228,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.DDB)>=0)
+		if (lprovider.indexOf(DataProvider.DDB)>=0 && (providerSelected == null || providerSelected == DataProvider.DDB))
 		{
 			int i = lprovider.indexOf(DataProvider.DDB);
 			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.DDB.name(),"before transform");
@@ -236,7 +244,7 @@ public class CheckEnrichment {
 			}
 		}
 		
-		if (lprovider.indexOf(DataProvider.Mendeley)>=0)
+		if (lprovider.indexOf(DataProvider.Mendeley)>=0 && (providerSelected == null || providerSelected == DataProvider.Mendeley))
 		{
 			int i = lprovider.indexOf(DataProvider.Mendeley);
 			dataset.addValue(ldatafieldLinkCount.get(i)/lrecordCount.get(i), DataProvider.Mendeley.name(),"before transform");
@@ -265,7 +273,14 @@ public class CheckEnrichment {
 		setupFonts(chart, plot);
         img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		outputfile = new File(Qc_dataprovider.outputDir+ "enrichment" +"-link-"+nWidth+"x"+nHeight+".png");
+        if (providerSelected == null)
+        {
+        	outputfile = new File(Qc_dataprovider.outputDir + "enrichment" +"-link-" +nWidth+"x"+nHeight+".png");
+        }
+        else
+        {
+        	outputfile = new File(Qc_dataprovider.outputDir + "enrichment" +"-link-" + providerSelected.toString() + nWidth+"x"+nHeight+".png");
+        }
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
