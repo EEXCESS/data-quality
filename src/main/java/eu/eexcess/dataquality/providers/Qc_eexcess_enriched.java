@@ -87,7 +87,6 @@ public class Qc_eexcess_enriched extends Qc_base {
 						}
 						else if (nodeChilds.item(i).getNodeName() == "ore:proxyIn")
 						{
-							
 							if (nodeChilds.item(i).hasChildNodes())
 							{
 								NodeList nodeListAggr = nodeChilds.item(i).getChildNodes();

@@ -318,7 +318,8 @@ public class Qc_base implements Qc_interface {
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
 					Node attribute = attributes.item(attributesIndex);
 					String value = attribute.getNodeValue();
-					if (value != null && !value.isEmpty() && 
+					String nodeName = attribute.getNodeName();
+					if (value != null && !value.isEmpty() && !nodeName.startsWith("xmlns:") &&
 							(value.toLowerCase().trim().startsWith("http://") || 
 							 value.toLowerCase().trim().startsWith("https://") || 
 							 value.toLowerCase().trim().startsWith("ftp://")

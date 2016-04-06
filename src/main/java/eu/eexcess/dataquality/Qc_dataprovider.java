@@ -1157,7 +1157,7 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<h3>non empty datafields</h3>";
         htmlReportGeneral += "<p>The chart shows the non empty datafields.</p>";
         htmlReportGeneral += "<img src=\"non_empty_datafields_barchart_1600x1200.png\" style=\"width:1000px;\"/>"; 
-        htmlReportGeneral += "<h3>non empty datafields per datafields</h3>";
+        htmlReportGeneral += "<h3>non empty datafields per record</h3>";
         htmlReportGeneral += "<p>The chart shows the non empty datafields in respect to the number of datafields.</p>";
         htmlReportGeneral += "<img src=\"non_empty_datafields_perdatafields_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         htmlReportGeneral += "<h3>links in datafields</h3>";
@@ -1168,8 +1168,11 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<img src=\"links_accessible_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         
         htmlReportGeneral += "<h3>enrichment statistics</h3>";
-        htmlReportGeneral += "<p>The chart shows the number of datafields during the enrichment process.</p>";
+        htmlReportGeneral += "<p>The chart shows the number of non empty datafields during the enrichment process.</p>";
         htmlReportGeneral += "<img src=\"enrichment-overview-1600x1200.png\" style=\"width:1000px;\"/>";
+        
+        htmlReportGeneral += "<p>The chart shows the number of links per record during the enrichment process.</p>";
+        htmlReportGeneral += "<img src=\"enrichment-link-1600x1200.png\" style=\"width:1000px;\"/>";
 
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";
