@@ -604,9 +604,9 @@ public class Qc_dataprovider {
 		if (dataprovider.equals(DATAPROVIDER_EUROPEANA))
 			return new Qc_europeana();
 		if (dataprovider.equals(DATAPROVIDER_KIMCOLLECT))
-			return new Qc_kimcollect();
-		if (dataprovider.equals(DATAPROVIDER_KIMPORTAL))
 			return new Qc_cultureWeb();
+		if (dataprovider.equals(DATAPROVIDER_KIMPORTAL))
+			return new Qc_kimcollect();
 		if (dataprovider.equals(DATAPROVIDER_MENDELEY))
 			return new Qc_mendeley();
 		if (dataprovider.equals(DATAPROVIDER_ZBW))
