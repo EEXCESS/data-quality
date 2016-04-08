@@ -734,6 +734,32 @@ public class Qc_dataprovider {
 			filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
 			htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 	        
+			if ( dataprovider.equals(DATAPROVIDER_DDB) || dataprovider.equals(DATAPROVIDER_D_D_B))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.DDB.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.DDB.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_EUROPEANA))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.Europeana.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.Europeana.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_MENDELEY))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.Mendeley.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.Mendeley.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_ZBW))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.ZBW.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.ZBW.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_KIMPORTAL))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.KIMCollect.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.KIMCollect.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			
 			htmlReport += "<p>...--...</p>";
 			
 			// TODO print out graphic

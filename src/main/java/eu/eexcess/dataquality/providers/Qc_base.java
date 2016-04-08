@@ -313,6 +313,11 @@ public class Qc_base implements Qc_interface {
 				){
 				if (lUniqueLinks.contains(actNodeTextContent.toLowerCase().trim()) == false)
 				{
+					// ##################################################################################
+					if (this.xmlFileName.endsWith("1459850177720-2016-04-05--11.56.17.859-ZBW-ZBWTransformer-done-transform-detail.xml"))
+					{
+						System.out.println(actNodeTextContent.toLowerCase().trim());
+					}
 					lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
 					nReturn++;
 				}
@@ -341,6 +346,12 @@ public class Qc_base implements Qc_interface {
 								!value.toLowerCase().trim().endsWith("/proxy/"))
 						{
 							lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
+							
+							// ##################################################################################
+							if (this.xmlFileName.endsWith("1459850177720-2016-04-05--11.56.17.859-ZBW-ZBWTransformer-done-transform-detail.xml"))
+							{
+								System.out.println(value.toLowerCase().trim());
+							}
 							nReturn++;
 						}
 					}
