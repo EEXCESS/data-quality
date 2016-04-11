@@ -149,7 +149,7 @@ public class CheckEnrichment {
 		}
 		
 		
-		JFreeChart chart = ChartFactory.createLineChart("check enrichment: datafields / record", "transformation", "non empty datafields / record", dataset);
+		JFreeChart chart = ChartFactory.createLineChart("check enrichment: data fields / record", " ", "non empty data fields / record", dataset);
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
 		// get a reference to the plot for further customization... 
@@ -261,7 +261,7 @@ public class CheckEnrichment {
 		}
 		
 		
-		chart = ChartFactory.createLineChart("check enrichment: links / record", "transformation", "links / record", dataset);
+		chart = ChartFactory.createLineChart("check enrichment: links / record", " ", "links / record", dataset);
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
 		// get a reference to the plot for further customization... 
