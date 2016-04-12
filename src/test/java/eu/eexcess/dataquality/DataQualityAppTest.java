@@ -165,6 +165,14 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
     
+    public void testAppInputStructurednessTestbedLinksNotReachable()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-links-not-reachable"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+    
+    
     public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};

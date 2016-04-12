@@ -313,11 +313,6 @@ public class Qc_base implements Qc_interface {
 				){
 				if (lUniqueLinks.contains(actNodeTextContent.toLowerCase().trim()) == false)
 				{
-					// ##################################################################################
-					if (this.xmlFileName.endsWith("1459850177720-2016-04-05--11.56.17.859-ZBW-ZBWTransformer-done-transform-detail.xml"))
-					{
-						System.out.println(actNodeTextContent.toLowerCase().trim());
-					}
 					lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
 					nReturn++;
 				}
@@ -346,12 +341,6 @@ public class Qc_base implements Qc_interface {
 								!value.toLowerCase().trim().endsWith("/proxy/"))
 						{
 							lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
-							
-							// ##################################################################################
-							if (this.xmlFileName.endsWith("1459850177720-2016-04-05--11.56.17.859-ZBW-ZBWTransformer-done-transform-detail.xml"))
-							{
-								System.out.println(value.toLowerCase().trim());
-							}
 							nReturn++;
 						}
 					}
@@ -395,15 +384,12 @@ public class Qc_base implements Qc_interface {
 				nReturn++;
 				try{
 				    final URLConnection connection = new URL(textContent).openConnection();
-				    connection.setConnectTimeout(1000);
+				    connection.setConnectTimeout(500);
 				    connection.setReadTimeout(2000);
 				    connection.setUseCaches(false);
 				    connection.connect();
-
 				    //System.out.println("Ressource " + textContent + " is available. ");
 				    //available = true;
-				    
-				    
 				} 
 				catch (UnknownHostException e){
 					nReturn--;
@@ -419,7 +405,11 @@ public class Qc_base implements Qc_interface {
 					nReturn--;
 					//Log.info("Ressource " + textContent + " NOT available. ", e);				    
 					System.out.println("Ressource " + textContent + " is NOT available. " + e.getMessage());
+				} catch (RuntimeException e) {
+					nReturn--;
+					System.out.println("Ressource " + textContent + " is NOT available. " + e.getMessage());				    
 				}
+
 			} 
 //				else {
 //				
@@ -444,7 +434,7 @@ public class Qc_base implements Qc_interface {
 						nReturn++;
 						try{
 						    final URLConnection connection = new URL(value).openConnection();
-						    connection.setConnectTimeout(1000);
+						    connection.setConnectTimeout(500);
 						    connection.setReadTimeout(2000);
 						    connection.setUseCaches(false);
 						    connection.connect();
