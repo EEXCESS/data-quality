@@ -453,7 +453,11 @@ public class Qc_base implements Qc_interface {
 							nReturn--;
 							System.out.println("Ressource " + value + " is NOT available. " + e.getMessage());				    
 							//System.out.println("Ressource " + value + " NOT available. " + e.getMessage());
-						}						
+						} catch (RuntimeException e) {
+							nReturn--;
+							System.out.println("Ressource " + value + " is NOT available. " + e.getMessage());				    
+						}
+						
 					}
 				}
 			}
