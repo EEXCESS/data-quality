@@ -52,7 +52,7 @@ public class Qc_eexcess_enriched extends Qc_base {
 
 	ArrayList<String> lsBlackList = new ArrayList<String>();
 	
-	// Counts dataFields
+	// Counts dataFieldsu
 	public void countDataFields(SearchType searchType) {
 		for (int i = 0; i < nodelistRecords.getLength(); i++) {
 			if (searchType == SearchType.allDataFields) {

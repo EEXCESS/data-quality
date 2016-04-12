@@ -42,7 +42,9 @@ h5 {
 	display: none;
 }
 
-
+.flip {
+    cursor: pointer;
+}
 table {
     border-collapse: collapse;
     width: 100%;

@@ -209,8 +209,8 @@ public class Qc_dataprovider {
 					"#links"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 					"#accessible links");					
 			htmlReportInputDataStatisticsResults += "<tr><th>file</th><th>provider</th><th>#records</th><th>mean fields/record</th><th>min fields/record</th>"+
-					"<th>max fields/record</th><th>mean non empty fields/record</th><th>mean non empty fields per datafields/record</th><th>mean empty fields/record</th>"+
-					"<th>mean empty fields per datafields/record</th><th>links/record</th><th>accessible links/record</th><th>#links</th><th>#accessible links</th></tr>";
+					"<th>max fields/record</th><th>mean non empty fields/record</th><th>mean non empty fields per data fields/record</th><th>mean empty fields/record</th>"+
+					"<th>mean empty fields per data fields/record</th><th>links/record</th><th>accessible links/record</th><th>#links</th><th>#accessible links</th></tr>";
 			
 			for (int i = 0; i < paramDataList.size(); i++) {
 				Qc_params param = paramDataList.get(i);
@@ -290,9 +290,9 @@ public class Qc_dataprovider {
 			writerStatisticRecords.newLine();
 			htmlReportInputDataStatisticsDataprovider += "<tr><th>"+"provider"+"</th><th>"+"#records"+"</th><th>"+"mean fields/record"+"</th><th>"+"min fields/record"+"</th><th>"+"max fields/record"+"</th><th>"+
 					"mean non empty fields/record"+"</th><th>"+
-					"mean non empty fields per datafields/record"+"</th><th>"+
+					"mean non empty fields per data fields/record"+"</th><th>"+
 					"mean empty fields/record"+"</th><th>"+
-					"mean empty fields per datafields/record"+"</th><th>"+
+					"mean empty fields per data fields/record"+"</th><th>"+
 					//uriCheck
 					//"mean links/record");
 					"mean links/record"+"</th><th>"+
@@ -642,12 +642,13 @@ public class Qc_dataprovider {
 		
 		String htmlReportGeneral = "<html xmlns:prov=\"http://www.w3.org/ns/prov#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" lang=\"en\">";
 		htmlReportGeneral += " <head><title>EEXCESS Data Quality Report</title>";
+		htmlReportGeneral += "<link rel=\"icon\" href=\"./eexcess.ico\" type=\"image/x-icon\" />";
 		htmlReportGeneral += "<link rel=\"stylesheet\" type=\"text/css\" href=\"./report.css\">";
 		htmlReportGeneral += "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
 		htmlReportGeneral += " </head>";
 		htmlReportGeneral += " <body>";
 		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		htmlReportGeneral += "<h1>EEXCESS Data Quality Report</h1><br/><h2>generated at:" +dt.format(new Date(System.currentTimeMillis()))+"</h2>";
+		htmlReportGeneral += "<h1><img src=\"./eexcess_Logo.jpg\"> Data Quality Report</h1><br/><h2>generated at: " +dt.format(new Date(System.currentTimeMillis()))+"</h2>";
 		String htmlReportGeneralHeader = htmlReportGeneral;
 		htmlReportGeneral += "<p>Portals providing access to different data provider more and more face the problem of \"data quality\". Data providers and aggregators are asked to do more quality checks on data they deliver. This clearly calls for more automation of the quality assessment process. In EEXCESS we decided to implement and include easy to handle features and analysis methods to provide feedback to the data provider regarding the data quality. Therefore, questions regarding the metadata provenance, the referencing of terms from relevant online vocabularies or the usage of open multilingual vocabularies and last but not least the very important questions regarding metadata rights that indicate the options for reusing the published resources have been stressed.</p>"; 
 		htmlReportGeneral += "<p>We determine measure about the structuredness of values, for example of fields containing dates, names or dimensions of objects. The aim is not only to make a binary decision whether they are structured, but also whether the format the field can be inferred.</p>";
@@ -734,20 +735,41 @@ public class Qc_dataprovider {
 			filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
 			htmlReport += "<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>";
 	        
-			htmlReport += "<p>...--...</p>";
-			
-			// TODO print out graphic
-			// htmlReport += "<img src=\""+Qc_dataprovider.outputDir + "enrichment" +"-link-" + dataprovider.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\">";
-			
+			if ( dataprovider.equals(DATAPROVIDER_DDB) || dataprovider.equals(DATAPROVIDER_D_D_B))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.DDB.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.DDB.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_EUROPEANA))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.Europeana.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.Europeana.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_MENDELEY))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.Mendeley.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.Mendeley.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_ZBW))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.ZBW.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.ZBW.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+			else if ( dataprovider.equals(DATAPROVIDER_KIMPORTAL))
+			{
+				htmlReport += "<img src=\"./enrichment-" + DataProvider.KIMCollect.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.KIMCollect.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+			}
+					
 	        iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
-	            htmlReport += "<h4 id=\""+dataprovider+field+"Header\" class=\"flip\">Field:" + field +"</h4>";
-	            htmlReport +="<div id=\""+dataprovider+field+"Panel\" class=\"panel\">";
+	            htmlReport += "<h4 id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"Header\" class=\"flip\">Field:" + field +"</h4>";
+	            htmlReport +="<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"Panel\" class=\"panel\">";
 
-	            htmlReportJavascript += "$(\"#"+dataprovider+field+"Header\").click(function(){";
-	            htmlReportJavascript += "    $(\"#"+dataprovider+field+"Panel\").slideToggle(\"slow\");";
+	            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"Header\").click(function(){";
+	            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"Panel\").slideToggle(\"slow\");";
 	            htmlReportJavascript +="});";
 
 	            StructureRecResult result = fieldResult.getValue();
@@ -893,11 +915,11 @@ public class Qc_dataprovider {
 							htmlReport += "<td>";
 							
 							
-				            htmlReport += "<div id=\""+dataprovider+field+"PatternSource"+helpCount+"Header\" class=\"flip\">show</h4>";
-				            htmlReport +="<div id=\""+dataprovider+field+"PatternSource"+helpCount+"Panel\" class=\"panel\">";
+				            htmlReport += "<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\" class=\"panel\">";
 
-				            htmlReportJavascript += "$(\"#"+dataprovider+field+"PatternSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"PatternSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\").slideToggle(\"slow\");";
 				            htmlReportJavascript +="});";
 
 							
@@ -977,11 +999,11 @@ public class Qc_dataprovider {
 							htmlReport += "<td>";
 							
 							
-				            htmlReport += "<div id=\""+dataprovider+field+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show</h4>";
-				            htmlReport +="<div id=\""+dataprovider+field+"PatternRegExSource"+helpCount+"Panel\" class=\"panel\">";
+				            htmlReport += "<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\" class=\"panel\">";
 
-				            htmlReportJavascript += "$(\"#"+dataprovider+field+"PatternRegExSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"PatternRegExSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\").slideToggle(\"slow\");";
 				            htmlReportJavascript +="});";
 
 							
@@ -1063,11 +1085,11 @@ public class Qc_dataprovider {
 								htmlReport += "<td>";
 								
 								
-					            htmlReport += "<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
-					            htmlReport +="<div id=\""+dataprovider+field+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">";
+					            htmlReport += "<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+					            htmlReport +="<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">";
 	
-					            htmlReportJavascript += "$(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Header\").click(function(){";
-					            htmlReportJavascript += "    $(\"#"+dataprovider+field+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+					            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\").click(function(){";
+					            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
 					            htmlReportJavascript +="});";
 	
 								
@@ -1119,11 +1141,11 @@ public class Qc_dataprovider {
 							htmlReport += "<td>";
 							
 							
-				            htmlReport += "<div id=\""+dataprovider+field+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
-				            htmlReport +="<div id=\""+dataprovider+field+"UrlFormatSource"+helpCount+"Panel\" class=\"panel\">";
+				            htmlReport += "<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>";
+				            htmlReport +="<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\" class=\"panel\">";
 
-				            htmlReportJavascript += "$(\"#"+dataprovider+field+"UrlFormatSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider+field+"UrlFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\").click(function(){";
+				            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
 				            htmlReportJavascript +="});";
 
 							
@@ -1172,24 +1194,24 @@ public class Qc_dataprovider {
         htmlReportGeneral += "</ul>";
         htmlReportGeneral += "More details on the input data is provided in the <a href=\"dataquality-report-inputdata.html\">Inputdata report</a>";
         
-        htmlReportGeneral += "<h3>All datafields</h3>";
-        htmlReportGeneral += "<p>The chart shows how many datafields are provided by dataprovider.</p>";
+        htmlReportGeneral += "<h3>All data fields</h3>";
+        htmlReportGeneral += "<p>The chart shows how many data fields are provided by the data providers.</p>";
         htmlReportGeneral += "<img src=\"all_datafields_bar_chart_1600x1200.png\" style=\"width:1000px;\"/>"; 
-        htmlReportGeneral += "<h3>non empty datafields</h3>";
-        htmlReportGeneral += "<p>The chart shows the non empty datafields.</p>";
+        htmlReportGeneral += "<h3>non empty data fields</h3>";
+        htmlReportGeneral += "<p>The chart shows the non empty data fields.</p>";
         htmlReportGeneral += "<img src=\"non_empty_datafields_barchart_1600x1200.png\" style=\"width:1000px;\"/>"; 
-        htmlReportGeneral += "<h3>non empty datafields per record</h3>";
-        htmlReportGeneral += "<p>The chart shows the non empty datafields in respect to the number of datafields.</p>";
+        htmlReportGeneral += "<h3>non empty data fields per record</h3>";
+        htmlReportGeneral += "<p>The chart shows the non empty data fields in respect to the number of data fields.</p>";
         htmlReportGeneral += "<img src=\"non_empty_datafields_perdatafields_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
-        htmlReportGeneral += "<h3>links in datafields</h3>";
-        htmlReportGeneral += "<p>The chart shows how many links are in the datafields.</p>";
+        htmlReportGeneral += "<h3>links per record and per data provider</h3>";
+        htmlReportGeneral += "<p>The chart shows the number of links per record.</p>";
         htmlReportGeneral += "<img src=\"links_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         htmlReportGeneral += "<h3>links accessible</h3>";
         htmlReportGeneral += "<p>The chart shows how many links are accessible.</p>";
         htmlReportGeneral += "<img src=\"links_accessible_barchart_1600x1200.png\" style=\"width:1000px;\"/>";
         
         htmlReportGeneral += "<h3>enrichment statistics</h3>";
-        htmlReportGeneral += "<p>The chart shows the number of non empty datafields during the enrichment process.</p>";
+        htmlReportGeneral += "<p>The chart shows the number of non empty data fields during the enrichment process.</p>";
         htmlReportGeneral += "<img src=\"enrichment-overview-1600x1200.png\" style=\"width:1000px;\"/>";
         
         htmlReportGeneral += "<p>The chart shows the number of links per record during the enrichment process.</p>";
@@ -1201,7 +1223,7 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<li><a target=\"_blank\" href=\""+DataQualityVocabularyRDFWriter.STATISTICS_DATAPROVIDER_XML_FILENAME+"\">Data Quality Report (RDF/XML) </a></li>";
         htmlReportGeneral += "</ul>";
         
-        htmlReportGeneral += "<h3>Reports for single Dataproviders</h3>";
+        htmlReportGeneral += "<h3>Reports for single data providers</h3>";
         htmlReportGeneral += htmlReportGeneralDataproviders;
         
         htmlReportGeneral += "<h3>Stats of the report generation</h3>";
@@ -1210,8 +1232,8 @@ public class Qc_dataprovider {
 		double timespanS = timespanMS / 1000;
 		double timespanM = timespanS / 60;
         htmlReportGeneral += "<p>Report generation </br>"+
-        					"started  at:"+dt.format(new Date(timestampStart))+"</br>" +
-        					"finished at:"+dt.format(new Date(System.currentTimeMillis()))+"</br>";
+        					"started at: "+dt.format(new Date(timestampStart))+"</br>" +
+        					"finished at: "+dt.format(new Date(System.currentTimeMillis()))+"</br>";
         
         htmlReportGeneral += "Elapsed time for processing: " + (timestampEnd - timestampStart) + "ms. ("+timespanS+"s or "+timespanM+"m)</p>";
 
@@ -1231,7 +1253,7 @@ public class Qc_dataprovider {
 	private void printInputDataInfoReport(String htmlReportGeneral) {
 		
 		String htmlReport = htmlReportGeneral;
-		htmlReport += "<h2>Inputdata</h2>";
+		htmlReport += "<h2>Input data</h2>";
 		htmlReport += "This report was generated using the files located at:<ul>" ;
         for (int i = 0; i < this.inputDirs.size(); i++) {
         	htmlReport += "<li>"+this.inputDirs.get(i)+"</li>" ;
@@ -1247,7 +1269,7 @@ public class Qc_dataprovider {
         htmlReport += "The dataset includes <b>"+numberRecords + "</b> records in <b>"+paramDataList.size() + "</b> files.";
         htmlReport += "</p>";
         
-		htmlReport += "<h3>Statistics by dataprovider</h3>";
+		htmlReport += "<h3>Statistics by data provider</h3>";
 		htmlReport += this.htmlReportInputDataStatisticsDataprovider;
 		
 		htmlReport += "<h3>Statistics by input file</h3>";
@@ -1301,6 +1323,39 @@ public class Qc_dataprovider {
 		copyResourcesCSS();
 	    copyResourcesJQplot();
 	    copyResourcesInputXML();
+	    copyResource("eexcess.ico");
+	    copyResource("eexcess_Logo.jpg");
+	}
+	
+	private void copyResource(String sFile)
+	{
+		InputStream inStream = null;
+		OutputStream outStream = null;
+	    try{
+	      try {
+	    	  File file = new File("./resources/" + sFile);
+	    	  inStream = new FileInputStream(file); 
+	        byte[] bucket = new byte[32*1024];
+	        outStream = new BufferedOutputStream(new FileOutputStream(Qc_dataprovider.outputDir + sFile));
+	        int bytesRead = 0;
+	        while(bytesRead != -1){
+	          bytesRead = inStream.read(bucket); //-1, 0, or more
+	          if(bytesRead > 0){
+	            outStream.write(bucket, 0, bytesRead);
+	          }
+	        }
+	      }
+	      finally {
+	        if (inStream != null) inStream.close();
+	        if (outStream != null) outStream.close();
+	      }
+	    }
+	    catch (FileNotFoundException ex){
+	      System.out.println("File not found: " + ex);
+	    }
+	    catch (IOException ex){
+	    	System.out.println(ex);
+	    }
 	}
 
 	private void copyResourcesCSS() {
