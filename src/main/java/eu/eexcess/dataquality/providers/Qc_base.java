@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -315,6 +316,7 @@ public class Qc_base implements Qc_interface {
 				if (lUniqueLinks.contains(actNodeTextContent.toLowerCase().trim()) == false)
 				{
 					lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
+					countTrustedLinks(actNodeTextContent.toLowerCase().trim());
 					nReturn++;
 				}
 			} 
@@ -341,7 +343,8 @@ public class Qc_base implements Qc_interface {
 								!value.toLowerCase().trim().endsWith("/aggregation/") &&
 								!value.toLowerCase().trim().endsWith("/proxy/"))
 						{
-							lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
+							lUniqueLinks.add(value.toLowerCase().trim());
+							countTrustedLinks(value.toLowerCase().trim());
 							nReturn++;
 						}
 					}
@@ -359,6 +362,15 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 
+	protected void countTrustedLinks(String sLink)
+	{
+		param.addTrustedLink(sLink);
+	}
+	
+	public HashMap<String,Integer> getTrustedLinksCount()
+	{
+		return param.getTrustedLinksCount();
+	}
 	
 	protected int countAccessibleLinks(int nReturn, Node actNode, boolean bSearchAttributes) {
 		
@@ -446,6 +458,7 @@ public class Qc_base implements Qc_interface {
 						nReturn++;
 						try{
 						    final URLConnection connection = new URL(value).openConnection();
+						    
 						    connection.setConnectTimeout(500);
 						    connection.setReadTimeout(2000);
 						    connection.setUseCaches(false);

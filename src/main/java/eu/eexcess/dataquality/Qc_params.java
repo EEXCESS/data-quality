@@ -19,16 +19,29 @@ package eu.eexcess.dataquality;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 
 public class Qc_params {
 
+	Qc_trustedLinks trustedLinks = new Qc_trustedLinks();
+	
 	public Qc_params(DataProvider provider) {
 		this.provider = provider;
 	}
+	
+	public void addTrustedLink(String sLink)
+	{
+		trustedLinks.addTrustedLink(sLink);
+	}
 
+	public HashMap<String,Integer> getTrustedLinksCount()
+	{
+		return trustedLinks.getTrustedLinksCount();
+	}
+	
 	// selected data provider
 	DataProvider provider = DataProvider.unknown;
 
