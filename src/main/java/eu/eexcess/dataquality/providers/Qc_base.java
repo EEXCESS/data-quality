@@ -395,21 +395,31 @@ public class Qc_base implements Qc_interface {
 				} 
 				catch (UnknownHostException e){
 					nReturn--;
-				    System.out.println("Ressource " + textContent + ": UnknownHostException");					
+				    System.out.println("Ressource " + textContent + ": UnknownHostException\n"+ e.getMessage());					
 				}
 				catch(final MalformedURLException e){
 					nReturn--;
-				    System.out.println("Ressource " + textContent + ": MalformedURLException");
-				    throw new IllegalStateException("Bad URL: " + textContent, e);
+				    System.out.println("Ressource " + textContent + ": MalformedURLException\n"+ e.getMessage());
+//				    throw new IllegalStateException("Bad URL: " + textContent, e);
 //				}   catch(final SocketTimeoutException e){
 //					Log.info("Ressource " + textContent + " NOT available (Timeout exceeded).", e);
 				} catch(final IOException e){
 					nReturn--;
 					//Log.info("Ressource " + textContent + " NOT available. ", e);				    
-					System.out.println("Ressource " + textContent + " is NOT available. " + e.getMessage());
+					System.out.println("Ressource " + textContent + " is NOT available. \nIOException\n" + e.getMessage());
+					if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
+						System.out.println("max connections reached...waiting...");
+						try {
+							Thread.sleep(1000*120);
+							System.out.println("now trying again...");
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 				} catch (RuntimeException e) {
 					nReturn--;
-					System.out.println("Ressource " + textContent + " is NOT available. " + e.getMessage());				    
+					System.out.println("Ressource " + textContent + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
 				}
 
 			} 
@@ -445,21 +455,30 @@ public class Qc_base implements Qc_interface {
 						}						    
 						catch (UnknownHostException e){
 								nReturn--;
-							    System.out.println("Ressource " + textContent + ": UnknownHostException");					
+							    System.out.println("Ressource " + textContent + ": UnknownHostException\n"+ e.getMessage());					
 						}						    
 						catch(final MalformedURLException e){
 							nReturn--;
-						    System.out.println("Ressource " + value + ": MalformedURLException");							
-						    throw new IllegalStateException("Bad URL: " + value, e);
+						    System.out.println("Ressource " + value + ": MalformedURLException\n"+ e.getMessage());							
+//						    throw new IllegalStateException("Bad URL: " + value, e);
 //						}   catch(final SocketTimeoutException e){
 //							Log.info("Ressource " + value + " NOT available (Timeout exceeded).", e);
 						} catch(final IOException e){
 							nReturn--;
-							System.out.println("Ressource " + value + " is NOT available. " + e.getMessage());				    
-							//System.out.println("Ressource " + value + " NOT available. " + e.getMessage());
+							System.out.println("Ressource " + value + " is NOT available. \nIOException\n" + e.getMessage());				    
+							if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
+								System.out.println("max connections reached...waiting...");
+								try {
+									Thread.sleep(1000*120);
+									System.out.println("now trying again...");
+								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
 						} catch (RuntimeException e) {
 							nReturn--;
-							System.out.println("Ressource " + value + " is NOT available. " + e.getMessage());				    
+							System.out.println("Ressource " + value + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
 						}
 						
 					}
