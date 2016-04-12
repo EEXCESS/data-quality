@@ -165,6 +165,14 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
     
+    public void testAppInputStructurednessTestbedLinksNotReachable()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-links-not-reachable"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+    
+    
     public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
@@ -189,7 +197,7 @@ public class DataQualityAppTest
     
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44Keywords2000()
     {
-    	String[] args = new String[]{ "\\\\dig-file\\DIG_IIS\\project\\EEXCESS\\data-quality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-200-keywords"};
+    	String[] args = new String[]{ "\\\\dig-file\\DIG_IIS\\project\\EEXCESS\\data-quality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-2000-keywords"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
