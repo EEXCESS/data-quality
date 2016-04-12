@@ -8,6 +8,7 @@ public class Qc_trustedLinks {
 
 	HashMap<String,String> hTrustedLinks = new HashMap<String,String>();
 	HashMap<String,Integer> hcountTrustedLinks = new HashMap<String,Integer>();
+	HashMap<String,Integer> hcountUnknownLinks = new HashMap<String,Integer>();
 	
 	public Qc_trustedLinks()
 	{
@@ -26,12 +27,14 @@ public class Qc_trustedLinks {
 	
 	public void addTrustedLink(String sLink)
 	{
+		Boolean bLinkKnown = false; 
 		Iterator<Entry<String, String>> it = hTrustedLinks.entrySet().iterator();
 		while (it.hasNext())
 		{
 			Entry<String, String> entry = it.next();
 			if (sLink.contains(entry.getValue()))
 			{
+				bLinkKnown = true;
 				if (hcountTrustedLinks.containsKey(entry.getKey())==false)
 				{
 					hcountTrustedLinks.put(entry.getKey(), 1);
@@ -43,6 +46,11 @@ public class Qc_trustedLinks {
 					hcountTrustedLinks.put(entry.getKey(), nCount);
 				}
 			}
+		}
+		
+		if (bLinkKnown == false)
+		{
+			System.out.println(sLink);
 		}
 	}
 
