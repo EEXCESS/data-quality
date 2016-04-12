@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -66,7 +67,7 @@ public class CheckEnrichment {
 		}
 		
 		// - - - - - - - - - - - - - - - - - - - - - - enrichment overview - - - - - - - - - - - - - - - - - - - - - - - - - -
-		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset ();
         
 		if (lprovider.indexOf(DataProvider.KIMCollect)>=0 && (providerSelected == null || providerSelected == DataProvider.KIMCollect))
 		{
@@ -156,8 +157,6 @@ public class CheckEnrichment {
 		CategoryPlot plot = chart.getCategoryPlot(); 
 		plot.setDrawingSupplier(new ChartDrawingSupplier());
 		
-		// CategoryAxis domainAxis = chart.getCategoryPlot().getDomainAxis();  
-	    // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI/2));
 		setupFonts(chart, plot);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
@@ -286,6 +285,8 @@ public class CheckEnrichment {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		
+		CalcTrustedLinks(paramDataList,nWidth,nHeight,providerSelected);
 	}
 	
 	private static void setupFonts(JFreeChart chart, final CategoryPlot plot) {
@@ -325,5 +326,100 @@ public class CheckEnrichment {
         {
         	
         }
+	}
+	
+	void CalcTrustedLinks(Qc_paramDataList paramDataList, int nWidth, int nHeight, DataProvider providerSelected)
+	{
+		int nRecords = 0;
+		
+		HashMap<String,Integer> hcountAllTrustedLinks = new HashMap<String,Integer>();
+		
+		for (int i=0; i<paramDataList.size();i++)
+		{
+			if (providerSelected != null)
+			{
+				if (!paramDataList.get(i).provider.toString().startsWith(providerSelected.toString()))
+				{
+					continue;
+				}
+			}
+			nRecords++;
+			String columnKey = "", rowKey = "";
+			
+			if (paramDataList.get(i).provider.toString().endsWith("enriched"))
+			{
+				columnKey = "enriched";
+			}
+			else if (paramDataList.get(i).provider.toString().endsWith("EEXCESS"))
+			{
+				columnKey = "done transform";
+			}
+			else
+			{
+				columnKey = "before transform";
+			}
+			
+			HashMap<String,Integer> hTrustedLinkCount = paramDataList.get(i).getTrustedLinksCount();
+			Iterator<Entry<String, Integer>> it = hTrustedLinkCount.entrySet().iterator();
+			while (it.hasNext())
+			{
+				Entry<String, Integer> entry = it.next();
+				rowKey = entry.getKey();
+				
+				Integer nCount = 0;
+				if (hcountAllTrustedLinks.containsKey(columnKey + "\t" + rowKey))
+				{
+					nCount = hcountAllTrustedLinks.get(columnKey + "\t" + rowKey);
+				}
+				nCount += (Integer)entry.getValue();
+				hcountAllTrustedLinks.put(columnKey + "\t" + rowKey, nCount);
+			}
+		}
+		
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset ();
+		
+		Iterator<Entry<String, Integer>> it = hcountAllTrustedLinks.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Entry<String, Integer> entry = it.next();
+			String[] sParts = entry.getKey().split("\t");
+			dataset.addValue(((double)entry.getValue() * 3) / nRecords, sParts[1], sParts[0]);
+			// System.out.println(sParts[1] + " # " + sParts[0] + " # " + entry.getValue());
+		}
+		
+		JFreeChart chart = null;
+		
+		if (providerSelected == null)
+		{
+			chart = ChartFactory.createLineChart("vocabulary links / record", " ", "vocabulary / record", dataset);
+		}
+		else
+		{
+			chart = ChartFactory.createLineChart( providerSelected.toString() + ": vocabulary links / record", " ", "vocabulary / record", dataset);
+		}
+		
+		chart.setAntiAlias(true);
+		chart.setBackgroundPaint(Color.white);
+		// get a reference to the plot for further customization... 
+		CategoryPlot plot = chart.getCategoryPlot(); 
+		plot.setDrawingSupplier(new ChartDrawingSupplier());
+		
+		setupFonts(chart, plot);
+        BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+        File outputfile = null;
+        if (providerSelected == null)
+        {
+        	outputfile = new File(Qc_dataprovider.outputDir + "vocabulary" +"-" + nWidth+"x"+nHeight+".png");
+        }
+        else
+        {
+        	outputfile = new File(Qc_dataprovider.outputDir + "vocabulary-" + providerSelected +"-" + nWidth+"x"+nHeight+".png");
+        }
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

@@ -27,6 +27,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -319,6 +320,7 @@ public class Qc_base implements Qc_interface {
 						System.out.println(actNodeTextContent.toLowerCase().trim());
 					}
 					lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
+					countTrustedLinks(actNodeTextContent.toLowerCase().trim());
 					nReturn++;
 				}
 			} 
@@ -345,13 +347,8 @@ public class Qc_base implements Qc_interface {
 								!value.toLowerCase().trim().endsWith("/aggregation/") &&
 								!value.toLowerCase().trim().endsWith("/proxy/"))
 						{
-							lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
-							
-							// ##################################################################################
-							if (this.xmlFileName.endsWith("1459850177720-2016-04-05--11.56.17.859-ZBW-ZBWTransformer-done-transform-detail.xml"))
-							{
-								System.out.println(value.toLowerCase().trim());
-							}
+							lUniqueLinks.add(value.toLowerCase().trim());
+							countTrustedLinks(value.toLowerCase().trim());
 							nReturn++;
 						}
 					}
@@ -369,6 +366,15 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 
+	protected void countTrustedLinks(String sLink)
+	{
+		param.addTrustedLink(sLink);
+	}
+	
+	public HashMap<String,Integer> getTrustedLinksCount()
+	{
+		return param.getTrustedLinksCount();
+	}
 	
 	protected int countAccessibleLinks(int nReturn, Node actNode, boolean bSearchAttributes) {
 		
