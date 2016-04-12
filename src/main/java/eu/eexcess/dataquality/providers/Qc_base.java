@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -52,8 +53,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_dataprovider;
+import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_interface;
 import eu.eexcess.dataquality.Qc_params;
 
@@ -388,6 +389,7 @@ public class Qc_base implements Qc_interface {
 				    connection.setReadTimeout(2000);
 				    connection.setUseCaches(false);
 				    connection.connect();
+				    ((HttpURLConnection) connection).disconnect();
 				    //System.out.println("Ressource " + textContent + " is available. ");
 				    //available = true;
 				} 
@@ -439,6 +441,7 @@ public class Qc_base implements Qc_interface {
 						    connection.setUseCaches(false);
 						    connection.connect();
 						    //System.out.println("Ressource " + value + " is available. ");
+						    ((HttpURLConnection) connection).disconnect();
 						}						    
 						catch (UnknownHostException e){
 								nReturn--;

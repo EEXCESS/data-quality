@@ -17,11 +17,25 @@ limitations under the License.
  */
 package eu.eexcess.dataquality;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 
 public class DataQualityApp 
 {
     public static void main( String[] args )
     {
+    	for (int i = 0; i < args.length; i++) {
+			if (0==args[i].compareToIgnoreCase("--log") ){
+		    	try {
+					System.setOut(new PrintStream(new FileOutputStream("DataQualityApp.log",false)));
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
         Qc_dataprovider provider = new Qc_dataprovider();
         provider.process(args);
     }
