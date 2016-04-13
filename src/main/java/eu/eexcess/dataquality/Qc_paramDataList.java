@@ -45,7 +45,7 @@ public class Qc_paramDataList {
 	public int getRecordsPerProvider(DataProvider provider) {
 		int nReturn = 0;
 		for (int i = 0; i < paramList.size(); i++) {
-			if (paramList.get(i).getProvider() == provider) {
+			if (provider == null || paramList.get(i).getProvider() == provider) {
 				nReturn += paramList.get(i).getRecordCount();
 			}
 		}

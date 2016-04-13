@@ -90,7 +90,7 @@ public class Qc_trustedLinks {
 			{
 				hcountUnknownLinks.put(sLink, 1);
 			}
-			System.out.println(sLink + " # " + hcountUnknownLinks.get(sLink));	
+			// System.out.println(sLink + " # " + hcountUnknownLinks.get(sLink));	
 		}
 	}
 

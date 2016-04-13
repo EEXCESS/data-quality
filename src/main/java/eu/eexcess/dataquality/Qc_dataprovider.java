@@ -156,9 +156,9 @@ public class Qc_dataprovider {
 	{
 		CheckEnrichment enrichment = new CheckEnrichment();
 		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, null);
-		for (int i=0; i<paramDataList.size();i++)
+		for (DataProvider provider : DataProvider.values())
 		{
-			switch (paramDataList.get(i).getProvider())
+			switch (provider)
 			{
 				case ZBW:
 				case Wissenmedia:
@@ -167,7 +167,7 @@ public class Qc_dataprovider {
 				case cultureWeb:
 				case Europeana:
 				case KIMCollect:
-					enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH,paramDataList.get(i).getProvider());
+					enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH,provider);
 					break;
 			}
 		}
