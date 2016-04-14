@@ -21,7 +21,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,6 +51,7 @@ public class CheckEnrichment {
 	/*
 	 * Show diagrams for enrichments
 	 */
+	
 	public void CalcEnrichment(Qc_paramDataList paramDataList, int nWidth, int nHeight, DataProvider providerSelected)
 	{
 		for (int i=0; i<paramDataList.size();i++)
@@ -391,5 +395,89 @@ public class CheckEnrichment {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	/*
+	 * Show all Links per provider
+	 */
+	public String CalcLinkTable(Qc_paramDataList paramDataList)
+	{
+		System.out.println("paramDataList " + paramDataList.size());
+		
+		StringBuilder sContent = new StringBuilder();
+		sContent.append("<table><tr><td>&nbsp;</td>");
+		for (DataProvider provider : DataProvider.values())
+		{
+			switch (provider)
+			{
+				case cultureWeb:
+				case cultureWeb_EEXCESS:
+				case cultureWeb_enriched:
+				case unknown:
+					// Do nothing
+					break;
+					
+					default:
+						sContent.append("<td align=\"center\" valign=\"middle\"><b>");
+						sContent.append(provider.name().replace("_", " "));
+						sContent.append("</b></td>");
+						break;
+			}
+		}
+		sContent.append("</tr>");
+		for (String sLink : paramDataList.getAllTrustedLinks())
+		{
+			sContent.append("<tr><td>");
+			sContent.append(sLink);
+			sContent.append("</td>");
+			for (DataProvider provider : DataProvider.values())
+			{
+				switch (provider)
+				{
+					case cultureWeb:
+					case cultureWeb_EEXCESS:
+					case cultureWeb_enriched:
+					case unknown:
+						// Do nothing
+						break;
+						
+					default:
+						sContent.append("<td>");
+						sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink));
+						sContent.append("</td>");
+						break;
+				}
+			}
+			sContent.append("</tr>");
+		}
+		
+		for (String sLink : paramDataList.getAllUnknownLinks())
+		{
+			sContent.append("<tr><td>");
+			sContent.append(sLink);
+			sContent.append("</td>");
+			for (DataProvider provider : DataProvider.values())
+			{
+				switch (provider)
+				{
+					case cultureWeb:
+					case cultureWeb_EEXCESS:
+					case cultureWeb_enriched:
+					case unknown:
+						// Do nothing
+						break;
+						
+					default:
+						sContent.append("<td>");
+						sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink));
+						sContent.append("</td>");
+						break;
+				}
+			}
+			sContent.append("</tr>");
+		}
+		
+		sContent.append("</table>");
+		return sContent.toString();
 	}
 }

@@ -150,11 +150,13 @@ public class Qc_dataprovider {
 
 	}
 	
+	CheckEnrichment enrichment = null;
+	
 	// check enrichment
 	@SuppressWarnings("incomplete-switch")
 	private void checkEnrichment()
 	{
-		CheckEnrichment enrichment = new CheckEnrichment();
+		enrichment = new CheckEnrichment();
 		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, null);
 		for (DataProvider provider : DataProvider.values())
 		{
@@ -1224,6 +1226,8 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<h3>known vocabulary links</h3>";
         htmlReportGeneral += "<p>The chart shows the number of links of known vocabulary links during the enrichment process.</p>";
         htmlReportGeneral += "<img src=\"vocabulary-1600x1200.png\" style=\"width:1000px;\"/>";
+        
+        htmlReportGeneral += enrichment.CalcLinkTable(paramDataList);
 
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";

@@ -17,6 +17,7 @@ limitations under the License.
  */
 package eu.eexcess.dataquality;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -46,7 +47,7 @@ public class Qc_trustedLinks {
 	{
 		Boolean bLinkKnown = false; 
 		Iterator<Entry<String, String>> it = hTrustedLinks.entrySet().iterator();
-		while (it.hasNext())
+		while (it.hasNext() && bLinkKnown == false)
 		{
 			Entry<String, String> entry = it.next();
 			if (sLink.contains(entry.getValue()))
@@ -58,9 +59,10 @@ public class Qc_trustedLinks {
 				}
 				else
 				{
-					int nCount = hcountTrustedLinks.get(entry.getKey());
+					Integer nCount = hcountTrustedLinks.get(entry.getKey());
 					nCount++;
 					hcountTrustedLinks.put(entry.getKey(), nCount);
+					// System.out.println(entry.getKey() + " # " + nCount);
 				}
 			}
 		}
@@ -97,5 +99,47 @@ public class Qc_trustedLinks {
 	public HashMap<String,Integer> getTrustedLinksCount()
 	{
 		return hcountTrustedLinks;
+	}
+	
+	public ArrayList<String> getTrustedLinks()
+	{
+		ArrayList<String> saLinks = new ArrayList<String>();
+		Iterator<Entry<String, String>> it = hTrustedLinks.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Entry<String, String> entry = it.next();
+			saLinks.add(entry.getKey());
+		}
+		return saLinks;
+	}
+	
+	public ArrayList<String> getAllUnknownLinks()
+	{
+		ArrayList<String> saLinks = new ArrayList<String>();
+		Iterator<Entry<String, Integer>> it = hcountUnknownLinks.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Entry<String, Integer> entry = it.next();
+			saLinks.add(entry.getKey());
+		}
+		return saLinks;
+	}
+	
+	public Integer getAllUnknownLinkCountPerLink(String sLink)
+	{
+		if (hcountUnknownLinks.containsKey(sLink))
+		{
+			return hcountUnknownLinks.get(sLink);
+		}
+		return 0;
+	}
+	
+	public Integer getTrustedLinkCountPerLink(String sLink)
+	{
+		if (hcountTrustedLinks.containsKey(sLink))
+		{
+			return hcountTrustedLinks.get(sLink);
+		}
+		return 0;
 	}
 }
