@@ -1227,7 +1227,7 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>The chart shows the number of links of known vocabulary links during the enrichment process.</p>";
         htmlReportGeneral += "<img src=\"vocabulary-1600x1200.png\" style=\"width:1000px;\"/>";
         
-        htmlReportGeneral += enrichment.CalcLinkTable(paramDataList);
+        htmlReportGeneral += enrichment.CalcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
 
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";

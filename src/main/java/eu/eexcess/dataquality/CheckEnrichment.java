@@ -295,7 +295,7 @@ public class CheckEnrichment {
         }
         catch (Exception e)
         {
-        	
+        	System.out.println(e.getMessage());
         }
 	}
 	
@@ -400,11 +400,16 @@ public class CheckEnrichment {
 	/*
 	 * Show all Links per provider
 	 */
-	public String CalcLinkTable(Qc_paramDataList paramDataList)
+	public String CalcLinkTable(Qc_paramDataList paramDataList, String sFieldSeperator)
 	{
-		System.out.println("paramDataList " + paramDataList.size());
+		try
+		{
+		File fileStatisticRecords = new File(Qc_dataprovider.outputDir + "statistics-links-dataprovider.csv");
+		BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 		
 		StringBuilder sContent = new StringBuilder();
+		StringBuilder sCSVcontent = new StringBuilder();
+		sCSVcontent.append(sFieldSeperator);
 		sContent.append("<table><tr><td>&nbsp;</td>");
 		for (DataProvider provider : DataProvider.values())
 		{
@@ -418,17 +423,25 @@ public class CheckEnrichment {
 					break;
 					
 					default:
-						sContent.append("<td align=\"center\" valign=\"middle\"><b>");
+						sContent.append("<td><b>");
 						sContent.append(provider.name().replace("_", " "));
 						sContent.append("</b></td>");
+						sCSVcontent.append(provider.name().replace("_", " "));
+						sCSVcontent.append(sFieldSeperator);
 						break;
 			}
 		}
+		writerStatisticRecords.write(sCSVcontent.toString());
+		writerStatisticRecords.newLine();
+		
 		sContent.append("</tr>");
 		for (String sLink : paramDataList.getAllTrustedLinks())
 		{
+			sCSVcontent.setLength(0);
 			sContent.append("<tr><td>");
 			sContent.append(sLink);
+			sCSVcontent.append(sLink);
+			sCSVcontent.append(sFieldSeperator);
 			sContent.append("</td>");
 			for (DataProvider provider : DataProvider.values())
 			{
@@ -445,16 +458,24 @@ public class CheckEnrichment {
 						sContent.append("<td>");
 						sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink));
 						sContent.append("</td>");
+						
+						sCSVcontent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink));
+						sCSVcontent.append(sFieldSeperator);
 						break;
 				}
 			}
+			writerStatisticRecords.write(sCSVcontent.toString());
+			writerStatisticRecords.newLine();
 			sContent.append("</tr>");
 		}
 		
 		for (String sLink : paramDataList.getAllUnknownLinks())
 		{
+			sCSVcontent.setLength(0);
 			sContent.append("<tr><td>");
 			sContent.append(sLink);
+			sCSVcontent.append(sLink);
+			sCSVcontent.append(sFieldSeperator);
 			sContent.append("</td>");
 			for (DataProvider provider : DataProvider.values())
 			{
@@ -471,13 +492,26 @@ public class CheckEnrichment {
 						sContent.append("<td>");
 						sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink));
 						sContent.append("</td>");
+						
+						sCSVcontent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink));
+						sCSVcontent.append(sFieldSeperator);
 						break;
 				}
 			}
+			writerStatisticRecords.write(sCSVcontent.toString());
+			writerStatisticRecords.newLine();
 			sContent.append("</tr>");
 		}
 		
 		sContent.append("</table>");
+		sContent.append("<p><a href=\".\\statistics-links-dataprovider.csv\">data as CSV</a></p>");
+		writerStatisticRecords.close();
 		return sContent.toString();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return "";
 	}
 }
