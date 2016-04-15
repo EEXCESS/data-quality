@@ -98,6 +98,7 @@ public class Qc_dataprovider {
 	Qc_base currentProvider = null;
 	Qc_paramDataList paramDataList = new Qc_paramDataList();
 	
+
 	public static String outputDir ="./output/";
 	
 	public boolean writeHistogrammCSV = false;

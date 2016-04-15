@@ -381,57 +381,8 @@ public class Qc_base implements Qc_interface {
 		
 		if (actNode.getNodeType() == Node.ELEMENT_NODE) {
 			String textContent = actNode.getTextContent();
-			if (textContent != null &&
-					(
-					textContent.toLowerCase().trim().startsWith("http://") || 
-					//uriCheck additional uri-schemes
-					textContent.toLowerCase().trim().startsWith("https://") ||
-					textContent.toLowerCase().trim().startsWith("ftp://")
-//					textContent.toLowerCase().startsWith("mailto://") ||
-//					textContent.toLowerCase().startsWith("file://") ||
-//					textContent.toLowerCase().startsWith("data://")
-					)
-				){
-				nReturn++;
-				try{
-				    final URLConnection connection = new URL(textContent).openConnection();
-				    connection.setConnectTimeout(500);
-				    connection.setReadTimeout(2000);
-				    connection.setUseCaches(false);
-				    connection.connect();
-				    ((HttpURLConnection) connection).disconnect();
-				    //System.out.println("Ressource " + textContent + " is available. ");
-				    //available = true;
-				} 
-				catch (UnknownHostException e){
-					nReturn--;
-				    System.out.println("Ressource " + textContent + ": UnknownHostException\n"+ e.getMessage());					
-				}
-				catch(final MalformedURLException e){
-					nReturn--;
-				    System.out.println("Ressource " + textContent + ": MalformedURLException\n"+ e.getMessage());
-				} catch(final IOException e){
-					nReturn--;
-					//Log.info("Ressource " + textContent + " NOT available. ", e);				    
-					System.out.println("Ressource " + textContent + " is NOT available. \nIOException\n" + e.getMessage());
-					if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
-				        Date date = new Date(System.currentTimeMillis());
-				        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-						System.out.println(simpleDateFormat.format(date)+": max connections reached...waiting...");
-						try {
-							Thread.sleep(1000*120);
-					        Date dateEnd = new Date(System.currentTimeMillis());
-							System.out.println(simpleDateFormat.format(dateEnd) + ": now trying again...");
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-					}
-				} catch (RuntimeException e) {
-					nReturn--;
-					System.out.println("Ressource " + textContent + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
-				}
-
-			} 
+			
+			nReturn = checkURLAccessible(nReturn, textContent); 
 			
 			if (actNode.getAttributes() != null && bSearchAttributes == true && actNode.getAttributes().getLength() > 0)
 			{
@@ -439,54 +390,7 @@ public class Qc_base implements Qc_interface {
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
 					Node attribute = attributes.item(attributesIndex);
 					String value = attribute.getNodeValue();
-					if (value != null && !value.isEmpty() && 
-							(value.toLowerCase().startsWith("http://") || 
-									 value.toLowerCase().trim().startsWith("https://") || 
-									 value.toLowerCase().trim().startsWith("ftp://")
-//									 value.toLowerCase().startsWith("mailto://") ||
-//									 value.toLowerCase().startsWith("file://") ||
-//									 value.toLowerCase().startsWith("data://")									
-							)
-					   ){
-						nReturn++;
-						try{
-						    final URLConnection connection = new URL(value).openConnection();
-						    
-						    connection.setConnectTimeout(500);
-						    connection.setReadTimeout(2000);
-						    connection.setUseCaches(false);
-						    connection.connect();
-						    //System.out.println("Ressource " + value + " is available. ");
-						    ((HttpURLConnection) connection).disconnect();
-						}						    
-						catch (UnknownHostException e){
-								nReturn--;
-							    System.out.println("Ressource " + textContent + ": UnknownHostException\n"+ e.getMessage());					
-						}						    
-						catch(final MalformedURLException e){
-							nReturn--;
-						    System.out.println("Ressource " + value + ": MalformedURLException\n"+ e.getMessage());							
-						} catch(final IOException e){
-							nReturn--;
-							System.out.println("Ressource " + value + " is NOT available. \nIOException\n" + e.getMessage());				    
-							if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
-						        Date date = new Date(System.currentTimeMillis());
-						        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-								System.out.println(simpleDateFormat.format(date)+": max connections reached...waiting...");
-								try {
-									Thread.sleep(1000*120);
-							        Date dateEnd = new Date(System.currentTimeMillis());
-									System.out.println(simpleDateFormat.format(dateEnd) + ": now trying again...");
-								} catch (InterruptedException e1) {
-									e1.printStackTrace();
-								}
-							}
-						} catch (RuntimeException e) {
-							nReturn--;
-							System.out.println("Ressource " + value + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
-						}
-						
-					}
+					nReturn = checkURLAccessible(nReturn, value); 
 				}
 			}
 
@@ -497,6 +401,62 @@ public class Qc_base implements Qc_interface {
 					nReturn = countAccessibleLinks(nReturn, actNodeChild, bSearchAttributes);
 				}
 			}
+		}
+		return nReturn;
+	}
+
+	private int checkURLAccessible(int nReturn, String textContent) {
+
+		if (textContent != null &&
+				(
+				textContent.toLowerCase().trim().startsWith("http://") || 
+				//uriCheck additional uri-schemes
+				textContent.toLowerCase().trim().startsWith("https://") ||
+				textContent.toLowerCase().trim().startsWith("ftp://")
+//					textContent.toLowerCase().startsWith("mailto://") ||
+//					textContent.toLowerCase().startsWith("file://") ||
+//					textContent.toLowerCase().startsWith("data://")
+				)
+			){
+			nReturn++;
+			try{
+			    final URLConnection connection = new URL(textContent).openConnection();
+			    connection.setConnectTimeout(500);
+			    connection.setReadTimeout(2000);
+			    connection.setUseCaches(false);
+			    connection.connect();
+			    ((HttpURLConnection) connection).disconnect();
+			    //System.out.println("Ressource " + textContent + " is available. ");
+			    //available = true;
+			} 
+			catch (UnknownHostException e){
+				nReturn--;
+			    System.out.println("Ressource " + textContent + ": UnknownHostException\n"+ e.getMessage());					
+			}
+			catch(final MalformedURLException e){
+				nReturn--;
+			    System.out.println("Ressource " + textContent + ": MalformedURLException\n"+ e.getMessage());
+			} catch(final IOException e){
+				nReturn--;
+				//Log.info("Ressource " + textContent + " NOT available. ", e);				    
+				System.out.println("Ressource " + textContent + " is NOT available. \nIOException\n" + e.getMessage());
+				if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
+			        Date date = new Date(System.currentTimeMillis());
+			        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+					System.out.println(simpleDateFormat.format(date)+": max connections reached...waiting...");
+					try {
+						Thread.sleep(1000*120);
+				        Date dateEnd = new Date(System.currentTimeMillis());
+						System.out.println(simpleDateFormat.format(dateEnd) + ": now trying again...");
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+			} catch (RuntimeException e) {
+				nReturn--;
+				System.out.println("Ressource " + textContent + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
+			}
+
 		}
 		return nReturn;
 	}
