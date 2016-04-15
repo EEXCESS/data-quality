@@ -18,6 +18,7 @@ limitations under the License.
 package eu.eexcess.dataquality;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
@@ -45,7 +46,7 @@ public class Qc_paramDataList {
 	public int getRecordsPerProvider(DataProvider provider) {
 		int nReturn = 0;
 		for (int i = 0; i < paramList.size(); i++) {
-			if (paramList.get(i).getProvider() == provider) {
+			if (provider == null || paramList.get(i).getProvider() == provider) {
 				nReturn += paramList.get(i).getRecordCount();
 			}
 		}
@@ -237,5 +238,79 @@ public class Qc_paramDataList {
 		return nReturn;
 	}
 
+	public ArrayList<String> getAllTrustedLinks()
+	{
+		ArrayList<String> saLinks = new ArrayList<String>();
+		for (int i = 0; i < paramList.size(); i++)
+		{
+			for (String sLink : paramList.get(i).getTrustedLinks())
+			{
+				if (!saLinks.contains(sLink))
+				{
+					saLinks.add(sLink);
+				}
+			}
+		}
+		Collections.sort(saLinks);
+		return saLinks;
+	}
 	
+	public ArrayList<String> getAllUnknownLinks()
+	{
+		ArrayList<String> saLinks = new ArrayList<String>();
+		for (int i = 0; i < paramList.size(); i++)
+		{
+			for (String sLink : paramList.get(i).getAllUnknownLinks())
+			{
+				if (!saLinks.contains(sLink))
+				{
+					saLinks.add(sLink);
+				}
+			}
+		}
+		Collections.sort(saLinks);
+		return saLinks;
+	}
+	
+	public String getTrustedLinkCountPerLinkAndProvider(DataProvider provider, String sLink)
+	{
+		String sCount = "";
+		if (provider != null)
+		{
+			double nCount=0;
+			for (int i = 0; i < paramList.size(); i++) {
+				if (paramList.get(i).getProvider() == provider)
+				{
+					nCount += paramList.get(i).getTrustedLinkCountPerLink(sLink);
+				}
+			}
+			if (nCount > 0)
+			{
+				nCount = nCount / getRecordsPerProvider(provider);
+				sCount = String.valueOf(nCount);
+			}
+		}
+		return sCount;
+	}
+	
+	public String getAllUnknownLinkCountPerLinkAndProvider(DataProvider provider, String sLink)
+	{
+		String sCount = "";
+		if (provider != null)
+		{
+			double nCount=0;
+			for (int i = 0; i < paramList.size(); i++) {
+				if (paramList.get(i).getProvider() == provider)
+				{
+					nCount += paramList.get(i).getAllUnknownLinkCountPerLink(sLink);
+				}
+			}
+			if (nCount > 0)
+			{
+				nCount = nCount / getRecordsPerProvider(provider);
+				sCount = String.valueOf(nCount);
+			}
+		}
+		return sCount;
+	}
 }

@@ -374,6 +374,11 @@ public class Qc_base implements Qc_interface {
 		return param.getTrustedLinksCount();
 	}
 	
+	public ArrayList<String> getAllUnknownLinks()
+	{
+		return param.getAllUnknownLinks();
+	}
+	
 	protected int countAccessibleLinks(int nReturn, Node actNode, boolean bSearchAttributes) {
 		
 		if (actNode.getNodeType() == Node.ELEMENT_NODE) {

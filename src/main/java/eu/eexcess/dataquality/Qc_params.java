@@ -26,10 +26,11 @@ import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 
 public class Qc_params {
 
-	Qc_trustedLinks trustedLinks = new Qc_trustedLinks();
+	Qc_trustedLinks trustedLinks = null;
 	
 	public Qc_params(DataProvider provider) {
 		this.provider = provider;
+		trustedLinks = new Qc_trustedLinks();
 	}
 	
 	public void addTrustedLink(String sLink)
@@ -40,6 +41,26 @@ public class Qc_params {
 	public HashMap<String,Integer> getTrustedLinksCount()
 	{
 		return trustedLinks.getTrustedLinksCount();
+	}
+	
+	public ArrayList<String> getAllUnknownLinks()
+	{
+		return trustedLinks.getAllUnknownLinks();
+	}
+	
+	public Integer getAllUnknownLinkCountPerLink(String sLink)
+	{
+		return trustedLinks.getAllUnknownLinkCountPerLink(sLink);
+	}
+	
+	public ArrayList<String> getTrustedLinks()
+	{
+		return trustedLinks.getTrustedLinks();
+	}
+	
+	public Integer getTrustedLinkCountPerLink(String sLink)
+	{
+		return trustedLinks.getTrustedLinkCountPerLink(sLink);
 	}
 	
 	// selected data provider

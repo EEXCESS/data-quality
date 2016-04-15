@@ -150,15 +150,17 @@ public class Qc_dataprovider {
 
 	}
 	
+	CheckEnrichment enrichment = null;
+	
 	// check enrichment
 	@SuppressWarnings("incomplete-switch")
 	private void checkEnrichment()
 	{
-		CheckEnrichment enrichment = new CheckEnrichment();
+		enrichment = new CheckEnrichment();
 		enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, null);
-		for (int i=0; i<paramDataList.size();i++)
+		for (DataProvider provider : DataProvider.values())
 		{
-			switch (paramDataList.get(i).getProvider())
+			switch (provider)
 			{
 				case ZBW:
 				case Wissenmedia:
@@ -167,7 +169,7 @@ public class Qc_dataprovider {
 				case cultureWeb:
 				case Europeana:
 				case KIMCollect:
-					enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH,paramDataList.get(i).getProvider());
+					enrichment.CalcEnrichment(paramDataList, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH,provider);
 					break;
 			}
 		}
@@ -739,26 +741,31 @@ public class Qc_dataprovider {
 			{
 				htmlReport += "<img src=\"./enrichment-" + DataProvider.DDB.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
 				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.DDB.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./vocabulary-" + DataProvider.DDB.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
 			}
 			else if ( dataprovider.equals(DATAPROVIDER_EUROPEANA))
 			{
 				htmlReport += "<img src=\"./enrichment-" + DataProvider.Europeana.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
 				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.Europeana.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./vocabulary-" + DataProvider.Europeana.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
 			}
 			else if ( dataprovider.equals(DATAPROVIDER_MENDELEY))
 			{
 				htmlReport += "<img src=\"./enrichment-" + DataProvider.Mendeley.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
 				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.Mendeley.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./vocabulary-" + DataProvider.Mendeley.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
 			}
 			else if ( dataprovider.equals(DATAPROVIDER_ZBW))
 			{
 				htmlReport += "<img src=\"./enrichment-" + DataProvider.ZBW.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
 				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.ZBW.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./vocabulary-" + DataProvider.ZBW.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
 			}
 			else if ( dataprovider.equals(DATAPROVIDER_KIMPORTAL))
 			{
 				htmlReport += "<img src=\"./enrichment-" + DataProvider.KIMCollect.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">" ;
 				htmlReport += "<img src=\"./enrichment-link-" + DataProvider.KIMCollect.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
+				htmlReport += "<img src=\"./vocabulary-" + DataProvider.KIMCollect.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" ;
 			}
 					
 	        iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
@@ -1216,6 +1223,11 @@ public class Qc_dataprovider {
         
         htmlReportGeneral += "<p>The chart shows the number of links per record during the enrichment process.</p>";
         htmlReportGeneral += "<img src=\"enrichment-link-1600x1200.png\" style=\"width:1000px;\"/>";
+        htmlReportGeneral += "<h3>known vocabulary links</h3>";
+        htmlReportGeneral += "<p>The chart shows the number of links of known vocabulary links during the enrichment process.</p>";
+        htmlReportGeneral += "<img src=\"vocabulary-1600x1200.png\" style=\"width:1000px;\"/>";
+        
+        htmlReportGeneral += enrichment.CalcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
 
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";
