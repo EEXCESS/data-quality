@@ -98,10 +98,15 @@ public class Qc_dataprovider {
 	Qc_base currentProvider = null;
 	Qc_paramDataList paramDataList = new Qc_paramDataList();
 	
-
+	public static HashMap<String,Boolean> URLCheckingResultsAccessible = new HashMap<String,Boolean>();
+	
 	public static String outputDir ="./output/";
 	
-	public boolean writeHistogrammCSV = false;
+	public static long countCheckedURLs = 0;
+	public static long countCheckedURLsOnline = 0;
+	public static long countCheckedURLsViaCache = 0;
+	
+	public boolean writeHistogrammCSV = true;
 	
 	HashMap<String,HashMap<String, StructureRecResult>> structurednessResults = new HashMap<String, HashMap<String, StructureRecResult>>();
 
@@ -137,6 +142,10 @@ public class Qc_dataprovider {
 				}
 			}
 		}
+		System.out.println("size of HashMap:"+Qc_dataprovider.URLCheckingResultsAccessible.size());
+		System.out.println("countCheckedURLs:"+Qc_dataprovider.countCheckedURLs);
+		System.out.println("countCheckedURLsOnline:"+Qc_dataprovider.countCheckedURLsOnline);
+		System.out.println("countCheckedURLsViaCache:"+Qc_dataprovider.countCheckedURLsViaCache);
 		printDebugTime("checking");
 		// check enrichment
 		checkEnrichment();

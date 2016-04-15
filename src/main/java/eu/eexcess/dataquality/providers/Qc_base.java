@@ -55,6 +55,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
+import eu.eexcess.dataquality.Qc_dataprovider;
 import eu.eexcess.dataquality.Qc_interface;
 import eu.eexcess.dataquality.Qc_params;
 
@@ -390,7 +391,8 @@ public class Qc_base implements Qc_interface {
 				for (int attributesIndex = 0; attributesIndex < actNode.getAttributes().getLength() ; attributesIndex++) {
 					Node attribute = attributes.item(attributesIndex);
 					String value = attribute.getNodeValue();
-					nReturn = checkURLAccessible(nReturn, value); 
+					if (attribute.getNodeName() != null && !attribute.getNodeName().isEmpty() && !attribute.getNodeName().startsWith("xmlns:"))
+						nReturn = checkURLAccessible(nReturn, value); 
 				}
 			}
 
@@ -405,41 +407,52 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 
-	private int checkURLAccessible(int nReturn, String textContent) {
-
-		if (textContent != null &&
+	private int checkURLAccessible(int nReturn, String urlToCheck) {
+		
+		if (urlToCheck != null &&
 				(
-				textContent.toLowerCase().trim().startsWith("http://") || 
+				urlToCheck.toLowerCase().trim().startsWith("http://") || 
 				//uriCheck additional uri-schemes
-				textContent.toLowerCase().trim().startsWith("https://") ||
-				textContent.toLowerCase().trim().startsWith("ftp://")
+				urlToCheck.toLowerCase().trim().startsWith("https://") ||
+				urlToCheck.toLowerCase().trim().startsWith("ftp://")
 //					textContent.toLowerCase().startsWith("mailto://") ||
 //					textContent.toLowerCase().startsWith("file://") ||
 //					textContent.toLowerCase().startsWith("data://")
 				)
 			){
+//			System.out.println(urlToCheck);
+			Qc_dataprovider.countCheckedURLs++;
+			if (Qc_dataprovider.URLCheckingResultsAccessible.containsKey(urlToCheck)) {
+				Qc_dataprovider.countCheckedURLsViaCache++;
+				if (Qc_dataprovider.URLCheckingResultsAccessible.get(urlToCheck))
+					return nReturn++;
+				else 
+					return nReturn;
+			}
+			Qc_dataprovider.countCheckedURLsOnline++;
 			nReturn++;
+			boolean accessible = false;
 			try{
-			    final URLConnection connection = new URL(textContent).openConnection();
+			    final URLConnection connection = new URL(urlToCheck).openConnection();
 			    connection.setConnectTimeout(500);
 			    connection.setReadTimeout(2000);
 			    connection.setUseCaches(false);
 			    connection.connect();
 			    ((HttpURLConnection) connection).disconnect();
 			    //System.out.println("Ressource " + textContent + " is available. ");
-			    //available = true;
+			    accessible = true;
 			} 
 			catch (UnknownHostException e){
 				nReturn--;
-			    System.out.println("Ressource " + textContent + ": UnknownHostException\n"+ e.getMessage());					
+			    System.out.println("Ressource " + urlToCheck + ": UnknownHostException\n"+ e.getMessage());					
 			}
 			catch(final MalformedURLException e){
 				nReturn--;
-			    System.out.println("Ressource " + textContent + ": MalformedURLException\n"+ e.getMessage());
+			    System.out.println("Ressource " + urlToCheck + ": MalformedURLException\n"+ e.getMessage());
 			} catch(final IOException e){
 				nReturn--;
 				//Log.info("Ressource " + textContent + " NOT available. ", e);				    
-				System.out.println("Ressource " + textContent + " is NOT available. \nIOException\n" + e.getMessage());
+				System.out.println("Ressource " + urlToCheck + " is NOT available. \nIOException\n" + e.getMessage());
 				if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
 			        Date date = new Date(System.currentTimeMillis());
 			        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
@@ -454,9 +467,9 @@ public class Qc_base implements Qc_interface {
 				}
 			} catch (RuntimeException e) {
 				nReturn--;
-				System.out.println("Ressource " + textContent + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
+				System.out.println("Ressource " + urlToCheck + " is NOT available. \nRuntimeException\n" + e.getMessage());				    
 			}
-
+			Qc_dataprovider.URLCheckingResultsAccessible.put(urlToCheck, accessible);
 		}
 		return nReturn;
 	}
