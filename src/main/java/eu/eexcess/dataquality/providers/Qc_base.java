@@ -17,9 +17,7 @@ limitations under the License.
  */
 package eu.eexcess.dataquality.providers;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -56,7 +54,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import eu.eexcess.dataquality.Qc_dataprovider;
 import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 import eu.eexcess.dataquality.Qc_interface;
 import eu.eexcess.dataquality.Qc_params;
@@ -297,6 +294,7 @@ public class Qc_base implements Qc_interface {
 	}
 	
 	ArrayList<String> lUniqueLinks = new ArrayList<String>();
+	
 	/*
 	 * count Links in nodes
 	 * */
@@ -394,13 +392,6 @@ public class Qc_base implements Qc_interface {
 //					textContent.toLowerCase().startsWith("data://")
 					)
 				){
-//				Socket socket = null;
-//				boolean reachable = false;
-//				try {
-//				    socket = new Socket(textContent);
-//				    reachable = true;
-//				} finally {            
-//				    if (socket != null) try { socket.close(); } catch(IOException e) {}
 				nReturn++;
 				try{
 				    final URLConnection connection = new URL(textContent).openConnection();
@@ -419,9 +410,6 @@ public class Qc_base implements Qc_interface {
 				catch(final MalformedURLException e){
 					nReturn--;
 				    System.out.println("Ressource " + textContent + ": MalformedURLException\n"+ e.getMessage());
-//				    throw new IllegalStateException("Bad URL: " + textContent, e);
-//				}   catch(final SocketTimeoutException e){
-//					Log.info("Ressource " + textContent + " NOT available (Timeout exceeded).", e);
 				} catch(final IOException e){
 					nReturn--;
 					//Log.info("Ressource " + textContent + " NOT available. ", e);				    
@@ -444,9 +432,6 @@ public class Qc_base implements Qc_interface {
 				}
 
 			} 
-//				else {
-//				
-//			}
 			
 			if (actNode.getAttributes() != null && bSearchAttributes == true && actNode.getAttributes().getLength() > 0)
 			{
@@ -463,7 +448,6 @@ public class Qc_base implements Qc_interface {
 //									 value.toLowerCase().startsWith("data://")									
 							)
 					   ){
-						writeToTempFile(this.dataProvider + " | " + value);
 						nReturn++;
 						try{
 						    final URLConnection connection = new URL(value).openConnection();
@@ -482,9 +466,6 @@ public class Qc_base implements Qc_interface {
 						catch(final MalformedURLException e){
 							nReturn--;
 						    System.out.println("Ressource " + value + ": MalformedURLException\n"+ e.getMessage());							
-//						    throw new IllegalStateException("Bad URL: " + value, e);
-//						}   catch(final SocketTimeoutException e){
-//							Log.info("Ressource " + value + " NOT available (Timeout exceeded).", e);
 						} catch(final IOException e){
 							nReturn--;
 							System.out.println("Ressource " + value + " is NOT available. \nIOException\n" + e.getMessage());				    
@@ -534,7 +515,7 @@ public class Qc_base implements Qc_interface {
 	public Qc_params getParam() {
 		return param;
 	}
-	
+	/*
 	protected void writeToTempFile(String textToAppend){
 		File tempFile = new File(Qc_dataprovider.outputDir + "tempFileJR.csv");
 		BufferedWriter writeBuffer;
@@ -549,7 +530,7 @@ public class Qc_base implements Qc_interface {
 
 		//writeBuffer.close();
 	}
-	
+	*/
 	public NodeList getNodesListByXPath(String xpathValues){
 		if (xmlFileName.length() > 0) {
 			try {

@@ -100,6 +100,8 @@ public class Qc_dataprovider {
 	
 	public static String outputDir ="./output/";
 	
+	public boolean writeHistogrammCSV = false;
+	
 	HashMap<String,HashMap<String, StructureRecResult>> structurednessResults = new HashMap<String, HashMap<String, StructureRecResult>>();
 
 	// XML files of known partners
@@ -219,39 +221,39 @@ public class Qc_dataprovider {
 					"#links"+STATISTIC_FILE_FIELD_SEPERATOR+					
 					"#accessible links");
 			writerStatisticRecords.newLine();
-			System.out.println("file"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"provider"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"#records"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"mean fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"min fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"max fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"mean non empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"mean non empty fields per datafields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"mean empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"mean empty fields per datafields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//			System.out.println("file"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"provider"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"#records"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"mean fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"min fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+"max fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"mean non empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"mean non empty fields per datafields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"mean empty fields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"mean empty fields per datafields/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
 //uriCheck
 //					"mean links/record");
-					"links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"accessible links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"#links"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
-					"#accessible links");					
+//					"links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"accessible links/record"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"#links"+STATISTIC_SYSTEMOUT_FIELD_SEPERATOR+
+//					"#accessible links");					
 			htmlReportInputDataStatisticsResults.append("<tr><th>file</th><th>provider</th><th>#records</th><th>mean fields/record</th><th>min fields/record</th>"+
 					"<th>max fields/record</th><th>mean non empty fields/record</th><th>mean non empty fields per data fields/record</th><th>mean empty fields/record</th>"+
 					"<th>mean empty fields per data fields/record</th><th>links/record</th><th>accessible links/record</th><th>#links</th><th>#accessible links</th></tr>");
 			
 			for (int i = 0; i < paramDataList.size(); i++) {
 				Qc_params param = paramDataList.get(i);
-				System.out.println(param.getXmlFileName() + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ param.getProvider().toString() + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ param.getRecordCount() + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getMinDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getMaxDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getNonEmptyDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getNonEmptyDataFieldsPerRecordPerDatafields()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getEmptyDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getEmptyDataFieldsPerRecordPerDatafields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-//uriCheck						
-//						+ formatNumber(param.getLinkDataFieldsPerRecord()));
-						+ formatNumber(param.getLinkDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
-						+ formatNumber(param.getNumberOfAllAccessibleLinks()));		
+//				System.out.println(param.getXmlFileName() + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ param.getProvider().toString() + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ param.getRecordCount() + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getMinDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getMaxDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getNonEmptyDataFieldsPerRecord()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getNonEmptyDataFieldsPerRecordPerDatafields()) + STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getEmptyDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getEmptyDataFieldsPerRecordPerDatafields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+////uriCheck						
+////						+ formatNumber(param.getLinkDataFieldsPerRecord()));
+//						+ formatNumber(param.getLinkDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
+//						+ formatNumber(param.getNumberOfAllAccessibleLinks()));		
 				htmlReportInputDataStatisticsResults.append("<tr><td><a href=\".\\input\\"+param.getXmlFileName()+"\">" + param.getXmlFileName() + "</a></td><td>"
 								+ param.getProvider().toString() + "</td><td>"
 								+ param.getRecordCount() + "</td><td>"
@@ -803,22 +805,25 @@ public class Qc_dataprovider {
 	            StructureRecResult result = fieldResult.getValue();
 	            // write Histogramm for value length
 				try {
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value length histogram.csv");
-					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 					
-					if (result.getLengthHistogram() != null)
-					{
-						for (int i = 0; i < result.getLengthHistogram().length; i++) {
-							writerStatisticRecords.write( i + STATISTIC_FILE_FIELD_SEPERATOR);
+					if (this.writeHistogrammCSV) {
+						if (result.getLengthHistogram() != null)
+						{
+							File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value length histogram.csv");
+							StringBuffer writerStatisticRecordsBuffer = new StringBuffer();
+							for (int i = 0; i < result.getLengthHistogram().length; i++) {
+								writerStatisticRecordsBuffer.append( i + STATISTIC_FILE_FIELD_SEPERATOR);
+							}
+							writerStatisticRecordsBuffer.append("\n");
+							for (int i = 0; i < result.getLengthHistogram().length; i++) {
+								writerStatisticRecordsBuffer.append(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
+							}
+							writerStatisticRecordsBuffer.append("\n");
+							BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+							writerStatisticRecords.append(writerStatisticRecordsBuffer);
+							writerStatisticRecords.close();
 						}
-						writerStatisticRecords.newLine();
-						for (int i = 0; i < result.getLengthHistogram().length; i++) {
-							writerStatisticRecords.write(result.getLengthHistogram()[i] + STATISTIC_FILE_FIELD_SEPERATOR);
-						}
-						writerStatisticRecords.newLine();
-						writerStatisticRecords.close();
-					}
-					
+					}					
 					htmlReport.append("<h5>Histogram for value length</h5>");
 					htmlReport.append("<table><tr><td><b>length:</b></td>");
 					htmlReport.append("<td><b>number:</b></td></tr>");
@@ -843,27 +848,31 @@ public class Qc_dataprovider {
 				
 				// write histogram for values
 				try {
-					
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value histogram.csv");
-					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-					{					
-				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
-						writerStatisticRecords.newLine();
-				        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
+					String filenameHistogramCSV = "";
+					if (writeHistogrammCSV) {
+						File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value histogram.csv");
+						StringBuffer writerStatisticRecordsBuffer = new StringBuffer();
+						{					
+					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecordsBuffer.append(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+					        writerStatisticRecordsBuffer.append("\n");
+					        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecordsBuffer.append(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+					        writerStatisticRecordsBuffer.append("\n");
+						}
+						BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+						writerStatisticRecords.append(writerStatisticRecordsBuffer);
+						writerStatisticRecords.close();
+						filenameHistogramCSV = fileStatisticRecords.getName();
 					}
-					writerStatisticRecords.newLine();
-					writerStatisticRecords.close();
-
 					{					
 						htmlReport.append("<h5>Histogram for values</h5>");
 						htmlReport.append("<table><tr><td><b>values:</b></td>");
@@ -875,7 +884,8 @@ public class Qc_dataprovider {
 							htmlReport.append("<td>"+pattern.getValue()+"</td></tr>");
 				        }
 				    	htmlReport.append("</table>");
-						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+fileStatisticRecords.getName()+"\">data as CSV</a></p>");
+				    	if (this.writeHistogrammCSV)
+				    		htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
 
 					}
 
@@ -894,27 +904,31 @@ public class Qc_dataprovider {
 				
 				// write histogram for pattern
 				try {
-					
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value pattern histogram.csv");
-					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-					{					
-				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
-						writerStatisticRecords.newLine();
-				        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
+					String filenameHistogramCSV = "";
+					if (writeHistogrammCSV) {
+						File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value pattern histogram.csv");
+						StringBuffer writerStatisticRecordsBuffer = new StringBuffer();
+						{					
+					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecordsBuffer.append(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+					        writerStatisticRecordsBuffer.append("\n");
+					        iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecordsBuffer.append(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+					        writerStatisticRecordsBuffer.append("\n");
+						}
+						BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+						writerStatisticRecords.append(writerStatisticRecordsBuffer);
+						writerStatisticRecords.close();
+						filenameHistogramCSV = fileStatisticRecords.getName();
 					}
-					writerStatisticRecords.newLine();
-					writerStatisticRecords.close();
-
 					{					
 						htmlReport.append("<h5>Histogram for pattern</h5>");
 						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
@@ -961,7 +975,7 @@ public class Qc_dataprovider {
 							helpCount++;
 				        }
 				    	htmlReport.append("</table>");
-						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+fileStatisticRecords.getName()+"\">data as CSV</a></p>");
+						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
 
 					}
 
@@ -978,29 +992,31 @@ public class Qc_dataprovider {
 				
 				// write histogram for pattern RegEx
 				try {
-					
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value pattern regex histogram.csv");
-					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-					StringBuffer writerStatisticRecordsBuffer = new StringBuffer();
-					{					
-				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecordsBuffer.append(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
-				        writerStatisticRecordsBuffer.append("\n");
-				        iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecordsBuffer.append(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
+					String filenameHistogramCSV = "";
+					if (this.writeHistogrammCSV) {
+						File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value pattern regex histogram.csv");
+						BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+						StringBuffer writerStatisticRecordsBuffer = new StringBuffer();
+						{					
+					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecordsBuffer.append(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+					        writerStatisticRecordsBuffer.append("\n");
+					        iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecordsBuffer.append(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+						}
+						writerStatisticRecordsBuffer.append("\n");
+						writerStatisticRecords.append(writerStatisticRecordsBuffer);
+						writerStatisticRecords.close();
+						filenameHistogramCSV = fileStatisticRecords.getName();
 					}
-					writerStatisticRecordsBuffer.append("\n");
-					writerStatisticRecords.append(writerStatisticRecordsBuffer);
-					writerStatisticRecords.close();
-
 					{					
 						htmlReport.append("<h5>Histogram for pattern(RegEx)</h5>");
 						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
@@ -1047,7 +1063,7 @@ public class Qc_dataprovider {
 							helpCount++;
 				        }
 				    	htmlReport.append("</table>");
-						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+fileStatisticRecords.getName()+"\">data as CSV</a></p>");
+						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
 					}
 
 				
@@ -1066,26 +1082,27 @@ public class Qc_dataprovider {
 				htmlReport.append("<p>date patterns detected:<b>"+result.getValuesDateformatHashMap().size()+"</b></p>");
 
 				try {
-					
-					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value date pattern histogram.csv");
-					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-					{					
-				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
+					if (this.writeHistogrammCSV) {
+						File fileStatisticRecords = new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR+ dataprovider+"-"+field.replace(":", " ")+"-value date pattern histogram.csv");
+						BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+						{					
+					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecords.write(pattern.getKey() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+							writerStatisticRecords.newLine();
+					        iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
+					        while (iteratorPatternHashMap.hasNext()) {
+					             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
+					             if ( ! pattern.getKey().isEmpty())
+					            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
+					        }
+						}
 						writerStatisticRecords.newLine();
-				        iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
-				        while (iteratorPatternHashMap.hasNext()) {
-				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-				             if ( ! pattern.getKey().isEmpty())
-				            	 writerStatisticRecords.write(pattern.getValue() + STATISTIC_FILE_FIELD_SEPERATOR);
-				        }
+						writerStatisticRecords.close();
 					}
-					writerStatisticRecords.newLine();
-					writerStatisticRecords.close();
 					if (result.getValuesDateformatHashMap().size() > 0) {
 						{					
 							htmlReport.append("<h4>Histogram for date patterns</h4>");
