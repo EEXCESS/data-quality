@@ -27,7 +27,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -420,12 +422,14 @@ public class Qc_base implements Qc_interface {
 					//Log.info("Ressource " + textContent + " NOT available. ", e);				    
 					System.out.println("Ressource " + textContent + " is NOT available. \nIOException\n" + e.getMessage());
 					if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
-						System.out.println("max connections reached...waiting...");
+				        Date date = new Date(System.currentTimeMillis());
+				        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+						System.out.println(simpleDateFormat.format(date)+": max connections reached...waiting...");
 						try {
 							Thread.sleep(1000*120);
-							System.out.println("now trying again...");
+					        Date dateEnd = new Date(System.currentTimeMillis());
+							System.out.println(simpleDateFormat.format(dateEnd) + ": now trying again...");
 						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -480,12 +484,14 @@ public class Qc_base implements Qc_interface {
 							nReturn--;
 							System.out.println("Ressource " + value + " is NOT available. \nIOException\n" + e.getMessage());				    
 							if (e.getMessage().contains("No buffer space available (maximum connections reached?)")) {
-								System.out.println("max connections reached...waiting...");
+						        Date date = new Date(System.currentTimeMillis());
+						        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+								System.out.println(simpleDateFormat.format(date)+": max connections reached...waiting...");
 								try {
 									Thread.sleep(1000*120);
-									System.out.println("now trying again...");
+							        Date dateEnd = new Date(System.currentTimeMillis());
+									System.out.println(simpleDateFormat.format(dateEnd) + ": now trying again...");
 								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 							}
