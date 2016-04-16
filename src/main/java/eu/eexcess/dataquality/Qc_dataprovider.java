@@ -146,6 +146,8 @@ public class Qc_dataprovider {
 		System.out.println("countCheckedURLs:"+Qc_dataprovider.countCheckedURLs);
 		System.out.println("countCheckedURLsOnline:"+Qc_dataprovider.countCheckedURLsOnline);
 		System.out.println("countCheckedURLsViaCache:"+Qc_dataprovider.countCheckedURLsViaCache);
+		Qc_dataprovider.URLCheckingResultsAccessible.clear();
+		System.gc();
 		printDebugTime("checking");
 		// check enrichment
 		checkEnrichment();
