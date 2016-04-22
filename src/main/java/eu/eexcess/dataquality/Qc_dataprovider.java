@@ -726,52 +726,11 @@ public class Qc_dataprovider {
 	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
             // System.out.println("Dataprovider:" + dataprovider);
             htmlReport.append("<h3>" + dataprovider +"</h3>");
+            {
+            printStructureOverview(htmlReport, dataprovider,
+					resultsByDataprovider);
+            }
             
-            htmlReport.append("<h4>Overview (using RegEx Pattners)</h4>");
-	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
-	        htmlReport.append("<table>");
-	        htmlReport.append("<tr><td><b>fieldname</b></td>");
-	        htmlReport.append("<td><b>distinct values</b></td>");
-	        htmlReport.append("<td><b>median</b></td>");
-	        htmlReport.append("<td><b>median by valid samples</b></td>");
-	        htmlReport.append("<td><b>standard deviation</b></td>");
-	        htmlReport.append("<td><b>distinct frac complement</b></td>");
-	        htmlReport.append("<td><b>cdfl 0.5</b></td>");
-	        htmlReport.append("<td><b>cdfl 0.75</b></td>");
-	        htmlReport.append("<td><b>lower frac</b></td>");
-	        htmlReport.append("<td><b>upper frac</b></td>");
-	        htmlReport.append("<td><b>weighted frac</b></td>");
-	        htmlReport.append("</tr>");
-	        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-	        decimalFormatSymbols.setDecimalSeparator('.');
-	        decimalFormatSymbols.setGroupingSeparator(',');
-	        DecimalFormat decimalFormat = new DecimalFormat("#,##0.000", decimalFormatSymbols);
-	        while (iteratorByDataprovider.hasNext()) {
-	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
-	            String field = fieldResult.getKey();
-	            StructureRecResult fieldResultValues = fieldResult.getValue();
-	            htmlReport.append("<tr>");
-	            htmlReport.append("<td>"+field+"</td>");
-	            htmlReport.append("<td>"+fieldResultValues.getResultRegEx().getResultDistinctValues()+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultMedian())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultMedianPerVaildSamples())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultSigma())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultDistinctFracComplement())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultCdfl05())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultCdfl075())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutLower())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutUpper())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutWeighted())+"</td>");
-	            htmlReport.append("</tr>");
-	        }
-	        htmlReport.append("</table>");
-	        
-			String filename = Qc_graphs.struturendnessDataproviderResultOverviewRegEx(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
-			htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
-
-			filename = Qc_graphs.struturendnessDataproviderResultOverview2RegEx(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
-			htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
-	        
 			if ( dataprovider.equals(DATAPROVIDER_DDB) || dataprovider.equals(DATAPROVIDER_D_D_B))
 			{
 				htmlReport.append("<img src=\"./enrichment-" + DataProvider.DDB.toString() + "-"+CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH + ".png\" style=\"width:1000px;\">") ;
@@ -803,7 +762,7 @@ public class Qc_dataprovider {
 				htmlReport.append("<img src=\"./vocabulary-" + DataProvider.KIMCollect.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">") ;
 			}
 					
-	        iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
@@ -853,7 +812,7 @@ public class Qc_dataprovider {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field.replace(":", " "), CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
+				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field.replace(":", " "), CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
 				htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 				
 				//////
@@ -1312,6 +1271,55 @@ public class Qc_dataprovider {
 			e.printStackTrace();
 		}
 	    
+	}
+
+	private void printStructureOverview(StringBuffer htmlReport,
+			String dataprovider,
+			HashMap<String, StructureRecResult> resultsByDataprovider) {
+		htmlReport.append("<h4>Overview (using RegEx Pattners)</h4>");
+		Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
+		htmlReport.append("<table>");
+		htmlReport.append("<tr><td><b>fieldname</b></td>");
+		htmlReport.append("<td><b>distinct values</b></td>");
+		htmlReport.append("<td><b>median</b></td>");
+		htmlReport.append("<td><b>median by valid samples</b></td>");
+		htmlReport.append("<td><b>standard deviation</b></td>");
+		htmlReport.append("<td><b>distinct frac complement</b></td>");
+		htmlReport.append("<td><b>cdfl 0.5</b></td>");
+		htmlReport.append("<td><b>cdfl 0.75</b></td>");
+		htmlReport.append("<td><b>lower frac</b></td>");
+		htmlReport.append("<td><b>upper frac</b></td>");
+		htmlReport.append("<td><b>weighted frac</b></td>");
+		htmlReport.append("</tr>");
+		DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+		decimalFormatSymbols.setDecimalSeparator('.');
+		decimalFormatSymbols.setGroupingSeparator(',');
+		DecimalFormat decimalFormat = new DecimalFormat("#,##0.000", decimalFormatSymbols);
+		while (iteratorByDataprovider.hasNext()) {
+		    Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
+		    String field = fieldResult.getKey();
+		    StructureRecResult fieldResultValues = fieldResult.getValue();
+		    htmlReport.append("<tr>");
+		    htmlReport.append("<td>"+field+"</td>");
+		    htmlReport.append("<td>"+fieldResultValues.getResultRegEx().getResultDistinctValues()+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultMedian())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultMedianPerVaildSamples())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultSigma())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultDistinctFracComplement())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultCdfl05())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultCdfl075())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutLower())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutUpper())+"</td>");
+		    htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutWeighted())+"</td>");
+		    htmlReport.append("</tr>");
+		}
+		htmlReport.append("</table>");
+		
+		String filename = Qc_graphs.struturendnessDataproviderResultOverviewRegEx(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
+		htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
+
+		filename = Qc_graphs.struturendnessDataproviderResultOverview2RegEx(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
+		htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 	}
 
 	private void printInputDataInfoReport(String htmlReportGeneral) {
