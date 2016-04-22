@@ -77,7 +77,7 @@ public class StructureRecognizer {
         int nrDistinctValues = myData.size();//-1; // number of distinct values (patterns) of samples
         // note: subtract one, as there is an empty cell at the end of the line
 
-        double distinctFracComplement = 1 - nrDistinctValues/nrValidSamples;
+        double distinctFracComplement = 1 - nrDistinctValues*1.0/nrValidSamples;
 
         HashMap myDataSorted = sortByValues(myData); //% sort values descendingly
 
