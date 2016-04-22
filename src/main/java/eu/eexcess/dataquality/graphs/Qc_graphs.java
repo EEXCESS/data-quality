@@ -504,17 +504,17 @@ public final class Qc_graphs {
 		return outputfile.getName();
 	}
 	
-	public static String struturendnessDataproviderResultOverview(String dataprovider, int nWidth, int nHeight, HashMap<String, StructureRecResult> result) {
+	public static String struturendnessDataproviderResultOverviewRegEx(String dataprovider, int nWidth, int nHeight, HashMap<String, StructureRecResult> result) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
         Iterator<Entry<String, StructureRecResult>> iteratorFieldsHashMap = result.entrySet().iterator();
         while (iteratorFieldsHashMap.hasNext()) {
             Entry<String, StructureRecResult> fieldResult = iteratorFieldsHashMap.next();
-           	dataset.addValue(fieldResult.getValue().getResultMedianPerVaildSamples(), "Median by valid samples",fieldResult.getKey());
-           	dataset.addValue(fieldResult.getValue().getResultDistinctFracComplement(), "DistinctFracComplement",fieldResult.getKey());
-           	dataset.addValue(fieldResult.getValue().getResultCdfl05(), "cdfl 0.5",fieldResult.getKey());
-           	dataset.addValue(fieldResult.getValue().getResultCdfl075(), "cdfl 0.75",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultMedianPerVaildSamples(), "Median by valid samples",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultDistinctFracComplement(), "DistinctFracComplement",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultCdfl05(), "cdfl 0.5",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultCdfl075(), "cdfl 0.75",fieldResult.getKey());
         }
 		
 		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" overview", "fields", "number ", dataset);
@@ -548,16 +548,16 @@ public final class Qc_graphs {
 		return outputfile.getName();
 	}
 
-	public static String struturendnessDataproviderResultOverview2(String dataprovider, int nWidth, int nHeight, HashMap<String, StructureRecResult> result) {
+	public static String struturendnessDataproviderResultOverview2RegEx(String dataprovider, int nWidth, int nHeight, HashMap<String, StructureRecResult> result) {
 		
 		DefaultCategoryDataset  dataset = new DefaultCategoryDataset ();
 		
         Iterator<Entry<String, StructureRecResult>> iteratorFieldsHashMap = result.entrySet().iterator();
         while (iteratorFieldsHashMap.hasNext()) {
             Entry<String, StructureRecResult> fieldResult = iteratorFieldsHashMap.next();
-           	dataset.addValue(fieldResult.getValue().getResultFracOutLower(), "lower frac",fieldResult.getKey());
-           	dataset.addValue(fieldResult.getValue().getResultFracOutUpper(), "upper frac",fieldResult.getKey());
-           	dataset.addValue(fieldResult.getValue().getResultFracOutWeighted(), "weighted frac",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultFracOutLower(), "lower frac",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultFracOutUpper(), "upper frac",fieldResult.getKey());
+           	dataset.addValue(fieldResult.getValue().getResultRegEx().getResultFracOutWeighted(), "weighted frac",fieldResult.getKey());
         }
 		
 		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" overview", "fields", "number ", dataset);

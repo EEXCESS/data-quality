@@ -752,24 +752,24 @@ public class Qc_dataprovider {
 	            StructureRecResult fieldResultValues = fieldResult.getValue();
 	            htmlReport.append("<tr>");
 	            htmlReport.append("<td>"+field+"</td>");
-	            htmlReport.append("<td>"+fieldResultValues.getResultDistinctValues()+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultMedian())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultMedianPerVaildSamples())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultSigma())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultDistinctFracComplement())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultCdfl05())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultCdfl075())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultFracOutLower())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultFracOutUpper())+"</td>");
-	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultFracOutWeighted())+"</td>");
+	            htmlReport.append("<td>"+fieldResultValues.getResultRegEx().getResultDistinctValues()+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultMedian())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultMedianPerVaildSamples())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultSigma())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultDistinctFracComplement())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultCdfl05())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultCdfl075())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutLower())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutUpper())+"</td>");
+	            htmlReport.append("<td>"+decimalFormat.format(fieldResultValues.getResultRegEx().getResultFracOutWeighted())+"</td>");
 	            htmlReport.append("</tr>");
 	        }
 	        htmlReport.append("</table>");
 	        
-			String filename = Qc_graphs.struturendnessDataproviderResultOverview(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
+			String filename = Qc_graphs.struturendnessDataproviderResultOverviewRegEx(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
 			htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 
-			filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
+			filename = Qc_graphs.struturendnessDataproviderResultOverview2RegEx(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider);
 			htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 	        
 			if ( dataprovider.equals(DATAPROVIDER_DDB) || dataprovider.equals(DATAPROVIDER_D_D_B))

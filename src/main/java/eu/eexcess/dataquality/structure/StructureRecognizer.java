@@ -61,8 +61,12 @@ public class StructureRecognizer {
 	
 	private StructureRecResult calcMetrics(List<ValueSource> values,
 			StructureRecResult result) {
-		HashMap<String, Integer> myData = result.getValuesPatternRegExHashMap();
+		result.setResultRegEx(calcStructuredResults(result, result.getValuesPatternRegExHashMap()));
+        return result;
+	}
 
+	private StructureRecResultAnalysisResultData calcStructuredResults(StructureRecResult result,
+			HashMap<String, Integer> myData) {
 		int nrValidSamples = 0; 
 		// number of samples with non-empty value
         Iterator<Entry<String, Integer>> iteratorHashMap = myData.entrySet().iterator();
@@ -133,19 +137,19 @@ public class StructureRecognizer {
 
 	    double fracOutWeighted = fracOutUpper*(1-distinctFracComplement)+fracOutLower*distinctFracComplement;
 
+	    StructureRecResultAnalysisResultData data = new StructureRecResultAnalysisResultData();
+	    data.setResultDistinctValues(nrDistinctValues);
+	    data.setResultMedian(median);
+	    data.setResultMedianPerVaildSamples(medPerVaildSamples);
+	    data.setResultSigma(sigma);
+	    data.setResultDistinctFracComplement(distinctFracComplement);
+	    data.setResultCdfl05(cdfl05);
+	    data.setResultCdfl075(cdfl075);
 	    
-	    result.setResultDistinctValues(nrDistinctValues);
-	    result.setResultMedian(median);
-	    result.setResultMedianPerVaildSamples(medPerVaildSamples);
-	    result.setResultSigma(sigma);
-	    result.setResultDistinctFracComplement(distinctFracComplement);
-	    result.setResultCdfl05(cdfl05);
-	    result.setResultCdfl075(cdfl075);
-	    
-	    result.setResultFracOutLower(fracOutLower);
-	    result.setResultFracOutUpper(fracOutUpper);
-	    result.setResultFracOutWeighted(fracOutWeighted);
-        return result;
+	    data.setResultFracOutLower(fracOutLower);
+	    data.setResultFracOutUpper(fracOutUpper);
+	    data.setResultFracOutWeighted(fracOutWeighted);
+	    return data;
 	}
 
 	

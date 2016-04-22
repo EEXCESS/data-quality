@@ -42,105 +42,99 @@ public class StructureRecResult {
 	protected int[] lengthHistogram;
 	
 	protected int datesFound = 0 ;
-	
-	protected double resultDistinctFracComplement;
-	
-	protected double resultMedian;
-	protected double resultMedianPerVaildSamples;
-	
-	protected double resultFracOutUpper;
-	protected double resultFracOutLower;
-	protected double resultFracOutWeighted;
-	
-	
-	
+/*	
 	public double getResultFracOutUpper() {
-		return resultFracOutUpper;
+		return resultRegEx.getResultFracOutUpper();
 	}
 
 	public void setResultFracOutUpper(double resultFracOutUpper) {
-		this.resultFracOutUpper = resultFracOutUpper;
+		this.resultRegEx.setResultFracOutUpper(resultFracOutUpper);
 	}
 
 	public double getResultFracOutLower() {
-		return resultFracOutLower;
+		return resultRegEx.getResultFracOutLower();
 	}
 
 	public void setResultFracOutLower(double resultFracOutLower) {
-		this.resultFracOutLower = resultFracOutLower;
+		this.resultRegEx.setResultFracOutLower(resultFracOutLower);
 	}
 
 	public double getResultFracOutWeighted() {
-		return resultFracOutWeighted;
+		return resultRegEx.getResultFracOutWeighted();
 	}
 
 	public void setResultFracOutWeighted(double resultFracOutWeighted) {
-		this.resultFracOutWeighted = resultFracOutWeighted;
+		this.resultRegEx.setResultFracOutWeighted(resultFracOutWeighted);
 	}
 
 	public double getResultMedianPerVaildSamples() {
-		return resultMedianPerVaildSamples;
+		return resultRegEx.getResultMedianPerVaildSamples();
 	}
 
 	public void setResultMedianPerVaildSamples(double resultMedianPerVaildSamples) {
-		this.resultMedianPerVaildSamples = resultMedianPerVaildSamples;
+		this.resultRegEx.setResultMedianPerVaildSamples(resultMedianPerVaildSamples);
 	}
 
-	protected double resultSigma;
 	public double getResultSigma() {
-		return resultSigma;
+		return resultRegEx.getResultSigma();
 	}
 
 	public void setResultSigma(double resultSigma) {
-		this.resultSigma = resultSigma;
+		this.resultRegEx.setResultSigma(resultSigma);
 	}
 
-	protected int resultDistinctValues;
-
 	public int getResultDistinctValues() {
-		return resultDistinctValues;
+		return resultRegEx.getResultDistinctValues();
 	}
 
 	public void setResultDistinctValues(int resultDistinctValues) {
-		this.resultDistinctValues = resultDistinctValues;
+		this.resultRegEx.setResultDistinctValues(resultDistinctValues);
 	}
 
-	protected double resultCdfl05;
-	
 	public double getResultDistinctFracComplement() {
-		return resultDistinctFracComplement;
+		return resultRegEx.getResultDistinctFracComplement();
 	}
 
 	public void setResultDistinctFracComplement(double resultDistinctFracComplement) {
-		this.resultDistinctFracComplement = resultDistinctFracComplement;
+		this.resultRegEx.setResultDistinctFracComplement(resultDistinctFracComplement);
 	}
 
 	public double getResultMedian() {
-		return resultMedian;
+		return resultRegEx.getResultMedian();
 	}
 
 	public void setResultMedian(double resultMedian) {
-		this.resultMedian = resultMedian;
+		this.resultRegEx.setResultMedian(resultMedian);
 	}
 
 	public double getResultCdfl05() {
-		return resultCdfl05;
+		return resultRegEx.getResultCdfl05();
 	}
 
 	public void setResultCdfl05(double resultCdfl05) {
-		this.resultCdfl05 = resultCdfl05;
+		this.resultRegEx.setResultCdfl05(resultCdfl05);
 	}
 
 	public double getResultCdfl075() {
-		return resultCdfl075;
+		return resultRegEx.getResultCdfl075();
 	}
 
 	public void setResultCdfl075(double resultCdfl075) {
-		this.resultCdfl075 = resultCdfl075;
+		this.resultRegEx.setResultCdfl075(resultCdfl075);
+	}
+*/
+	protected StructureRecResultAnalysisResultData resultRegEx = new StructureRecResultAnalysisResultData();
+
+
+
+	public StructureRecResultAnalysisResultData getResultRegEx() {
+		return resultRegEx;
 	}
 
-	protected double resultCdfl075;
-	
+	public void setResultRegEx(StructureRecResultAnalysisResultData resultRegEx) {
+		this.resultRegEx = resultRegEx;
+	}
+
 	public int getDatesFound() {
 		return datesFound;
 	}
