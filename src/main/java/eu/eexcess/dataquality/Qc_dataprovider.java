@@ -1322,11 +1322,17 @@ public class Qc_dataprovider {
 		    htmlReport.append("</tr>");
 		}
 		htmlReport.append("</table>");
+		htmlReport.append("<p>");
+		htmlReport.append("The following chart shows the data from the table above.<br/>");
 		String filename = Qc_graphs.struturendnessDataproviderResultOverview(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider,structureResultType);
 		htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 
+		htmlReport.append("</p><p>");
+		htmlReport.append("The following chart shows the data from the table above.<br/>");
 		filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider,structureResultType);
 		htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
+		
+		htmlReport.append("</p>");
 	}
 
 	private void printInputDataInfoReport(String htmlReportGeneral) {
