@@ -25,6 +25,8 @@ import java.util.Map.Entry;
 
 public class StructureRecResult {
 
+	public enum  StructureResultTyp { REGEX,VALUE}
+
 	protected boolean structureDetected = false;
 	
 	//protected String pattern ="";
@@ -126,9 +128,19 @@ public class StructureRecResult {
 	protected StructureRecResultAnalysisResultData resultRegEx = new StructureRecResultAnalysisResultData();
 
 
+	protected StructureRecResultAnalysisResultData resultValue = new StructureRecResultAnalysisResultData();
+
 
 	public StructureRecResultAnalysisResultData getResultRegEx() {
 		return resultRegEx;
+	}
+
+	public StructureRecResultAnalysisResultData getResultValue() {
+		return resultValue;
+	}
+
+	public void setResultValue(StructureRecResultAnalysisResultData resultValue) {
+		this.resultValue = resultValue;
 	}
 
 	public void setResultRegEx(StructureRecResultAnalysisResultData resultRegEx) {

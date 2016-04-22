@@ -62,6 +62,7 @@ public class StructureRecognizer {
 	private StructureRecResult calcMetrics(List<ValueSource> values,
 			StructureRecResult result) {
 		result.setResultRegEx(calcStructuredResults(result, result.getValuesPatternRegExHashMap()));
+		result.setResultValue(calcStructuredResults(result, result.getValuesHashMap()));
         return result;
 	}
 
