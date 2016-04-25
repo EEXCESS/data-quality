@@ -764,17 +764,24 @@ public class Qc_dataprovider {
 				htmlReport.append("<img src=\"./enrichment-link-" + DataProvider.KIMCollect.toString() + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">" );
 				htmlReport.append("<img src=\"./vocabulary-" + DataProvider.KIMCollect.toString() + "-" + CHART_WIDTH_HIGH+"x"+CHART_HEIGHT_HIGH+".png\" style=\"width:1000px;\">") ;
 			}
-					
+			
+			htmlReport.append("<p><h4>Fields:</h4>");
 	        Iterator<Entry<String, StructureRecResult>> iteratorByDataprovider = resultsByDataprovider.entrySet().iterator();
 	        while (iteratorByDataprovider.hasNext()) {
+	        	StringBuffer htmlReportPerField = new StringBuffer(htmlReportGeneralHeader);
+		    	String htmlReportPerFieldJavascript = new String(htmlReportJavascriptGeneral);
+
 	            Entry<String, StructureRecResult> fieldResult = (Entry<String, StructureRecResult>) iteratorByDataprovider.next();
 	            String field = fieldResult.getKey();
-	            htmlReport.append("<h4 id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"Header\" class=\"flip\">Field:" + field +"</h4>");
-	            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"Panel\" class=\"panel\">");
+	            htmlReportPerField.append("<h3>" + dataprovider +"</h3>");
+//	            htmlReportPerField.append("<h4 id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"Header\" class=\"flip\">Field:" + field +"</h4>");
+	            htmlReportPerField.append("<h4>Field:" + field +"</h4>");
+//	            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"Panel\" class=\"panel\">");
+	            htmlReportPerField.append("<div >");
 
-	            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"Header\").click(function(){";
-	            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"Panel\").slideToggle(\"slow\");";
-	            htmlReportJavascript +="});";
+	            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"Header\").click(function(){";
+	            htmlReportPerFieldJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"Panel\").slideToggle(\"slow\");";
+	            htmlReportPerFieldJavascript +="});";
 
 	            StructureRecResult result = fieldResult.getValue();
 	            // write Histogramm for value length
@@ -798,25 +805,25 @@ public class Qc_dataprovider {
 							writerStatisticRecords.close();
 						}
 					}					
-					htmlReport.append("<h5>Histogram for value length</h5>");
-					htmlReport.append("<table><tr><td><b>length:</b></td>");
-					htmlReport.append("<td><b>number:</b></td></tr>");
+					htmlReportPerField.append("<h5>Histogram for value length</h5>");
+					htmlReportPerField.append("<table><tr><td><b>length:</b></td>");
+					htmlReportPerField.append("<td><b>number:</b></td></tr>");
 					
 					if (result.getLengthHistogram() != null)
 					{
 						for (int i = 0; i < result.getLengthHistogram().length; i++) {
 							if (result.getLengthHistogram()[i] > 0) {
-								htmlReport.append("<tr><td>"+i+"</td>");
-								htmlReport.append("<td>"+result.getLengthHistogram()[i]+"</td></tr>");
+								htmlReportPerField.append("<tr><td>"+i+"</td>");
+								htmlReportPerField.append("<td>"+result.getLengthHistogram()[i]+"</td></tr>");
 							}
 						}
 					}
-					htmlReport.append("</table>");
+					htmlReportPerField.append("</table>");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				String filename = Qc_graphs.struturendnessDataproviderFieldValueLengthHistrogramm(dataprovider, field.replace(":", " "), CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
-				htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
+				htmlReportPerField.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 				
 				//////
 				
@@ -848,18 +855,18 @@ public class Qc_dataprovider {
 						filenameHistogramCSV = fileStatisticRecords.getName();
 					}
 					{					
-						htmlReport.append("<h5>Histogram for values</h5>");
-						htmlReport.append("<table><tr><td><b>values:</b></td>");
-						htmlReport.append("<td><b>number:</b></td></tr>");
+						htmlReportPerField.append("<h5>Histogram for values</h5>");
+						htmlReportPerField.append("<table><tr><td><b>values:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td></tr>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td></tr>");
 				        }
-				    	htmlReport.append("</table>");
+				    	htmlReportPerField.append("</table>");
 				    	if (this.writeHistogrammCSV)
-				    		htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
+				    		htmlReportPerField.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
 
 					}
 
@@ -871,7 +878,7 @@ public class Qc_dataprovider {
 				
 //				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
 				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field.replace(":", " "), "values", CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
-				htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
+				htmlReportPerField.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 				
 				//////
 				
@@ -904,52 +911,52 @@ public class Qc_dataprovider {
 						filenameHistogramCSV = fileStatisticRecords.getName();
 					}
 					{					
-						htmlReport.append("<h5>Histogram for pattern</h5>");
-						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReport.append("<td><b>number:</b></td></tr>");
+						htmlReportPerField.append("<h5>Histogram for pattern</h5>");
+						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td></tr>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td></tr>");
 				        }
-				    	htmlReport.append("</table>");
+				    	htmlReportPerField.append("</table>");
 					}
 					{					
-						htmlReport.append("<h5>Histogram for pattern - Sourcen</h5>");
-						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReport.append("<td><b>number:</b></td>");
-						htmlReport.append("<td><b>Source:</b></td></tr>");
+						htmlReportPerField.append("<h5>Histogram for pattern - Sourcen</h5>");
+						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td>");
+						htmlReportPerField.append("<td><b>Source:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td>");
-							htmlReport.append("<td>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td>");
+							htmlReportPerField.append("<td>");
 							
 							
-				            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\" class=\"flip\">show</h4>");
-				            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\" class=\"panel\">");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\" class=\"panel\">");
 
-				            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\").slideToggle(\"slow\");";
-				            htmlReportJavascript +="});";
+				            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\").click(function(){";
+				            htmlReportPerFieldJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportPerFieldJavascript +="});";
 
 							
 							
-				            htmlReport.append("<ul>");
+				            htmlReportPerField.append("<ul>");
 							ArrayList<PatternSource> sources = patternSource.getValue();
 							for (int i = 0; i < sources.size(); i++) {
-								htmlReport.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
+								htmlReportPerField.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
 							}
-							htmlReport.append("</ul></div></div></td></tr>");
+							htmlReportPerField.append("</ul></div></div></td></tr>");
 							helpCount++;
 				        }
-				    	htmlReport.append("</table>");
-						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
+				    	htmlReportPerField.append("</table>");
+						htmlReportPerField.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
 
 					}
 
@@ -961,7 +968,7 @@ public class Qc_dataprovider {
 				
 //				Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field, CHART_WIDTH_MID, CHART_HEIGHT_MID, result);
 				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field.replace(":", " "), "pattern", CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
-				htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
+				htmlReportPerField.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 				
 				
 				// write histogram for pattern RegEx
@@ -992,52 +999,52 @@ public class Qc_dataprovider {
 						filenameHistogramCSV = fileStatisticRecords.getName();
 					}
 					{					
-						htmlReport.append("<h5>Histogram for pattern(RegEx)</h5>");
-						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReport.append("<td><b>number:</b></td></tr>");
+						htmlReportPerField.append("<h5>Histogram for pattern(RegEx)</h5>");
+						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td></tr>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td></tr>");
 				        }
-				    	htmlReport.append("</table>");
+				    	htmlReportPerField.append("</table>");
 					}
 					{					
-						htmlReport.append("<h5>Histogram for pattern(RegEx) - Sourcen</h5>");
-						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReport.append("<td><b>number:</b></td>");
-						htmlReport.append("<td><b>Source:</b></td></tr>");
+						htmlReportPerField.append("<h5>Histogram for pattern(RegEx) - Sourcen</h5>");
+						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td>");
+						htmlReportPerField.append("<td><b>Source:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternRegExSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td>");
-							htmlReport.append("<td>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td>");
+							htmlReportPerField.append("<td>");
 							
 							
-				            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show</h4>");
-				            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\" class=\"panel\">");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\" class=\"panel\">");
 
-				            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\").slideToggle(\"slow\");";
-				            htmlReportJavascript +="});";
+				            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\").click(function(){";
+				            htmlReportPerFieldJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportPerFieldJavascript +="});";
 
 							
 							
-				            htmlReport.append("<ul>");
+				            htmlReportPerField.append("<ul>");
 							ArrayList<PatternSource> sources = patternSource.getValue();
 							for (int i = 0; i < sources.size(); i++) {
-								htmlReport.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
+								htmlReportPerField.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
 							}
-							htmlReport.append("</ul></div></div></td></tr>");
+							htmlReportPerField.append("</ul></div></div></td></tr>");
 							helpCount++;
 				        }
-				    	htmlReport.append("</table>");
-						htmlReport.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
+				    	htmlReportPerField.append("</table>");
+						htmlReportPerField.append("<p><a href=\".\\"+OUTPUT_STRUCT_CSV_DIR+filenameHistogramCSV+"\">data as CSV</a></p>");
 					}
 
 				
@@ -1047,13 +1054,13 @@ public class Qc_dataprovider {
 				
 				
 				filename = Qc_graphs.struturendnessDataproviderFieldValuePatternHistrogramm(dataprovider, field.replace(":", " "),"pattern RegEx", CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, result);
-				htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
+				htmlReportPerField.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 				
 
 				
 				// write histogram for date pattern
-				htmlReport.append("<h5>date patterns</h5>");
-				htmlReport.append("<p>date patterns detected:<b>"+result.getValuesDateformatHashMap().size()+"</b></p>");
+				htmlReportPerField.append("<h5>date patterns</h5>");
+				htmlReportPerField.append("<p>date patterns detected:<b>"+result.getValuesDateformatHashMap().size()+"</b></p>");
 
 				try {
 					if (this.writeHistogrammCSV) {
@@ -1079,112 +1086,127 @@ public class Qc_dataprovider {
 					}
 					if (result.getValuesDateformatHashMap().size() > 0) {
 						{					
-							htmlReport.append("<h4>Histogram for date patterns</h4>");
-							htmlReport.append("<table><tr><td><b>pattern:</b></td>");
-							htmlReport.append("<td><b>number:</b></td></tr>");
+							htmlReportPerField.append("<h4>Histogram for date patterns</h4>");
+							htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+							htmlReportPerField.append("<td><b>number:</b></td></tr>");
 					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
 					        while (iteratorPatternHashMap.hasNext()) {
 					            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-								htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-								htmlReport.append("<td>"+pattern.getValue()+"</td></tr>");
+								htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+								htmlReportPerField.append("<td>"+pattern.getValue()+"</td></tr>");
 					        }
-					    	htmlReport.append("</table>");
+					    	htmlReportPerField.append("</table>");
 						}
 						{					
-							htmlReport.append("<h4>Histogram for date pattern - Sourcen</h4>");
-							htmlReport.append("<table><tr><td><b>date pattern:</b></td>");
-							htmlReport.append("<td><b>number:</b></td>");
-							htmlReport.append("<td><b>Source:</b></td></tr>");
+							htmlReportPerField.append("<h4>Histogram for date pattern - Sourcen</h4>");
+							htmlReportPerField.append("<table><tr><td><b>date pattern:</b></td>");
+							htmlReportPerField.append("<td><b>number:</b></td>");
+							htmlReportPerField.append("<td><b>Source:</b></td></tr>");
 					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
 					        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesDateformatSourceHashMap().entrySet().iterator();
 					        int helpCount = 0;
 					        while (iteratorPatternHashMap.hasNext()) {
 					            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 					            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
-								htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-								htmlReport.append("<td>"+pattern.getValue()+"</td>");
-								htmlReport.append("<td>");
+								htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+								htmlReportPerField.append("<td>"+pattern.getValue()+"</td>");
+								htmlReportPerField.append("<td>");
 								
 								
-					            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>");
-					            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">");
+					            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+					            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">");
 	
-					            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\").click(function(){";
-					            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
-					            htmlReportJavascript +="});";
+					            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\").click(function(){";
+					            htmlReportPerFieldJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+					            htmlReportPerFieldJavascript +="});";
 	
 								
 								
-					            htmlReport.append("<ul>");
+					            htmlReportPerField.append("<ul>");
 								ArrayList<PatternSource> sources = patternSource.getValue();
 								for (int i = 0; i < sources.size(); i++) {
-									htmlReport.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
+									htmlReportPerField.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
 								}
-								htmlReport.append("</ul></div></div></td></tr>");
+								htmlReportPerField.append("</ul></div></div></td></tr>");
 								helpCount++;
 					        }
-					    	htmlReport.append("</table>");
+					    	htmlReportPerField.append("</table>");
 						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				
-				htmlReport.append("<h5>URL patterns</h5>");
-				htmlReport.append("<p>URL patterns detected:<b>"+result.getValuesUrlformatHashMap().size()+"</b></p>");
+				htmlReportPerField.append("<h5>URL patterns</h5>");
+				htmlReportPerField.append("<p>URL patterns detected:<b>"+result.getValuesUrlformatHashMap().size()+"</b></p>");
 				if (result.getValuesUrlformatHashMap().size() > 0)
 				{
 					{					
-						htmlReport.append("<h4>Histogram for URL patterns</h4>");
-						htmlReport.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReport.append("<td><b>number:</b></td></tr>");
+						htmlReportPerField.append("<h4>Histogram for URL patterns</h4>");
+						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesUrlformatHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td></tr>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td></tr>");
 				        }
-				    	htmlReport.append("</table>");
+				    	htmlReportPerField.append("</table>");
 					}
 					{					
-						htmlReport.append("<h4>Histogram for URL pattern - Sourcen</h4>");
-						htmlReport.append("<table><tr><td><b>URL pattern:</b></td>");
-						htmlReport.append("<td><b>number:</b></td>");
-						htmlReport.append("<td><b>Source:</b></td></tr>");
+						htmlReportPerField.append("<h4>Histogram for URL pattern - Sourcen</h4>");
+						htmlReportPerField.append("<table><tr><td><b>URL pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td>");
+						htmlReportPerField.append("<td><b>Source:</b></td></tr>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesUrlformatHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesUrlformatSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
 				            Entry<String, ArrayList<PatternSource>> patternSource = iteratorPatternSourceHashMap.next();
-							htmlReport.append("<tr><td>"+pattern.getKey()+"</td>");
-							htmlReport.append("<td>"+pattern.getValue()+"</td>");
-							htmlReport.append("<td>");
+							htmlReportPerField.append("<tr><td>"+pattern.getKey()+"</td>");
+							htmlReportPerField.append("<td>"+pattern.getValue()+"</td>");
+							htmlReportPerField.append("<td>");
 							
 							
-				            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>");
-				            htmlReport.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\" class=\"panel\">");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\" class=\"panel\">");
 
-				            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\").click(function(){";
-				            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
-				            htmlReportJavascript +="});";
+				            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\").click(function(){";
+				            htmlReportPerFieldJavascript += "    $(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\").slideToggle(\"slow\");";
+				            htmlReportPerFieldJavascript +="});";
 
 							
 							
-				            htmlReport.append("<ul>");
+				            htmlReportPerField.append("<ul>");
 							ArrayList<PatternSource> sources = patternSource.getValue();
 							for (int i = 0; i < sources.size(); i++) {
-								htmlReport.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
+								htmlReportPerField.append("<li><a href=\".\\input\\"+sources.get(i).getFilename()+"\">" + sources.get(i).getValue() + " " + "</a></li>");
 							}
-							htmlReport.append("</ul></div></div></td></tr>");
+							htmlReportPerField.append("</ul></div></div></td></tr>");
 							helpCount++;
 				        }
-				    	htmlReport.append("</table>");
+				    	htmlReportPerField.append("</table>");
 					}
 				}
 				
-				htmlReport.append("</div>");
+				htmlReportPerField.append("</div>");
 
+				
+				htmlReportPerFieldJavascript += "});</script>";
+				htmlReportPerField.append(htmlReportPerFieldJavascript);
+				htmlReportPerField.append("</body></html>");
+		        try {
+					File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report-"+dataprovider+"-"+field.replace(":", "")+".html");
+					BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+					
+					writerStatisticRecords.append(htmlReportPerField);
+					writerStatisticRecords.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	        	
+				htmlReport.append("<li> <a href=\"dataquality-report-"+dataprovider+"-"+field.replace(":", "")+".html\">" +           field +"</a></li>");
 
 	        }
 	        htmlReportJavascript += "});</script>";
