@@ -455,10 +455,10 @@ public class CheckEnrichment {
 						
 					default:
 						sContent.append("<td>");
-						sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink));
+						sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2));
 						sContent.append("</td>");
 						
-						sCSVcontent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink));
+						sCSVcontent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,4));
 						sCSVcontent.append(sFieldSeperator);
 						break;
 				}
@@ -489,10 +489,10 @@ public class CheckEnrichment {
 						
 					default:
 						sContent.append("<td>");
-						sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink));
+						sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2));
 						sContent.append("</td>");
 						
-						sCSVcontent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink));
+						sCSVcontent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,4));
 						sCSVcontent.append(sFieldSeperator);
 						break;
 				}

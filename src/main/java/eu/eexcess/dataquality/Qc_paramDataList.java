@@ -17,6 +17,7 @@ limitations under the License.
  */
 package eu.eexcess.dataquality;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -272,7 +273,7 @@ public class Qc_paramDataList {
 		return saLinks;
 	}
 	
-	public String getTrustedLinkCountPerLinkAndProvider(DataProvider provider, String sLink)
+	public String getTrustedLinkCountPerLinkAndProvider(DataProvider provider, String sLink, int nCommaCount)
 	{
 		String sCount = "";
 		if (provider != null)
@@ -287,13 +288,14 @@ public class Qc_paramDataList {
 			if (nCount > 0)
 			{
 				nCount = nCount / getRecordsPerProvider(provider);
-				sCount = String.valueOf(nCount);
+				DecimalFormat df = new DecimalFormat("0." + new String(new char[nCommaCount]).replace("\0", "0"));
+				sCount = df.format(nCount);
 			}
 		}
 		return sCount;
 	}
 	
-	public String getAllUnknownLinkCountPerLinkAndProvider(DataProvider provider, String sLink)
+	public String getAllUnknownLinkCountPerLinkAndProvider(DataProvider provider, String sLink, int nCommaCount)
 	{
 		String sCount = "";
 		if (provider != null)
@@ -308,7 +310,8 @@ public class Qc_paramDataList {
 			if (nCount > 0)
 			{
 				nCount = nCount / getRecordsPerProvider(provider);
-				sCount = String.valueOf(nCount);
+				DecimalFormat df = new DecimalFormat("0." + new String(new char[nCommaCount]).replace("\0", "0"));
+				sCount = df.format(nCount);
 			}
 		}
 		return sCount;
