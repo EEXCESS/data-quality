@@ -1,5 +1,4 @@
 <!-- ##################################################################### 
-
 	DQV to HTML
 	     
 	 ##################################################################### -->
@@ -36,12 +35,22 @@ xmlns:daq="http://purl.org/eis/vocab/daq#" xmlns:dcat="http://www.w3.org/ns/dcat
 $(document).ready(function(){
 
 
-    var measurements = [ 
+    var measurementsRec = [ 
 	
-	<xsl:call-template name="collectMeasurements"/>
+	<xsl:call-template name="collectMeasurements">
+		<xsl:with-param name="metrics">eexdaq:metric#numberOfRecords eexdaq:metric#maxFieldsPerRecord</xsl:with-param>
+	</xsl:call-template>
 	
 	];
 
+	
+	 var measurementsFields = [ 
+	
+	<xsl:call-template name="collectMeasurements">
+		<xsl:with-param name="metrics">eexdaq:metric#meanFieldsPerRecord eexdaq:metric#minFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerDatafieldsPerRecord</xsl:with-param>
+	</xsl:call-template>
+	
+	];
 	 
    // Can specify a custom tick Array.
     // Ticks should match up one for each y value (category) in the series.
@@ -51,7 +60,7 @@ $(document).ready(function(){
     
 	];
 	
-    var plot1 = $.jqplot('chart', measurements, {
+    var plot1 = $.jqplot('chart1', measurementsRec, {
         // The "seriesDefaults" option is an options object that will
         // be applied to all series in the chart.
         seriesDefaults:{
@@ -63,7 +72,8 @@ $(document).ready(function(){
             xaxis: {
                 renderer: $.jqplot.CategoryAxisRenderer,
                 ticks: ticks,
-				label: 'data providers'
+				label: 'data providers',
+				tickOptions: { angle: -30, fontSize: '8pt' }
             },
 	
            // Pad the y axis just a little so bars can get close to, but
@@ -79,9 +89,42 @@ $(document).ready(function(){
             show: true,
 			location: 'ne',
             placement: 'inside',
-			labels: [ <xsl:apply-templates select="//daq:Metric" /> ]
+			labels: [ <xsl:apply-templates select="//daq:Metric" ><xsl:with-param name="metrics">eexdaq:metric#numberOfRecords eexdaq:metric#maxFieldsPerRecord</xsl:with-param></xsl:apply-templates> ]
         },	
 	});
+
+  var plot2 = $.jqplot('chart2', measurementsFields, {
+        // The "seriesDefaults" option is an options object that will
+        // be applied to all series in the chart.
+        seriesDefaults:{
+            renderer:$.jqplot.BarRenderer,
+            rendererOptions: {fillToZero: true}
+        }, 
+        axes: {
+            // Use a category axis on the x axis and use our custom ticks.
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks: ticks,
+				label: 'data providers',
+				tickOptions: { angle: -30, fontSize: '8pt' }
+            },
+	
+           // Pad the y axis just a little so bars can get close to, but
+            // not touch, the grid boundaries.  1.2 is the default padding.
+            yaxis: {
+                pad: 1.05,
+                tickOptions: {formatString: '%f'},
+				label: 'score',
+				min: 0
+            }
+        },
+		legend: {
+            show: true,
+			location: 'ne',
+            placement: 'inside',
+			labels: [ <xsl:apply-templates select="//daq:Metric" ><xsl:with-param name="metrics">eexdaq:metric#meanFieldsPerRecord eexdaq:metric#minFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerDatafieldsPerRecord</xsl:with-param></xsl:apply-templates> ]
+        },	
+	});	
 
 
 	
@@ -91,7 +134,9 @@ $(document).ready(function(){
 </head><body>
 
 	<h2>Data Quality Measurements</h2>
-	<div id="chart" style="width:document.body.offsetWidth; height:500px;"></div>
+	<div id="chart1" style="width:document.body.offsetWidth; height:500px;"></div>
+	
+	<div id="chart2" style="width:document.body.offsetWidth; height:500px;"></div>
 
 	
 </body>
@@ -99,37 +144,45 @@ $(document).ready(function(){
 </xsl:template>
 
 <xsl:template match = "//daq:Metric" > 
-	<xsl:text>'</xsl:text><xsl:value-of select="substring-after(@rdf:about,'#')" /><xsl:text>'</xsl:text>
-	<xsl:if test="not(position()=last())">
-		<xsl:text>,</xsl:text>
+	<xsl:param name="metrics" ><xsl:text>eexdaq:metric#numberOfRecords eexdaq:metric#meanFieldsPerRecord eexdaq:metric#minFieldsPerRecord eexdaq:metric#maxFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerDatafieldsPerRecord</xsl:text></xsl:param>
+	<xsl:variable name="cMetric"><xsl:value-of select="@rdf:about" /></xsl:variable>
+	<xsl:if test="contains($metrics,$cMetric)">
+		<xsl:text>'</xsl:text><xsl:value-of select="substring-after(@rdf:about,'#')" /><xsl:text>'</xsl:text>
+		<xsl:if test="not(position()=last())">
+			<xsl:text>,</xsl:text>
+		</xsl:if>
 	</xsl:if>
 </xsl:template> 
 
 <xsl:template match = "//dcat:Distribution" > 
-	<xsl:text>'</xsl:text><xsl:value-of select="dct:title" /><xsl:text>'</xsl:text>
+	<xsl:text>'</xsl:text><xsl:value-of select="substring-before(substring-after(dct:title,'My EEXCESS '),' dataset')" /><xsl:text>'</xsl:text>
 	<xsl:if test="not(position()=last())">
 		<xsl:text>,</xsl:text>
 	</xsl:if>
 </xsl:template> 
 
 <xsl:template name="collectMeasurements" > 
+	<xsl:param name="metrics" ><xsl:text>eexdaq:metric#numberOfRecords eexdaq:metric#meanFieldsPerRecord eexdaq:metric#minFieldsPerRecord eexdaq:metric#maxFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerRecord eexdaq:metric#meanNonEmptyFieldsPerDatafieldsPerRecord</xsl:text></xsl:param>
 	<xsl:for-each select="//daq:Metric">
 		<xsl:variable name="cMetric"><xsl:value-of select="@rdf:about" /></xsl:variable>
-		<xsl:text>[</xsl:text>
-		<xsl:for-each select="//dcat:Distribution">
-			<xsl:variable name="cDataDistribution"><xsl:value-of select="@rdf:about" /></xsl:variable>
-						
-			<xsl:apply-templates select="//dqv:QualityMeasure[daq:computedOn/@rdf:resource=$cDataDistribution and daq:metric/@rdf:resource=$cMetric]" />
+		<xsl:if test="contains($metrics,$cMetric)">
+		
+			<xsl:text>[</xsl:text>
+			<xsl:for-each select="//dcat:Distribution">
+				<xsl:variable name="cDataDistribution"><xsl:value-of select="@rdf:about" /></xsl:variable>
+							
+				<xsl:apply-templates select="//dqv:QualityMeasure[daq:computedOn/@rdf:resource=$cDataDistribution and daq:metric/@rdf:resource=$cMetric]" />
+				
+				<xsl:if test="not(position()=last())">
+					<xsl:text>,</xsl:text>
+				</xsl:if>
+				
+			</xsl:for-each>
+			<xsl:text>]</xsl:text>
 			
 			<xsl:if test="not(position()=last())">
 				<xsl:text>,</xsl:text>
 			</xsl:if>
-			
-		</xsl:for-each>
-		<xsl:text>]</xsl:text>
-		
-		<xsl:if test="not(position()=last())">
-			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:for-each>
 	
@@ -147,4 +200,3 @@ $(document).ready(function(){
 </xsl:template> 
 
 </xsl:stylesheet>
-
