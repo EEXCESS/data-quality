@@ -29,6 +29,31 @@
 			<artifactId>commons-math3</artifactId>
 			<version>3.6</version>
 		</dependency>
+<!-- 
+<dependency>
+	<groupId>edu.mit</groupId>
+	<artifactId>jwi</artifactId>
+	<version>2.2.3</version>
+</dependency>
+
+<dependency>
+	<groupId>de.sciss</groupId>
+	<artifactId>ws4j</artifactId>
+	<version>0.1.0</version>
+</dependency>
+<dependency>
+	<groupId>de.sciss</groupId>
+	<artifactId>jawjaw</artifactId>
+	<version>0.1.0</version>
+</dependency>
+-->
+<dependency>
+	<groupId>eu.eexcess</groupId>
+	<artifactId>ws4j</artifactId>
+	<version>1.0.1</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/src/libs/ws4j-1.0.1.jar</systemPath>
+</dependency>
 	</dependencies>
 	<build>
 		<plugins>

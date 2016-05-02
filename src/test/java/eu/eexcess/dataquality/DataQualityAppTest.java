@@ -180,6 +180,13 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2WithoutInputdataCopy()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2", "--dontCopyInput"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};

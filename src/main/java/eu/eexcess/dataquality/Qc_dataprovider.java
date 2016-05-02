@@ -77,6 +77,9 @@ import eu.eexcess.dataquality.structure.StructureRecResult;
 import eu.eexcess.dataquality.structure.StructureRecResultAnalysisResultData;
 import eu.eexcess.dataquality.structure.StructureRecognizer;
 import eu.eexcess.dataquality.structure.ValueSource;
+import eu.eexcess.dataquality.wordnet.WordNetSimilarity;
+import eu.eexcess.dataquality.wordnet.WordNetSimilarityResultObject;
+import eu.eexcess.dataquality.wordnet.WordNetSimilarityResultProxyObject;
 
 // Check for data provider
 public class Qc_dataprovider {
@@ -94,6 +97,7 @@ public class Qc_dataprovider {
 	private static final int CHART_HEIGHT_HIGH = 1200;
 	private static final int CHART_WIDTH_MID = 800;
 	private static final int CHART_HEIGHT_MID = 600;
+	private static final String DATAQUALITY_REPORT_ENRICHMENT_HTML_FILENAME = "dataquality-report-enrichment.html";
 //	private static final int CHART_WIDTH_LOW = 400;
 //	private static final int CHART_HEIGHT_LOW = 350;
 	Qc_base currentProvider = null;
@@ -101,16 +105,32 @@ public class Qc_dataprovider {
 	
 	public static HashMap<String,Boolean> URLCheckingResultsAccessible = new HashMap<String,Boolean>();
 	
+	public static HashMap<String,Boolean> URLCheckingResultsHostsBlacklist = new HashMap<String,Boolean>();
+
 	public static String outputDir ="./output/";
+	
+	private boolean copyInput = true;
 	
 	public static long countCheckedURLs = 0;
 	public static long countCheckedURLsOnline = 0;
 	public static long countCheckedURLsViaCache = 0;
+	public static long countCheckedURLsViaBlackList = 0;
 	
 	public boolean writeHistogrammCSV = true;
 	
 	HashMap<String,HashMap<String, StructureRecResult>> structurednessResults = new HashMap<String, HashMap<String, StructureRecResult>>();
+	HashMap<String,HashMap<String,WordNetSimilarityResultObject>> similarityResults = new HashMap<String,HashMap<String, WordNetSimilarityResultObject>>();
 
+	NumberFormat numberFormater = null;
+	NumberFormat numberFormaterXML = null;
+
+	public Qc_dataprovider()
+	{
+		numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
+		numberFormaterXML = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
+		numberFormaterXML.setGroupingUsed(false);
+	}
+	
 	// XML files of known partners
 	public enum DataProvider {
 		KIMCollect, KIMCollect_EEXCESS, KIMCollect_enriched,
@@ -128,6 +148,10 @@ public class Qc_dataprovider {
 		timestampLastTime = System.currentTimeMillis();
 		inputDirs = new ArrayList<String>();
 		for (int i = 0; i < sParams.length; i++) {
+			if (sParams[i].equalsIgnoreCase(DataQualityApp.CMD_PARAM_DONT_COPY_INPUT))
+			{
+				this.copyInput = false;
+			}
 			File f = new File(sParams[i]);
 			if (f.isFile() == true && f.isDirectory() == false) {
 				checkDataProviderFile(sParams[i]);
@@ -147,7 +171,10 @@ public class Qc_dataprovider {
 		System.out.println("countCheckedURLs:"+Qc_dataprovider.countCheckedURLs);
 		System.out.println("countCheckedURLsOnline:"+Qc_dataprovider.countCheckedURLsOnline);
 		System.out.println("countCheckedURLsViaCache:"+Qc_dataprovider.countCheckedURLsViaCache);
+		System.out.println("countCheckedURLsViaBlackList:"+Qc_dataprovider.countCheckedURLsViaBlackList);
+		System.out.println("size of Blacklist for Hosts:"+Qc_dataprovider.URLCheckingResultsHostsBlacklist.size());
 		Qc_dataprovider.URLCheckingResultsAccessible.clear();
+		Qc_dataprovider.URLCheckingResultsHostsBlacklist.clear();
 		System.gc();
 		printDebugTime("checking");
 		// check enrichment
@@ -210,10 +237,14 @@ public class Qc_dataprovider {
 		}
 	}
 
-	NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
 
 	private String formatNumber(double number) {
 		return numberFormater.format(number);
+	}
+	
+
+	private String formatNumberXML(double number) {
+		return numberFormaterXML.format(number);
 	}
 	
 	private void printStatisticsCharts() {
@@ -385,13 +416,16 @@ public class Qc_dataprovider {
 		DataQualityVocabularyRDFWriter dQVRDFWriter = new DataQualityVocabularyRDFWriter();
 		for (int i=0;i<DataProvider.values().length; i++)
 		{
-			dQVRDFWriter.addQualityMeasure_numberOfRecords(DataProvider.values()[i].toString(), formatNumber(paramDataList.getRecordsPerProvider(DataProvider.values()[i])));
-			dQVRDFWriter.addQualityMeasure_meanFieldsPerRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			if (paramDataList.getRecordsPerProvider(DataProvider.values()[i]) == 0 ) {
+				continue;
+			}
+			dQVRDFWriter.addQualityMeasure_numberOfRecords(DataProvider.values()[i].toString(), formatNumberXML(paramDataList.getRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_meanFieldsPerRecord(DataProvider.values()[i].toString(), formatNumberXML(paramDataList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
 			dQVRDFWriter.addQualityMeasure_minFieldsPerRecord(DataProvider.values()[i].toString(), ""+paramDataList.getMinDataFieldsPerRecordsPerProvider(DataProvider.values()[i]));
 			dQVRDFWriter.addQualityMeasure_maxFieldsPerRecord(DataProvider.values()[i].toString(), ""+paramDataList.getMaxDataFieldsPerRecordsPerProvider(DataProvider.values()[i]));
 			
-			dQVRDFWriter.addQualityMeasure_meanNonEmptyFieldsPerRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
-			dQVRDFWriter.addQualityMeasure_meanNonEmptyFieldsPerDatafieldsPerRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_meanNonEmptyFieldsPerRecord(DataProvider.values()[i].toString(), formatNumberXML(paramDataList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
+			dQVRDFWriter.addQualityMeasure_meanNonEmptyFieldsPerDatafieldsPerRecord(DataProvider.values()[i].toString(), formatNumberXML(paramDataList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])));
 			
 			//dQVRDFWriter.addQualityMeasure_meanEmptyFieldsPerRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i])));
 			//dQVRDFWriter.addQualityMeasure_meanEmptyFieldsPerDatafieldsRecord(DataProvider.values()[i].toString(), formatNumber(paramDataList.getEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i])));
@@ -545,17 +579,33 @@ public class Qc_dataprovider {
 		
 		//next list of all files per provider
 		HashMap<String, ArrayList<String>> filesNameByDataproviderHashMap = new HashMap<String, ArrayList<String>>();
+		HashMap<String, ArrayList<String>> filesNameByDataproviderTransformedHashMap = new HashMap<String, ArrayList<String>>();
+		HashMap<String, ArrayList<String>> filesNameByDataproviderEnrichedHashMap = new HashMap<String, ArrayList<String>>();
 		for (Iterator<String> iteratorDataprovider = dataproviders.iterator(); iteratorDataprovider.hasNext();) {
 			String actDataProvider = (String) iteratorDataprovider.next();
 			ArrayList<String> fileNameByDataProvider = new ArrayList<String>();
+			ArrayList<String> fileNameByDataProviderTransformed = new ArrayList<String>();
+			ArrayList<String> fileNameByDataProviderEnriched = new ArrayList<String>();
 			for (Iterator<String> iteratorFileNames = fileNames.iterator(); iteratorFileNames.hasNext();) {
 				String actFileName = (String) iteratorFileNames.next();
 				if (!actFileName.contains("enrichment") && !actFileName.contains("done-transform")) {
 					if (actFileName.contains(actDataProvider))
 						fileNameByDataProvider.add(actFileName);
+				} else {
+					if (actFileName.contains("done-transform")) {
+						if (actFileName.contains(actDataProvider))
+							fileNameByDataProviderTransformed.add(actFileName);
+					}else {
+						if (actFileName.contains("enrichment")) {
+							if (actFileName.contains(actDataProvider))
+								fileNameByDataProviderEnriched.add(actFileName);
+						}
+					}
 				}
 			}
 			filesNameByDataproviderHashMap.put(actDataProvider, fileNameByDataProvider);
+			filesNameByDataproviderTransformedHashMap.put(actDataProvider, fileNameByDataProviderTransformed);
+			filesNameByDataproviderEnrichedHashMap.put(actDataProvider, fileNameByDataProviderEnriched);
 /*
 			System.out.println("files for dataprovider:" + actDataProvider);
 			for (Iterator<String> iterator = fileNameByDataProvider.iterator(); iterator.hasNext();) {
@@ -564,6 +614,11 @@ public class Qc_dataprovider {
 			}
 */
 		}
+		///////////////////////////////
+		//
+		// process Service-Responses 
+		//
+		///////////////////////////////
 		Iterator<Entry<String, ArrayList<String>>> filesNameByDataproviderHashMapIterator = filesNameByDataproviderHashMap.entrySet().iterator();
 	    while (filesNameByDataproviderHashMapIterator.hasNext()) {
 	        Entry<String, ArrayList<String>> entry = filesNameByDataproviderHashMapIterator.next();
@@ -613,14 +668,14 @@ public class Qc_dataprovider {
 				// for earch field
 				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
 				ArrayList<ValueSource> values = new ArrayList<ValueSource>();
-//				System.out.println(fieldXPaths.get(i));
+				//System.out.println(fieldXPaths.get(i));
 				for (String actFileName : actProviderFileList) {
 					// for each file
 					qcBase.setXmlFileName(actFileName);
 					NodeList nodes = qcBase.getNodesListByXPath(fieldXPaths.get(i));
 					for (int count = 0; count < nodes.getLength(); count++) {
 						if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
-//							System.out.println(nodes.item(count).getTextContent());
+							//System.out.println(nodes.item(count).getTextContent());
 							values.add(new ValueSource(nodes.item(count).getTextContent(),new File(actFileName).getName()));
 						}
 					}
@@ -633,6 +688,127 @@ public class Qc_dataprovider {
 			this.structurednessResults.put(actDataprovider, actProviderStructurednessResults);
 
 	    }
+		///////////////////////////////
+		//
+		// process Enriched 
+		//
+		///////////////////////////////
+		Iterator<Entry<String, ArrayList<String>>> filesNameByDataproviderEnrichedHashMapIterator = filesNameByDataproviderEnrichedHashMap.entrySet().iterator();
+	    while (filesNameByDataproviderEnrichedHashMapIterator.hasNext()) {
+	        Entry<String, ArrayList<String>> entry = filesNameByDataproviderEnrichedHashMapIterator.next();
+	        String actDataprovider = entry.getKey();
+	        ArrayList<String> actProviderFileList = entry.getValue();
+			Qc_base qcBase = new Qc_eexcess_enriched();
+//			System.out.println("dataprovider:"+actDataprovider+" "+qcBase.getRecordSeparator());
+			
+			// calc all XPaths for all fields in all file from a data provider
+			ArrayList<String> fieldXPathsProxy = new ArrayList<String>();
+			ArrayList<String> fieldXPathsEnrichedProxy = new ArrayList<String>();
+			fieldXPathsProxy.add(			"/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='title']");
+			fieldXPathsProxy.add(			"/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='description']");
+			fieldXPathsProxy.add(			"/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='creator']");
+			
+			fieldXPathsEnrichedProxy.add("/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/enrichedProxy/')]/*[local-name()='subject']/*/*[local-name()='label']");
+			
+			HashMap<String, WordNetSimilarityResultObject> mySimilarityResultHashMap = new HashMap<String, WordNetSimilarityResultObject>();
+			
+			if (qcBase != null)
+			{
+				for (String actFileName : actProviderFileList) {
+					System.out.println("//////////////////////////////////////////////////////\n"+actFileName);
+					qcBase.setXmlFileName(actFileName);
+					/*
+					NodeList nodes = qcBase.getNodesListByXPath(qcBase.getRecordSeparator() + qcBase.getXpathsToFieldsFromRecordSeparator());
+					for (int countRecords = 0; countRecords < nodes.getLength(); countRecords++) {
+						//iterate over records
+						if (nodes.item(countRecords).hasChildNodes())
+						{
+							for (int countFields = 0; countFields < nodes.item(countRecords).getChildNodes().getLength(); countFields++) {
+								Node actNodeField = nodes.item(countRecords).getChildNodes().item(countFields);
+								if (actNodeField.getNodeType() == Node.ELEMENT_NODE) {
+									String tempFieldXpath = qcBase.getXPath(actNodeField);
+									if (!fieldXPaths.contains(tempFieldXpath))
+										fieldXPaths.add(tempFieldXpath);
+								} else {
+									if (actNodeField.hasChildNodes()) {
+										for (int countSubFields = 0; countSubFields < actNodeField.getChildNodes().getLength(); countSubFields++) {
+											Node actNodeSubField = actNodeField.getChildNodes().item(countSubFields);
+											if (actNodeSubField.getNodeType() == Node.ELEMENT_NODE) {
+												String tempFieldXpath = qcBase.getXPath(actNodeSubField);
+												if (!fieldXPaths.contains(tempFieldXpath))
+													fieldXPaths.add(tempFieldXpath);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					*/
+//			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
+					ArrayList<String> valuesProxy = new ArrayList<String>();
+					ArrayList<String> valuesEnrichedProxy = new ArrayList<String>();
+					for (int i = 0; i < fieldXPathsProxy.size(); i++) {
+//				// for earch field
+//				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
+						System.out.println(fieldXPathsProxy.get(i));
+//				
+//				for (String actFileName : actProviderFileList) {
+//					// for each file
+//					qcBase.setXmlFileName(actFileName);
+						NodeList nodes = qcBase.getNodesListByXPath(fieldXPathsProxy.get(i));
+						for (int count = 0; count < nodes.getLength(); count++) {
+							if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
+								String temp = nodes.item(count).getTextContent().trim();
+								System.out.println(temp);
+								valuesProxy.add(temp);
+							}
+						}
+				//}
+						System.out.println("-------------------------------------------------------");
+				
+					}
+					for (int i = 0; i < fieldXPathsEnrichedProxy.size(); i++) {
+//						// for earch field
+//						String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
+								System.out.println(fieldXPathsProxy.get(i));
+//						
+//						for (String actFileName : actProviderFileList) {
+//							// for each file
+//							qcBase.setXmlFileName(actFileName);
+								NodeList nodes = qcBase.getNodesListByXPath(fieldXPathsEnrichedProxy.get(i));
+								for (int count = 0; count < nodes.getLength(); count++) {
+									if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
+										String temp = nodes.item(count).getTextContent().trim();
+										System.out.println(temp);
+										valuesEnrichedProxy.add(temp);
+									}
+								}
+						//}
+								System.out.println("-------------------------------------------------------");
+						
+							}
+//					for (int i = 0; i < values.size(); i++) {
+//						System.out.println(values.get(i));
+//					}
+					if (valuesEnrichedProxy.size() > 0 ) {
+						valuesEnrichedProxy.addAll(valuesProxy);
+						if (valuesProxy.size() > 0 ) {
+							WordNetSimilarity wordnetSimilarity = new WordNetSimilarity();
+							WordNetSimilarityResultProxyObject valueProxy = wordnetSimilarity.compute(valuesProxy);
+							WordNetSimilarityResultProxyObject valueEnrichedProxy = wordnetSimilarity.compute(valuesEnrichedProxy);
+							WordNetSimilarityResultObject mySimilarityResult = new WordNetSimilarityResultObject(valueProxy, valueEnrichedProxy,actFileName);
+							mySimilarityResultHashMap.put(actFileName, mySimilarityResult);
+						}
+					}
+
+				}
+			}
+			this.similarityResults.put(actDataprovider, mySimilarityResultHashMap);
+			//this.structurednessResults.put(actDataprovider, actProviderStructurednessResults);
+
+	    }
+
 	}
 	
 	public static String DATAPROVIDER_CULTUREWEB ="KIMCollect";
@@ -938,7 +1114,7 @@ public class Qc_dataprovider {
 							htmlReportPerField.append("<td>");
 							
 							
-				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\" class=\"flip\">show");
 				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Panel\" class=\"panel\">");
 
 				            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternSource"+helpCount+"Header\").click(function(){";
@@ -1026,7 +1202,7 @@ public class Qc_dataprovider {
 							htmlReportPerField.append("<td>");
 							
 							
-				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\" class=\"flip\">show");
 				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Panel\" class=\"panel\">");
 
 				            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"PatternRegExSource"+helpCount+"Header\").click(function(){";
@@ -1113,7 +1289,7 @@ public class Qc_dataprovider {
 								htmlReportPerField.append("<td>");
 								
 								
-					            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+					            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\" class=\"flip\">show");
 					            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Panel\" class=\"panel\">");
 	
 					            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"DateFormatSource"+helpCount+"Header\").click(function(){";
@@ -1169,7 +1345,7 @@ public class Qc_dataprovider {
 							htmlReportPerField.append("<td>");
 							
 							
-				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show</h4>");
+				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\" class=\"flip\">show");
 				            htmlReportPerField.append("<div id=\""+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Panel\" class=\"panel\">");
 
 				            htmlReportPerFieldJavascript += "$(\"#"+dataprovider.replace(" ", "")+field.replace(":", "")+"UrlFormatSource"+helpCount+"Header\").click(function(){";
@@ -1263,7 +1439,21 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>The chart shows the number of links of known vocabulary links during the enrichment process.</p>";
         htmlReportGeneral += "<img src=\"vocabulary-1600x1200.png\" style=\"width:1000px;\"/>";
         
-        htmlReportGeneral += enrichment.CalcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
+        htmlReportGeneral += "<h4>known vocabulary links detailed data</h4>";
+        htmlReportGeneral += "<p>More detailed data is provided on <a href=\"dataquality-report-enrichment-vocabulary-links.html\">this page.</a></p>";
+		try {
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ "dataquality-report-enrichment-vocabulary-links.html");
+			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+			String tempReportFile = htmlReportGeneralHeader;
+			tempReportFile += "<h3>known vocabulary links detailed data</h3>";
+			tempReportFile +=enrichment.CalcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
+			tempReportFile +="</body></html>";
+			writerStatisticRecords.write(tempReportFile);
+			writerStatisticRecords.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
 
         htmlReportGeneral += "<h3>Summary</h3>";
         htmlReportGeneral += "<ul>";
@@ -1273,6 +1463,9 @@ public class Qc_dataprovider {
         
         htmlReportGeneral += "<h3>Reports for single data providers</h3>";
         htmlReportGeneral += htmlReportGeneralDataproviders;
+        
+        htmlReportGeneral += "<h3>Report for enrichments</h3>";
+        htmlReportGeneral +="<a target=\"_blank\" href=\""+DATAQUALITY_REPORT_ENRICHMENT_HTML_FILENAME+"\">Report about enrichment </a>";        
         
         htmlReportGeneral += "<h3>Stats of the report generation</h3>";
 		long timestampEnd = System.currentTimeMillis();
@@ -1295,9 +1488,62 @@ public class Qc_dataprovider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		printEnrichmentsReport(htmlReportGeneralHeader);
 	    
 	}
 
+	private void printEnrichmentsReport(String htmlReportGeneral)
+	{
+		String htmlReportJavascript = "<script>$(document).ready(function(){";
+        htmlReportGeneral += "<h2>Enrichment Report</h2>";
+		Iterator<Entry<String, HashMap<String, WordNetSimilarityResultObject>>> similarityResultsIterator = this.similarityResults.entrySet().iterator();
+	    while (similarityResultsIterator.hasNext()) {
+	        Entry<String, HashMap<String, WordNetSimilarityResultObject>> entry = similarityResultsIterator.next();
+	        String dataprovider = entry.getKey();
+	        HashMap<String, WordNetSimilarityResultObject> resultsByDataprovider = entry.getValue();
+	        htmlReportGeneral += "<h3>"+dataprovider+"</h3><p>";
+	        htmlReportGeneral += "<div id=\""+dataprovider.replace(" ", "")+"Header\" class=\"flip\">show";
+	        htmlReportGeneral += "<div id=\""+dataprovider.replace(" ", "")+"Panel\" class=\"panel\">";
+
+            htmlReportJavascript += "$(\"#"+dataprovider.replace(" ", "")+"Header\").click(function(){";
+            htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+"Panel\").slideToggle(\"slow\");";
+            htmlReportJavascript +="});";
+
+	        htmlReportGeneral += "<table><tr><td></td><td>source</td></tr>";
+			Iterator<Entry<String, WordNetSimilarityResultObject>> resultsByDataproviderIterator = resultsByDataprovider.entrySet().iterator();
+		    while (resultsByDataproviderIterator.hasNext()) {
+		        Entry<String, WordNetSimilarityResultObject> entryObject = resultsByDataproviderIterator.next();
+		        String filename = entryObject.getKey();
+		        WordNetSimilarityResultObject resultsObject = entryObject.getValue();
+	        
+		        if (resultsObject.getWuPalmerRelatednessOfWordsMedianDist() != Double.MAX_VALUE &&
+		        	resultsObject.getWuPalmerRelatednessOfWordsMedianDist() != Double.NaN
+		        		)
+		        {
+			        htmlReportGeneral += "<tr><td>";
+		        	htmlReportGeneral += this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMedianDist()) ;
+		        	htmlReportGeneral += "</td><td> <a href=\".\\input\\"+filename.substring(filename.lastIndexOf("\\"))+"\" target=\"_blank\">" + filename.substring(filename.lastIndexOf("\\")+1) + " " + "</a>";
+
+		        	htmlReportGeneral += "</td></tr>";
+		        }
+		    }
+	        htmlReportGeneral += "</table></div></div>";
+	        htmlReportGeneral += "</p>";
+	    }        
+        htmlReportGeneral += htmlReportJavascript + "});</script>";
+        htmlReportGeneral += "</body></html>";
+		try {
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ DATAQUALITY_REPORT_ENRICHMENT_HTML_FILENAME);
+			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+			
+			writerStatisticRecords.write(htmlReportGeneral);
+			writerStatisticRecords.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
+	
 	private void printStructureOverview(StringBuffer htmlReport,
 			String dataprovider,
 			HashMap<String, StructureRecResult> resultsByDataprovider, StructureRecResult.StructureResultTyp structureResultType) {
@@ -1426,7 +1672,7 @@ public class Qc_dataprovider {
 	private void copyResources() {
 		copyResourcesCSS();
 	    copyResourcesJQplot();
-	    copyResourcesInputXML();
+	    if (this.copyInput) copyResourcesInputXML();
 	    copyResource("eexcess.ico");
 	    copyResource("eexcess_Logo.jpg");
 	}

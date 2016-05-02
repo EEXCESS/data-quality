@@ -407,6 +407,25 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 
+	private String getHost(String url){
+	    if(url == null || url.length() == 0)
+	        return "";
+
+	    int doubleslash = url.indexOf("//");
+	    if(doubleslash == -1)
+	        doubleslash = 0;
+	    else
+	        doubleslash += 2;
+
+	    int end = url.indexOf('/', doubleslash);
+	    end = end >= 0 ? end : url.length();
+
+	    int port = url.indexOf(':', doubleslash);
+	    end = (port > 0 && port < end) ? port : end;
+
+	    return url.substring(doubleslash, end);
+	}
+	
 	private int checkURLAccessible(int nReturn, String urlToCheck) {
 		
 		if (urlToCheck != null &&
@@ -421,6 +440,12 @@ public class Qc_base implements Qc_interface {
 				)
 			){
 //			System.out.println(urlToCheck);
+			String host = this.getHost(urlToCheck);
+			if (Qc_dataprovider.URLCheckingResultsHostsBlacklist.containsKey(host)) {
+				Qc_dataprovider.countCheckedURLsViaBlackList++;
+				return nReturn;
+			}
+			
 			Qc_dataprovider.countCheckedURLs++;
 			if (Qc_dataprovider.URLCheckingResultsAccessible.containsKey(urlToCheck)) {
 				Qc_dataprovider.countCheckedURLsViaCache++;
@@ -444,7 +469,8 @@ public class Qc_base implements Qc_interface {
 			} 
 			catch (UnknownHostException e){
 				nReturn--;
-			    System.out.println("Ressource " + urlToCheck + ": UnknownHostException\n"+ e.getMessage());					
+			    System.out.println("Ressource " + urlToCheck + ": UnknownHostException\n"+ e.getMessage());	
+				Qc_dataprovider.URLCheckingResultsHostsBlacklist.put(host, false);
 			}
 			catch(final MalformedURLException e){
 				nReturn--;

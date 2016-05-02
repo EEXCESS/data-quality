@@ -27,7 +27,7 @@ public class DataQualityApp
     public static void main( String[] args )
     {
     	for (int i = 0; i < args.length; i++) {
-			if (0==args[i].compareToIgnoreCase("--log") ){
+			if (0==args[i].compareToIgnoreCase(CMD_PARAM_LOG) ){
 		    	try {
 					System.setOut(new PrintStream(new FileOutputStream("DataQualityApp.log",false)));
 				} catch (FileNotFoundException e) {
@@ -39,4 +39,7 @@ public class DataQualityApp
         Qc_dataprovider provider = new Qc_dataprovider();
         provider.process(args);
     }
+
+	public static final String CMD_PARAM_DONT_COPY_INPUT = "--dontCopyInput";
+	public static final String CMD_PARAM_LOG = "--log";
 }
