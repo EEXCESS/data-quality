@@ -187,6 +187,46 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV3WithoutInputdataCopy()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v3", "--dontCopyInput"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppInputTheEuropeanLibraryDatasetTestCase1()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-1", 
+    			"--dontCopyInput",
+    			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
+    			"--dataprovider=The European Library"
+    			};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppInputTheEuropeanLibraryDatasetTestCase2()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-2", 
+    			"--dontCopyInput",
+    			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
+    			"--dataprovider=The European Library"
+    			};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
+    public void testAppInputTheEuropeanLibraryDatasetTestCase3()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-3", 
+    			"--dontCopyInput",
+    			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
+    			"--dataprovider=The European Library"
+    			};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
     {
     	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};

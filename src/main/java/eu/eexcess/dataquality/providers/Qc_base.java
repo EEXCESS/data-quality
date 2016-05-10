@@ -428,7 +428,7 @@ public class Qc_base implements Qc_interface {
 	
 	private int checkURLAccessible(int nReturn, String urlToCheck) {
 		
-		if (urlToCheck != null &&
+		if (Qc_dataprovider.checkLinksOnline && urlToCheck != null &&
 				(
 				urlToCheck.toLowerCase().trim().startsWith("http://") || 
 				//uriCheck additional uri-schemes

@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -92,7 +93,7 @@ public class Qc_dataprovider {
 	
 	private static final String DATAQUALITY_REPORT_PLOT_HTML_FILENAME = "dataquality-report-plot.html";
 	private static final String STATISTIC_FILE_FIELD_SEPERATOR = ";";
-	private static final String STATISTIC_SYSTEMOUT_FIELD_SEPERATOR = "\t";
+//	private static final String STATISTIC_SYSTEMOUT_FIELD_SEPERATOR = "\t";
 	private static final int CHART_WIDTH_HIGH = 1600;
 	private static final int CHART_HEIGHT_HIGH = 1200;
 	private static final int CHART_WIDTH_MID = 800;
@@ -143,6 +144,12 @@ public class Qc_dataprovider {
 		unknown
 	}
 
+	protected String cmdParameterXpathRecordSeperator = "";
+	protected String cmdParameterXpathFieldsToRecordSeperator = "";
+	public static String cmdParameterDataprovider = "";
+	
+	public static boolean checkLinksOnline = true;
+
 	public void process(String[] sParams) {
 		timestampStart = System.currentTimeMillis();
 		timestampLastTime = System.currentTimeMillis();
@@ -151,22 +158,48 @@ public class Qc_dataprovider {
 			if (sParams[i].equalsIgnoreCase(DataQualityApp.CMD_PARAM_DONT_COPY_INPUT))
 			{
 				this.copyInput = false;
-			}
-			File f = new File(sParams[i]);
-			if (f.isFile() == true && f.isDirectory() == false) {
-				checkDataProviderFile(sParams[i]);
-			} else if (f.isDirectory() == true) {
-				inputDirs.add(f.getPath());
-				File[] files = f.listFiles(new FilenameFilter() {
-					public boolean accept(File dir, String name) {
-						return name.toLowerCase().endsWith(".xml");
+			} else {
+				if (sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_XPATH_RECORD_SEPERATOR.toLowerCase()))
+				{
+					this.cmdParameterXpathRecordSeperator = sParams[i].substring(DataQualityApp.CMD_PARAM_XPATH_RECORD_SEPERATOR.length());;
+				} else {
+					if (sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_XPATH_FIELDS_TO_RECORD_SEPERATOR.toLowerCase()))
+					{
+						this.cmdParameterXpathFieldsToRecordSeperator = sParams[i].substring(DataQualityApp.CMD_PARAM_XPATH_FIELDS_TO_RECORD_SEPERATOR.length());;
+					} else {
+						if (sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_DATAPROVIDER.toLowerCase()))
+						{
+							cmdParameterDataprovider = sParams[i].substring(DataQualityApp.CMD_PARAM_DATAPROVIDER.length());;
+						} else {
+						}
 					}
-				});
-				for (int j = 0; j < files.length; j++) {
-					checkDataProviderFile(files[j].getPath());
 				}
 			}
 		}
+		for (int i = 0; i < sParams.length; i++) {
+			if (sParams[i].equalsIgnoreCase(DataQualityApp.CMD_PARAM_DONT_COPY_INPUT) || 
+					sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_XPATH_RECORD_SEPERATOR.toLowerCase()) ||
+					sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_XPATH_FIELDS_TO_RECORD_SEPERATOR.toLowerCase())
+				)
+			{
+			} else {
+				File f = new File(sParams[i]);
+				if (f.isFile() == true && f.isDirectory() == false) {
+					checkDataProviderFile(sParams[i]);
+				} else if (f.isDirectory() == true) {
+					inputDirs.add(f.getPath());
+					File[] files = f.listFiles(new FilenameFilter() {
+						public boolean accept(File dir, String name) {
+							return name.toLowerCase().endsWith(".xml");
+						}
+					});
+					for (int j = 0; j < files.length; j++) {
+						checkDataProviderFile(files[j].getPath());
+					}
+				}
+			}
+		}
+		
 		System.out.println("size of HashMap:"+Qc_dataprovider.URLCheckingResultsAccessible.size());
 		System.out.println("countCheckedURLs:"+Qc_dataprovider.countCheckedURLs);
 		System.out.println("countCheckedURLsOnline:"+Qc_dataprovider.countCheckedURLsOnline);
@@ -298,8 +331,14 @@ public class Qc_dataprovider {
 //						+ formatNumber(param.getAccessibleLinksDataFieldsPerRecord())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 //						+ formatNumber(param.getNumberOfAllLinkDataFields())+ STATISTIC_SYSTEMOUT_FIELD_SEPERATOR
 //						+ formatNumber(param.getNumberOfAllAccessibleLinks()));		
-				htmlReportInputDataStatisticsResults.append("<tr><td><a href=\".\\input\\"+param.getXmlFileName()+"\">" + param.getXmlFileName() + "</a></td><td>"
-								+ param.getProvider().toString() + "</td><td>"
+				htmlReportInputDataStatisticsResults.append("<tr><td><a href=\".\\input\\"+param.getXmlFileName()+"\">" + param.getXmlFileName() + "</a></td><td>");
+				
+				
+				if (param.getProvider() == DataProvider.unknown)
+					htmlReportInputDataStatisticsResults.append(Qc_dataprovider.cmdParameterDataprovider);
+				else 
+					htmlReportInputDataStatisticsResults.append(param.getProvider().toString());
+				htmlReportInputDataStatisticsResults.append("</td><td>"
 								+ param.getRecordCount() + "</td><td>"
 								+ formatNumber(param.getDataFieldsPerRecord()) + "</td><td>"
 								+ formatNumber(param.getMinDataFieldsPerRecord()) + "</td><td>"
@@ -388,8 +427,12 @@ public class Qc_dataprovider {
 						+ formatNumber(paramDataList.getNumberOfAccesibleLinksPerProvider(DataProvider.values()[i]))
 						);
 				writerStatisticRecords.newLine();
-				htmlReportInputDataStatisticsDataprovider.append("<tr><td>"				
-						+ DataProvider.values()[i].toString() + "</td><td>"
+				htmlReportInputDataStatisticsDataprovider.append("<tr><td>");
+				if (DataProvider.values()[i] == DataProvider.unknown && !Qc_dataprovider.cmdParameterDataprovider.isEmpty())
+					htmlReportInputDataStatisticsDataprovider.append(Qc_dataprovider.cmdParameterDataprovider);
+				else 
+					htmlReportInputDataStatisticsDataprovider.append(DataProvider.values()[i].toString());
+				htmlReportInputDataStatisticsDataprovider.append("</td><td>"
 						+ formatNumber(paramDataList.getRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
 						+ formatNumber(paramDataList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i])) + "</td><td>"
 						+ paramDataList.getMinDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) + "</td><td>"
@@ -510,7 +553,9 @@ public class Qc_dataprovider {
 					break;
 
 				default:
-					currentProvider = null;
+					currentProvider = new Qc_base();
+					currentProvider.setRecordSeparator(this.cmdParameterXpathRecordSeperator);
+					currentProvider.setXpathsToFieldsFromRecordSeparator(this.cmdParameterXpathFieldsToRecordSeperator);
 					break;
 				}
 
@@ -564,10 +609,14 @@ public class Qc_dataprovider {
 		ArrayList<String> dataproviders = new ArrayList<String>();
 		for (Iterator<String> iteratorFileNames = fileNames.iterator(); iteratorFileNames.hasNext();) {
 			String actFileName = (String) iteratorFileNames.next();
-			String temp = actFileName.substring(actFileName.lastIndexOf("\\")+40);
-			temp = temp.substring(0,temp.indexOf("-"));
-			if (!dataproviders.contains(temp))
-				dataproviders.add(temp);
+			if (actFileName.lastIndexOf("\\")+40 < actFileName.length()) {
+				String temp = actFileName.substring(actFileName.lastIndexOf("\\")+40);
+				temp = temp.substring(0,temp.indexOf("-"));
+				if (!dataproviders.contains(temp))
+					dataproviders.add(temp);
+			} else {
+				dataproviders.add(DATAPROVIDER_UNKNOWN);
+			}
 		}
 		/*
 		System.out.println("dataprovider:");
@@ -588,17 +637,21 @@ public class Qc_dataprovider {
 			ArrayList<String> fileNameByDataProviderEnriched = new ArrayList<String>();
 			for (Iterator<String> iteratorFileNames = fileNames.iterator(); iteratorFileNames.hasNext();) {
 				String actFileName = (String) iteratorFileNames.next();
-				if (!actFileName.contains("enrichment") && !actFileName.contains("done-transform")) {
-					if (actFileName.contains(actDataProvider))
+				if (actDataProvider.equals(DATAPROVIDER_UNKNOWN)) {
 						fileNameByDataProvider.add(actFileName);
 				} else {
-					if (actFileName.contains("done-transform")) {
+					if (!actFileName.contains("enrichment") && !actFileName.contains("done-transform")) {
 						if (actFileName.contains(actDataProvider))
-							fileNameByDataProviderTransformed.add(actFileName);
-					}else {
-						if (actFileName.contains("enrichment")) {
+							fileNameByDataProvider.add(actFileName);
+					} else {
+						if (actFileName.contains("done-transform")) {
 							if (actFileName.contains(actDataProvider))
-								fileNameByDataProviderEnriched.add(actFileName);
+								fileNameByDataProviderTransformed.add(actFileName);
+						}else {
+							if (actFileName.contains("enrichment")) {
+								if (actFileName.contains(actDataProvider))
+									fileNameByDataProviderEnriched.add(actFileName);
+							}
 						}
 					}
 				}
@@ -666,13 +719,29 @@ public class Qc_dataprovider {
 			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
 			for (int i = 0; i < fieldXPaths.size(); i++) {
 				// for earch field
-				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
+				String tempXPath = fieldXPaths.get(i);
+				String actFieldName = tempXPath.substring(fieldXPaths.get(i).lastIndexOf("/")+1);
+				if (actDataprovider == DATAPROVIDER_UNKNOWN){
+					if (actFieldName.contains(":")) {
+						tempXPath = tempXPath.replace(actFieldName, "*[local-name()='"+actFieldName.substring(actFieldName.indexOf(":")+1)+"']");
+					}
+					StringTokenizer tokenizer = new StringTokenizer(tempXPath,"/");
+					String newXpath = "";
+					while (tokenizer.hasMoreElements()) {
+						String tempToken = tokenizer.nextToken();
+						if (tempToken.contains(":"))
+							newXpath += "/*[local-name()='" + tempToken.substring(tempToken.indexOf(":")+1)+"']";
+						else 
+							newXpath += "/" +  tempToken;
+					}
+					tempXPath = newXpath;
+				}
 				ArrayList<ValueSource> values = new ArrayList<ValueSource>();
 				//System.out.println(fieldXPaths.get(i));
 				for (String actFileName : actProviderFileList) {
 					// for each file
 					qcBase.setXmlFileName(actFileName);
-					NodeList nodes = qcBase.getNodesListByXPath(fieldXPaths.get(i));
+					NodeList nodes = qcBase.getNodesListByXPath(tempXPath);
 					for (int count = 0; count < nodes.getLength(); count++) {
 						if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 							//System.out.println(nodes.item(count).getTextContent());
@@ -820,6 +889,8 @@ public class Qc_dataprovider {
 	public static String DATAPROVIDER_MENDELEY ="Mendeley";
 	public static String DATAPROVIDER_WISSENMEDIA ="Wissenmedia";
 	public static String DATAPROVIDER_ZBW ="ZBW";
+	public static String DATAPROVIDER_UNKNOWN ="unknown";
+	
 	protected StringBuffer htmlReportInputDataStatisticsResults;
 	protected StringBuffer htmlReportInputDataStatisticsDataprovider;
 	protected ArrayList<String> inputDirs;
@@ -843,7 +914,12 @@ public class Qc_dataprovider {
 			return new Qc_ZBW();
 		if (dataprovider.equals(DATAPROVIDER_WISSENMEDIA))
 			return new Qc_wissenmedia();
-		
+		if (dataprovider.equals(DATAPROVIDER_UNKNOWN)) {
+			Qc_base ret = new Qc_base();
+			ret.setRecordSeparator(this.cmdParameterXpathRecordSeperator);
+			ret.setXpathsToFieldsFromRecordSeparator(this.cmdParameterXpathFieldsToRecordSeperator);
+			return ret;
+		}
 		return null;
 	}
 	
@@ -859,6 +935,11 @@ public class Qc_dataprovider {
 		htmlReportGeneral += "<link rel=\"icon\" href=\"./eexcess.ico\" type=\"image/x-icon\" />";
 		htmlReportGeneral += "<link rel=\"stylesheet\" type=\"text/css\" href=\"./report.css\">";
 		htmlReportGeneral += "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>";
+		
+		
+		htmlReportGeneral += "<link rel=\"stylesheet\" type=\"text/css\" href=\"datatables.min.css\"/>";
+		htmlReportGeneral += "<script type=\"text/javascript\" src=\"datatables.min.js\"></script>";
+		
 		htmlReportGeneral += " </head>";
 		htmlReportGeneral += " <body>";
 		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -902,7 +983,9 @@ public class Qc_dataprovider {
 	        String dataprovider = entry.getKey();
 	        HashMap<String, StructureRecResult> resultsByDataprovider = entry.getValue();
             // System.out.println("Dataprovider:" + dataprovider);
-            htmlReport.append("<h3>" + dataprovider +"</h3>");
+	        if (dataprovider.equals(DATAPROVIDER_UNKNOWN))
+	        	dataprovider = this.cmdParameterDataprovider;
+	        htmlReport.append("<h3>" + dataprovider +"</h3>");
             {
         		htmlReport.append("<h4>Overview (using RegEx Pattners)</h4>");
         		printStructureOverview(htmlReport, dataprovider,resultsByDataprovider,StructureRecResult.StructureResultTyp.REGEX );
@@ -982,8 +1065,10 @@ public class Qc_dataprovider {
 						}
 					}					
 					htmlReportPerField.append("<h5>Histogram for value length</h5>");
-					htmlReportPerField.append("<table><tr><td><b>length:</b></td>");
-					htmlReportPerField.append("<td><b>number:</b></td></tr>");
+					String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"valuelength";
+		            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+					htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>length:</b></td>");
+					htmlReportPerField.append("<td><b>number:</b></td></tr></thead>");
 					
 					if (result.getLengthHistogram() != null)
 					{
@@ -1032,8 +1117,10 @@ public class Qc_dataprovider {
 					}
 					{					
 						htmlReportPerField.append("<h5>Histogram for values</h5>");
-						htmlReportPerField.append("<table><tr><td><b>values:</b></td>");
-						htmlReportPerField.append("<td><b>number:</b></td></tr>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"valuehisto";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>values:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
@@ -1088,8 +1175,10 @@ public class Qc_dataprovider {
 					}
 					{					
 						htmlReportPerField.append("<h5>Histogram for pattern</h5>");
-						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReportPerField.append("<td><b>number:</b></td></tr>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"patternhisto";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
@@ -1100,9 +1189,11 @@ public class Qc_dataprovider {
 					}
 					{					
 						htmlReportPerField.append("<h5>Histogram for pattern - Sourcen</h5>");
-						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"sourcehisto";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>pattern:</b></td>");
 						htmlReportPerField.append("<td><b>number:</b></td>");
-						htmlReportPerField.append("<td><b>Source:</b></td></tr>");
+						htmlReportPerField.append("<td><b>Source:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
@@ -1176,8 +1267,10 @@ public class Qc_dataprovider {
 					}
 					{					
 						htmlReportPerField.append("<h5>Histogram for pattern(RegEx)</h5>");
-						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReportPerField.append("<td><b>number:</b></td></tr>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"patternRegExhisto";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				             Entry<String, Integer> pattern = iteratorPatternHashMap.next();
@@ -1188,9 +1281,11 @@ public class Qc_dataprovider {
 					}
 					{					
 						htmlReportPerField.append("<h5>Histogram for pattern(RegEx) - Sourcen</h5>");
-						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"patternRegExhistoSource";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>pattern:</b></td>");
 						htmlReportPerField.append("<td><b>number:</b></td>");
-						htmlReportPerField.append("<td><b>Source:</b></td></tr>");
+						htmlReportPerField.append("<td><b>Source:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesPatternRegExHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesPatternRegExSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
@@ -1263,8 +1358,10 @@ public class Qc_dataprovider {
 					if (result.getValuesDateformatHashMap().size() > 0) {
 						{					
 							htmlReportPerField.append("<h4>Histogram for date patterns</h4>");
-							htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
-							htmlReportPerField.append("<td><b>number:</b></td></tr>");
+							String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"datepatternhisto";
+				            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+							htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>pattern:</b></td>");
+							htmlReportPerField.append("<td><b>number:</b></td></tr></thead>");
 					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
 					        while (iteratorPatternHashMap.hasNext()) {
 					            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
@@ -1275,9 +1372,11 @@ public class Qc_dataprovider {
 						}
 						{					
 							htmlReportPerField.append("<h4>Histogram for date pattern - Sourcen</h4>");
-							htmlReportPerField.append("<table><tr><td><b>date pattern:</b></td>");
+							String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"datepatternhistosource";
+				            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+							htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>date pattern:</b></td>");
 							htmlReportPerField.append("<td><b>number:</b></td>");
-							htmlReportPerField.append("<td><b>Source:</b></td></tr>");
+							htmlReportPerField.append("<td><b>Source:</b></td></tr></thead>");
 					        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesDateformatHashMap().entrySet().iterator();
 					        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesDateformatSourceHashMap().entrySet().iterator();
 					        int helpCount = 0;
@@ -1319,8 +1418,10 @@ public class Qc_dataprovider {
 				{
 					{					
 						htmlReportPerField.append("<h4>Histogram for URL patterns</h4>");
-						htmlReportPerField.append("<table><tr><td><b>pattern:</b></td>");
-						htmlReportPerField.append("<td><b>number:</b></td></tr>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"urlpatternhisto";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>pattern:</b></td>");
+						htmlReportPerField.append("<td><b>number:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesUrlformatHashMap().entrySet().iterator();
 				        while (iteratorPatternHashMap.hasNext()) {
 				            Entry<String, Integer> pattern = iteratorPatternHashMap.next();
@@ -1331,9 +1432,11 @@ public class Qc_dataprovider {
 					}
 					{					
 						htmlReportPerField.append("<h4>Histogram for URL pattern - Sourcen</h4>");
-						htmlReportPerField.append("<table><tr><td><b>URL pattern:</b></td>");
+						String tempHTMLID = dataprovider.replace(" ", "")+field.replace(":", "")+"urlpatternhistosource";
+			            htmlReportPerFieldJavascript +="$('#"+tempHTMLID+"').DataTable();";
+						htmlReportPerField.append("<table id =\""+tempHTMLID+"\"><thead><tr><td><b>URL pattern:</b></td>");
 						htmlReportPerField.append("<td><b>number:</b></td>");
-						htmlReportPerField.append("<td><b>Source:</b></td></tr>");
+						htmlReportPerField.append("<td><b>Source:</b></td></tr></thead>");
 				        Iterator<Entry<String, Integer>> iteratorPatternHashMap = result.getValuesUrlformatHashMap().entrySet().iterator();
 				        Iterator<Entry<String, ArrayList<PatternSource>>> iteratorPatternSourceHashMap = result.getValuesUrlformatSourceHashMap().entrySet().iterator();
 				        int helpCount = 0;
@@ -1671,7 +1774,7 @@ public class Qc_dataprovider {
 
 	private void copyResources() {
 		copyResourcesCSS();
-	    copyResourcesJQplot();
+	    copyResourcesHTML();
 	    if (this.copyInput) copyResourcesInputXML();
 	    copyResource("eexcess.ico");
 	    copyResource("eexcess_Logo.jpg");
@@ -1738,10 +1841,13 @@ public class Qc_dataprovider {
 	    }
 	}
 	
-	private void copyResourcesJQplot() {
+	private void copyResourcesHTML() {
 	    try{
 	    	File destDir = new File(Qc_dataprovider.outputDir + "jqplot/");
             File srcDir = new File("./resources/jqplot");
+	    	FileUtils.copyDirectory(srcDir, destDir);
+	    	destDir = new File(Qc_dataprovider.outputDir );
+            srcDir = new File("./resources/cssjs");
 	    	FileUtils.copyDirectory(srcDir, destDir);
 	    }
 	    catch (FileNotFoundException ex){

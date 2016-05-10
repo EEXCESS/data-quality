@@ -423,9 +423,13 @@ public class CheckEnrichment {
 					
 					default:
 						sContent.append("<td><b>");
-						sContent.append(provider.name().replace("_", " "));
+						String tempDataprovider = provider.name();
+						if (tempDataprovider.equalsIgnoreCase(DataProvider.unknown.toString()) && 
+							!Qc_dataprovider.cmdParameterDataprovider.isEmpty())
+							tempDataprovider  = Qc_dataprovider.cmdParameterDataprovider;
+						sContent.append(tempDataprovider.replace("_", " "));
 						sContent.append("</b></td>");
-						sCSVcontent.append(provider.name().replace("_", " "));
+						sCSVcontent.append(tempDataprovider.replace("_", " "));
 						sCSVcontent.append(sFieldSeperator);
 						break;
 			}

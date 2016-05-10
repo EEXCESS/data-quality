@@ -24,7 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import eu.eexcess.dataquality.DataQualityApp;
 import eu.eexcess.dataquality.Qc_dataprovider;
+import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 
 public class DataQualityVocabularyRDFWriter {
 	
@@ -79,30 +81,36 @@ public class DataQualityVocabularyRDFWriter {
 		try {
 			File fileStatisticRecords = new File(Qc_dataprovider.outputDir+ STATISTICS_DATAPROVIDER_XML_FILENAME);
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-			writerStatisticRecords.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			writerStatisticRecords.append("<rdf:RDF xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:prov=\"http://www.w3.org/ns/prov#\" >");
+			StringBuffer writerBuffer = new StringBuffer();
+			writerBuffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			writerBuffer.append("<rdf:RDF xmlns:eexdaq=\"http://eexcess.eu/ns/dataquality/daq/\" xmlns:daq=\"http://purl.org/eis/vocab/daq#\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dqv=\"http://www.w3.org/ns/dqv#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:prov=\"http://www.w3.org/ns/prov#\" >");
 			
 			for (int i = 0; i < metricList.size(); i++) {
-				writerStatisticRecords.write("<daq:Metric rdf:about=\""+this.getMetricName(metricList.get(i))+"\">");
-				writerStatisticRecords.write("</daq:Metric>");
+				writerBuffer.append("<daq:Metric rdf:about=\""+this.getMetricName(metricList.get(i))+"\">");
+				writerBuffer.append("</daq:Metric>");
 			}
 			
-			writerStatisticRecords.write("<dcat:Dataset rdf:about=\""+this.getDatasetName()+"\">");
-			writerStatisticRecords.write("<dct:title>My EEXCESS dataset</dct:title>");
+			writerBuffer.append("<dcat:Dataset rdf:about=\""+this.getDatasetName()+"\">");
+			writerBuffer.append("<dct:title>My EEXCESS dataset</dct:title>");
 			for (int i = 0; i < distributionList.size(); i++) {
-				writerStatisticRecords.write("<dcat:distribution>");
-				writerStatisticRecords.write("<dcat:Distribution rdf:about=\""+this.getDistributionName(distributionList.get(i))+"\">");
-				writerStatisticRecords.write("<dct:title>My EEXCESS "+distributionList.get(i)+" dataset </dct:title>");
-				writerStatisticRecords.write("<prov:wasGeneratedBy rdf:resource=\""+this.namespace+"dataprovider#"+distributionList.get(i)+"\"/>");
-				writerStatisticRecords.write("</dcat:Distribution>");
-				writerStatisticRecords.write("</dcat:distribution>");
+				writerBuffer.append("<dcat:distribution>");
+				writerBuffer.append("<dcat:Distribution rdf:about=\""+this.getDistributionName(distributionList.get(i))+"\">");
+				writerBuffer.append("<dct:title>My EEXCESS "+distributionList.get(i)+" dataset </dct:title>");
+				writerBuffer.append("<prov:wasGeneratedBy rdf:resource=\""+this.namespace+"dataprovider#"+distributionList.get(i)+"\"/>");
+				writerBuffer.append("</dcat:Distribution>");
+				writerBuffer.append("</dcat:distribution>");
 			}
 			
-			writerStatisticRecords.write("</dcat:Dataset>");
+			writerBuffer.append("</dcat:Dataset>");
 			
-			writerStatisticRecords.append(this.qualityMeasures);
+			writerBuffer.append(this.qualityMeasures);
 	
-			writerStatisticRecords.write("</rdf:RDF>");
+			writerBuffer.append("</rdf:RDF>");
+			String out = writerBuffer.toString();
+			if (out.contains(DataProvider.unknown.toString())) {
+				out = out.replaceAll(DataProvider.unknown.toString(), Qc_dataprovider.cmdParameterDataprovider);
+			}
+			writerStatisticRecords.write(out);
 			writerStatisticRecords.close();
 		} catch (Exception e) {
 			e.printStackTrace();

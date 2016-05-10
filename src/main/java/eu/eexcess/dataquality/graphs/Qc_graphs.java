@@ -152,8 +152,13 @@ public final class Qc_graphs {
 					case DDB:
 					case cultureWeb:
 					case Europeana:
-					dataset.addValue(paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
-					break;
+						dataset.addValue(paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+					case unknown:
+						if (paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) > 0) {
+							dataset.addValue(paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), Qc_dataprovider.cmdParameterDataprovider, "");
+						}
+						break;
 				}
 		}
 		
@@ -200,6 +205,11 @@ public final class Qc_graphs {
 					case cultureWeb:
 					case Europeana:
 						dataset.addValue(paramList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+					case unknown:
+						if (paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) > 0) {
+							dataset.addValue(paramList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), Qc_dataprovider.cmdParameterDataprovider, "");
+						}
 						break;
 				}
 		}
@@ -248,6 +258,11 @@ public final class Qc_graphs {
 					case cultureWeb:
 					case Europeana:
 						dataset.addValue(paramList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+					case unknown:
+						if (paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) > 0) {
+							dataset.addValue(paramList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i]), Qc_dataprovider.cmdParameterDataprovider, "");
+						}
 						break;
 				}
 		}
@@ -326,6 +341,11 @@ public final class Qc_graphs {
 					case Europeana:
 						dataset.addValue(paramList.getNonEmptyDataFieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
 						break;
+					case unknown:
+						if (paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) > 0) {
+							dataset.addValue(paramList.getAccesibleLinksPerRecordsPerProvider(DataProvider.values()[i]), Qc_dataprovider.cmdParameterDataprovider, "");
+						}
+						break;
 				}
 		}
 		
@@ -372,6 +392,11 @@ public final class Qc_graphs {
 					case cultureWeb:
 					case Europeana:
 						dataset.addValue(paramList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i]), DataProvider.values()[i].toString(), "");
+						break;
+					case unknown:
+						if (paramList.getDataFieldsPerRecordsPerProvider(DataProvider.values()[i]) > 0) {
+							dataset.addValue(paramList.getNonEmptyDataFieldsPerDatafieldsPerRecordsPerProvider(DataProvider.values()[i]), Qc_dataprovider.cmdParameterDataprovider, "");
+						}
 						break;
 				}
 		}
