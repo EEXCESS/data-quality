@@ -30,12 +30,12 @@ public class Qc_params {
 	
 	public Qc_params(DataProvider provider) {
 		this.provider = provider;
-		trustedLinks = new Qc_trustedLinks();
+		trustedLinks = new Qc_trustedLinks(provider);
 	}
 	
-	public void addTrustedLink(String sLink)
+	public void addTrustedLink(String sLink, String xPath)
 	{
-		trustedLinks.addTrustedLink(sLink);
+		trustedLinks.addTrustedLink(sLink, xPath);
 	}
 
 	public HashMap<String,Integer> getTrustedLinksCount()
@@ -223,8 +223,9 @@ public class Qc_params {
 	public double getLinkDataFieldsPerRecord() {
 		double fReturn = 0;
 		if (recordCount > 0) {
+			fReturn = trustedLinks.getLinksCount();
 			for (int i = 0; i < dataLinkFieldsPerRecord.size(); i++) {
-				fReturn += dataLinkFieldsPerRecord.get(i);
+				// fReturn += dataLinkFieldsPerRecord.get(i);
 			}
 			fReturn = fReturn / (double) recordCount;
 //			fReturn = Math.round(fReturn * 100) / 100;
@@ -237,9 +238,10 @@ public class Qc_params {
 	public double getNumberOfAllLinkDataFields() {
 		double fReturn = 0;
 		if (recordCount > 0) {
-			for (int i = 0; i < dataLinkFieldsPerRecord.size(); i++) {
-				fReturn += dataLinkFieldsPerRecord.get(i);
-			}
+			// for (int i = 0; i < dataLinkFieldsPerRecord.size(); i++) {
+			// 	fReturn += dataLinkFieldsPerRecord.get(i);
+			// }
+			fReturn = trustedLinks.getLinksCount();
 		}
 		return fReturn;
 	}

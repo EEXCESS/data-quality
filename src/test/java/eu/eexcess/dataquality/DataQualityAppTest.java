@@ -65,6 +65,13 @@ public class DataQualityAppTest
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
+    
+    public void testAppTransformedEnrichedMini()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\prw"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
 
     public void testAppTransformedEnrichedZBW()
     {

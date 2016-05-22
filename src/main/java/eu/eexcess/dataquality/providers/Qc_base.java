@@ -294,6 +294,16 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 	
+	protected String getAllParentNodes (Node actNode)
+	{
+		String sReturn = actNode.getNodeName();
+		if (actNode.getParentNode() != null)
+		{
+			sReturn = getAllParentNodes(actNode.getParentNode()) + "/" + sReturn;
+		}
+		return sReturn;
+	}
+	
 	ArrayList<String> lUniqueLinks = new ArrayList<String>();
 	
 	/*
@@ -317,7 +327,7 @@ public class Qc_base implements Qc_interface {
 				if (lUniqueLinks.contains(actNodeTextContent.toLowerCase().trim()) == false)
 				{
 					lUniqueLinks.add(actNodeTextContent.toLowerCase().trim());
-					countTrustedLinks(actNodeTextContent.toLowerCase().trim());
+					countTrustedLinks(actNodeTextContent.toLowerCase().trim(), getAllParentNodes(actNode));
 					nReturn++;
 				}
 			} 
@@ -345,7 +355,7 @@ public class Qc_base implements Qc_interface {
 								!value.toLowerCase().trim().endsWith("/proxy/"))
 						{
 							lUniqueLinks.add(value.toLowerCase().trim());
-							countTrustedLinks(value.toLowerCase().trim());
+							countTrustedLinks(value.toLowerCase().trim(), getAllParentNodes(actNode));
 							nReturn++;
 						}
 					}
@@ -363,9 +373,9 @@ public class Qc_base implements Qc_interface {
 		return nReturn;
 	}
 
-	protected void countTrustedLinks(String sLink)
+	protected void countTrustedLinks(String sLink, String xPath)
 	{
-		param.addTrustedLink(sLink);
+		param.addTrustedLink(sLink, xPath);
 	}
 	
 	public HashMap<String,Integer> getTrustedLinksCount()

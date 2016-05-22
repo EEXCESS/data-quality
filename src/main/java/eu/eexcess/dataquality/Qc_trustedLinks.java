@@ -20,16 +20,22 @@ package eu.eexcess.dataquality;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+
+import eu.eexcess.dataquality.Qc_dataprovider.DataProvider;
 
 public class Qc_trustedLinks {
 
-	HashMap<String,String> hTrustedLinks = new HashMap<String,String>();
-	HashMap<String,Integer> hcountTrustedLinks = new HashMap<String,Integer>();
-	HashMap<String,Integer> hcountUnknownLinks = new HashMap<String,Integer>();
+	private HashMap<String,String> hTrustedLinks = new HashMap<String,String>();
+	private HashMap<String,Integer> hcountTrustedLinks = new HashMap<String,Integer>();
+	private HashMap<String,Integer> hcountUnknownLinks = new HashMap<String,Integer>();
+	private List<String> allLinks = new ArrayList<String>();
+	private DataProvider provider = DataProvider.unknown;
 	
-	public Qc_trustedLinks()
+	public Qc_trustedLinks(DataProvider provider)
 	{
+		this.provider = provider;
 		hTrustedLinks.put("Geonames", "geonames.org");
 		hTrustedLinks.put("LC Linked Data Service", "id.loc.gov");
 		hTrustedLinks.put("DBpedia", "dbpedia.org");
@@ -43,8 +49,22 @@ public class Qc_trustedLinks {
 		}
 	}
 	
-	public void addTrustedLink(String sLink)
+	public double getLinksCount()
 	{
+		return allLinks.size();
+	}
+	
+	public void addTrustedLink(String sLink, String xPath )
+	{
+		if (allLinks.contains(sLink) == true)
+		{
+			return;
+		}
+		
+		// System.out.println(provider.name() + ": " + allLinks.size() + " --> " + xPath + " # " + sLink);
+		
+		allLinks.add(sLink);
+
 		Boolean bLinkKnown = false; 
 		Iterator<Entry<String, String>> it = hTrustedLinks.entrySet().iterator();
 		while (it.hasNext() && bLinkKnown == false)

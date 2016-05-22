@@ -200,12 +200,12 @@ public class Qc_dataprovider {
 			}
 		}
 		
-		System.out.println("size of HashMap:"+Qc_dataprovider.URLCheckingResultsAccessible.size());
-		System.out.println("countCheckedURLs:"+Qc_dataprovider.countCheckedURLs);
-		System.out.println("countCheckedURLsOnline:"+Qc_dataprovider.countCheckedURLsOnline);
-		System.out.println("countCheckedURLsViaCache:"+Qc_dataprovider.countCheckedURLsViaCache);
-		System.out.println("countCheckedURLsViaBlackList:"+Qc_dataprovider.countCheckedURLsViaBlackList);
-		System.out.println("size of Blacklist for Hosts:"+Qc_dataprovider.URLCheckingResultsHostsBlacklist.size());
+		// System.out.println("size of HashMap:"+Qc_dataprovider.URLCheckingResultsAccessible.size());
+		// System.out.println("countCheckedURLs:"+Qc_dataprovider.countCheckedURLs);
+		// System.out.println("countCheckedURLsOnline:"+Qc_dataprovider.countCheckedURLsOnline);
+		// System.out.println("countCheckedURLsViaCache:"+Qc_dataprovider.countCheckedURLsViaCache);
+		// System.out.println("countCheckedURLsViaBlackList:"+Qc_dataprovider.countCheckedURLsViaBlackList);
+		// System.out.println("size of Blacklist for Hosts:"+Qc_dataprovider.URLCheckingResultsHostsBlacklist.size());
 		Qc_dataprovider.URLCheckingResultsAccessible.clear();
 		Qc_dataprovider.URLCheckingResultsHostsBlacklist.clear();
 		System.gc();
@@ -820,7 +820,7 @@ public class Qc_dataprovider {
 					for (int i = 0; i < fieldXPathsProxy.size(); i++) {
 //				// for earch field
 //				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
-						System.out.println(fieldXPathsProxy.get(i));
+						// System.out.println(fieldXPathsProxy.get(i));
 //				
 //				for (String actFileName : actProviderFileList) {
 //					// for each file
@@ -829,7 +829,7 @@ public class Qc_dataprovider {
 						for (int count = 0; count < nodes.getLength(); count++) {
 							if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 								String temp = nodes.item(count).getTextContent().trim();
-								System.out.println(temp);
+								// System.out.println(temp);
 								valuesProxy.add(temp);
 							}
 						}
@@ -840,7 +840,7 @@ public class Qc_dataprovider {
 					for (int i = 0; i < fieldXPathsEnrichedProxy.size(); i++) {
 //						// for earch field
 //						String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
-								System.out.println(fieldXPathsProxy.get(i));
+								// System.out.println(fieldXPathsProxy.get(i));
 //						
 //						for (String actFileName : actProviderFileList) {
 //							// for each file
@@ -849,7 +849,7 @@ public class Qc_dataprovider {
 								for (int count = 0; count < nodes.getLength(); count++) {
 									if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 										String temp = nodes.item(count).getTextContent().trim();
-										System.out.println(temp);
+										// System.out.println(temp);
 										valuesEnrichedProxy.add(temp);
 									}
 								}

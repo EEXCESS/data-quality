@@ -117,7 +117,7 @@ public class WordNetSimilarityTest extends TestCase {
 //		String words = "White square dish with prosciutto wrapped asparagus stalks on a green tablemat credit: Ilva Beretta / thePictureKitchen / TopFoto";
 		String words = "White square dish prosciutto asparagus green prosciutto asparagus Beretta White";
 		WordNetSimilarityResultProxyObject result = sim.compute(words);
-		System.out.println("Results:\n"+result+"\n" + result.toString());
+		// System.out.println("Results:\n"+result+"\n" + result.toString());
 //		assertEquals(18, result.getRecords());
     }
     
@@ -126,13 +126,13 @@ public class WordNetSimilarityTest extends TestCase {
 		WordNetSimilarity sim = new WordNetSimilarity();
 		sim.setTraceOn();
 		String words = "White square dish with prosciutto wrapped asparagus stalks on a green tablemat credit: Ilva Beretta / thePictureKitchen / TopFoto";
-		System.out.println("\ninput:\n"+words+"\n");
+		// System.out.println("\ninput:\n"+words+"\n");
 		WordNetSimilarityResultProxyObject result = sim.compute(words);
-		System.out.println("Results:\n"+result+"\n" + result.toString());
+		// System.out.println("Results:\n"+result+"\n" + result.toString());
 		words = "White square dish with prosciutto wrapped asparagus stalks on a green tablemat credit: Ilva Beretta / thePictureKitchen / TopFoto prosciutto asparagus Beretta White";
-		System.out.println("\ninput:\n"+words+"\n");
+		// System.out.println("\ninput:\n"+words+"\n");
 		result = sim.compute(words);
-		System.out.println("Results:\n"+result+"\n" + result.toString());
+		// System.out.println("Results:\n"+result+"\n" + result.toString());
     }
     
 }

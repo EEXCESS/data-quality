@@ -183,10 +183,12 @@ public class CheckEnrichment {
 			if (lprovider.indexOf(DataProvider.Europeana_EEXCESS)>=0)
 			{
 				dataset.addValue(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.Europeana_EEXCESS), DataProvider.Europeana.name(),"done transform");
+				// System.out.println("Europeana_EEXCESS: " + paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.Europeana_EEXCESS));
 			}
 			if (lprovider.indexOf(DataProvider.Europeana_enriched)>=0)
 			{
 				dataset.addValue(paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.Europeana_enriched), DataProvider.Europeana.name(),"enriched");
+				// System.out.println("Europeana_enriched: " + paramDataList.getLinkDataFieldsPerRecordsPerProvider(DataProvider.Europeana_enriched));
 			}
 		}
 		
