@@ -779,9 +779,10 @@ public class Qc_dataprovider {
 			// calc all XPaths for all fields in all file from a data provider
 			ArrayList<String> fieldXPathsProxy = new ArrayList<String>();
 			ArrayList<String> fieldXPathsEnrichedProxy = new ArrayList<String>();
-			fieldXPathsProxy.add(			"/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='title']");
-			fieldXPathsProxy.add(			"/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='description']");
-			fieldXPathsProxy.add(			"/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='creator']");
+			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='title']");
+			fieldXPathsProxy.add(		 "/*/*[local-name()='title']");
+			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='description']");
+			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='creator']");
 			
 			fieldXPathsEnrichedProxy.add("/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/enrichedProxy/')]/*[local-name()='subject']/*/*[local-name()='label']");
 			
@@ -823,7 +824,10 @@ public class Qc_dataprovider {
 //			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
 					ArrayList<String> valuesProxy = new ArrayList<String>();
 					ArrayList<String> valuesEnrichedProxy = new ArrayList<String>();
+					System.out.println("fieldXPathsProxy:");
 					for (int i = 0; i < fieldXPathsProxy.size(); i++) {
+						String xpath = 	fieldXPathsProxy.get(i);
+						System.out.println("xPath:"+xpath);
 //				// for earch field
 //				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
 						// System.out.println(fieldXPathsProxy.get(i));
@@ -831,7 +835,7 @@ public class Qc_dataprovider {
 //				for (String actFileName : actProviderFileList) {
 //					// for each file
 //					qcBase.setXmlFileName(actFileName);
-						NodeList nodes = qcBase.getNodesListByXPath(fieldXPathsProxy.get(i));
+						NodeList nodes = qcBase.getNodesListByXPath(xpath);
 						for (int count = 0; count < nodes.getLength(); count++) {
 							if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 								String temp = nodes.item(count).getTextContent().trim();
@@ -843,7 +847,11 @@ public class Qc_dataprovider {
 						System.out.println("-------------------------------------------------------");
 				
 					}
+					System.out.println("fieldXPathsEnrichedProxy:");
 					for (int i = 0; i < fieldXPathsEnrichedProxy.size(); i++) {
+						String xpath = 	fieldXPathsEnrichedProxy.get(i);
+						System.out.println("xPath:"+xpath);
+
 //						// for earch field
 //						String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
 								// System.out.println(fieldXPathsProxy.get(i));
@@ -851,11 +859,11 @@ public class Qc_dataprovider {
 //						for (String actFileName : actProviderFileList) {
 //							// for each file
 //							qcBase.setXmlFileName(actFileName);
-								NodeList nodes = qcBase.getNodesListByXPath(fieldXPathsEnrichedProxy.get(i));
+								NodeList nodes = qcBase.getNodesListByXPath(xpath);
 								for (int count = 0; count < nodes.getLength(); count++) {
 									if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 										String temp = nodes.item(count).getTextContent().trim();
-										// System.out.println(temp);
+										System.out.println(temp);
 										valuesEnrichedProxy.add(temp);
 									}
 								}
