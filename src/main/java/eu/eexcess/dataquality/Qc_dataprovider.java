@@ -176,6 +176,12 @@ public class Qc_dataprovider {
 				}
 			}
 		}
+		//exists output dir?
+		File outputDir = new File(this.outputDir);
+		if (!outputDir.exists()) {
+			outputDir.mkdir();
+		}
+		
 		for (int i = 0; i < sParams.length; i++) {
 			if (sParams[i].equalsIgnoreCase(DataQualityApp.CMD_PARAM_DONT_COPY_INPUT) || 
 					sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_XPATH_RECORD_SEPERATOR.toLowerCase()) ||
