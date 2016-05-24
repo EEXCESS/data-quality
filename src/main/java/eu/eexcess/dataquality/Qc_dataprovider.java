@@ -278,6 +278,8 @@ public class Qc_dataprovider {
 
 
 	private String formatNumber(double number) {
+		if (Double.isNaN(number))
+			return "";
 		return numberFormater.format(number);
 	}
 	
@@ -779,13 +781,16 @@ public class Qc_dataprovider {
 			// calc all XPaths for all fields in all file from a data provider
 			ArrayList<String> fieldXPathsProxy = new ArrayList<String>();
 			ArrayList<String> fieldXPathsEnrichedProxy = new ArrayList<String>();
+//			fieldXPathsProxy.add(		 "//*[local-name()='title']");
 			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='title']");
-			fieldXPathsProxy.add(		 "/*/*[local-name()='title']");
+//			fieldXPathsProxy.add(		 "/*/*[local-name()='title']");
 			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='description']");
 			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='creator']");
 			
 			fieldXPathsEnrichedProxy.add("/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/enrichedProxy/')]/*[local-name()='subject']/*/*[local-name()='label']");
+//			fieldXPathsProxy.add("//*[local-name()='title']");
 			
+//			/rdf:RDF[@xmlns:Schema="http://schema.org/"]/eexcess:Proxy[2]/dc:subject
 			HashMap<String, WordNetSimilarityResultObject> mySimilarityResultHashMap = new HashMap<String, WordNetSimilarityResultObject>();
 			
 			if (qcBase != null)
@@ -793,84 +798,49 @@ public class Qc_dataprovider {
 				for (String actFileName : actProviderFileList) {
 					System.out.println("//////////////////////////////////////////////////////\n"+actFileName);
 					qcBase.setXmlFileName(actFileName);
-					/*
-					NodeList nodes = qcBase.getNodesListByXPath(qcBase.getRecordSeparator() + qcBase.getXpathsToFieldsFromRecordSeparator());
-					for (int countRecords = 0; countRecords < nodes.getLength(); countRecords++) {
-						//iterate over records
-						if (nodes.item(countRecords).hasChildNodes())
-						{
-							for (int countFields = 0; countFields < nodes.item(countRecords).getChildNodes().getLength(); countFields++) {
-								Node actNodeField = nodes.item(countRecords).getChildNodes().item(countFields);
-								if (actNodeField.getNodeType() == Node.ELEMENT_NODE) {
-									String tempFieldXpath = qcBase.getXPath(actNodeField);
-									if (!fieldXPaths.contains(tempFieldXpath))
-										fieldXPaths.add(tempFieldXpath);
-								} else {
-									if (actNodeField.hasChildNodes()) {
-										for (int countSubFields = 0; countSubFields < actNodeField.getChildNodes().getLength(); countSubFields++) {
-											Node actNodeSubField = actNodeField.getChildNodes().item(countSubFields);
-											if (actNodeSubField.getNodeType() == Node.ELEMENT_NODE) {
-												String tempFieldXpath = qcBase.getXPath(actNodeSubField);
-												if (!fieldXPaths.contains(tempFieldXpath))
-													fieldXPaths.add(tempFieldXpath);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					*/
-//			HashMap<String, StructureRecResult> actProviderStructurednessResults = new HashMap<String, StructureRecResult>();
+					if (actFileName.contains("1459849953368"))
+						System.out.print("test");
+
 					ArrayList<String> valuesProxy = new ArrayList<String>();
 					ArrayList<String> valuesEnrichedProxy = new ArrayList<String>();
+
 					System.out.println("fieldXPathsProxy:");
 					for (int i = 0; i < fieldXPathsProxy.size(); i++) {
 						String xpath = 	fieldXPathsProxy.get(i);
 						System.out.println("xPath:"+xpath);
-//				// for earch field
-//				String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
-						// System.out.println(fieldXPathsProxy.get(i));
-//				
-//				for (String actFileName : actProviderFileList) {
-//					// for each file
-//					qcBase.setXmlFileName(actFileName);
 						NodeList nodes = qcBase.getNodesListByXPath(xpath);
 						for (int count = 0; count < nodes.getLength(); count++) {
 							if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
 								String temp = nodes.item(count).getTextContent().trim();
-								// System.out.println(temp);
+								System.out.println(temp);
 								valuesProxy.add(temp);
 							}
 						}
-				//}
 						System.out.println("-------------------------------------------------------");
 				
 					}
+					
+
+					System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+					
 					System.out.println("fieldXPathsEnrichedProxy:");
 					for (int i = 0; i < fieldXPathsEnrichedProxy.size(); i++) {
 						String xpath = 	fieldXPathsEnrichedProxy.get(i);
 						System.out.println("xPath:"+xpath);
 
-//						// for earch field
-//						String actFieldName = fieldXPaths.get(i).substring(fieldXPaths.get(i).lastIndexOf("/")+1);
-								// System.out.println(fieldXPathsProxy.get(i));
-//						
-//						for (String actFileName : actProviderFileList) {
-//							// for each file
-//							qcBase.setXmlFileName(actFileName);
-								NodeList nodes = qcBase.getNodesListByXPath(xpath);
-								for (int count = 0; count < nodes.getLength(); count++) {
-									if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
-										String temp = nodes.item(count).getTextContent().trim();
-										System.out.println(temp);
-										valuesEnrichedProxy.add(temp);
-									}
-								}
-						//}
-								System.out.println("-------------------------------------------------------");
-						
+						NodeList nodes = qcBase.getNodesListByXPath(xpath);
+						for (int count = 0; count < nodes.getLength(); count++) {
+							if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
+								String temp = nodes.item(count).getTextContent().trim();
+								System.out.println(temp);
+								valuesEnrichedProxy.add(temp);
 							}
+						}
+						System.out.println("-------------------------------------------------------");
+				
+					}
+					
 //					for (int i = 0; i < values.size(); i++) {
 //						System.out.println(values.get(i));
 //					}
@@ -1634,7 +1604,7 @@ public class Qc_dataprovider {
 		        WordNetSimilarityResultObject resultsObject = entryObject.getValue();
 	        
 		        if (resultsObject.getWuPalmerRelatednessOfWordsMedianDist() != Double.MAX_VALUE &&
-		        	resultsObject.getWuPalmerRelatednessOfWordsMedianDist() != Double.NaN
+		        	!Double.isNaN(resultsObject.getWuPalmerRelatednessOfWordsMedianDist())
 		        		)
 		        {
 			        htmlReportGeneral += "<tr><td>";
