@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	>
+
+<h:head>
+	<title>EEXCESS Partner Wizard</title>
+	<meta http-equiv="content-type" content="text/xhtml; charset=UTF-8" />
+</h:head>
+
+<h:body >
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="pw.css" />
+
+	<h:form styleClass="form-horizontal" id="formID" enctype="multipart/form-data">
+	    <p:growl id="messages" showDetail="true" />
+		<header class="navigation">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8">
+						<img src="images/eexcess-logo.png" alt="" class="logo img-responsive" />
+						<a href="http://www.joanneum.at/" target="_blank"><img src="images/joanneum-research-logo.png" alt="" class="logo img-responsive" /></a>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="container">
+			<h:panelGroup id="wholePage">
+				<ui:insert name="body">Default content</ui:insert>
+			</h:panelGroup>
+			<hr />
+		</div>
+		<!-- /container -->
+		<footer>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-11">
+						<div class="pull-right">@ 2016 JOANNEUM RESEARCH</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	</h:form>
+
+</h:body>
+</html>
