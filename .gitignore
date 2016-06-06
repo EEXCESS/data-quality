@@ -11,3 +11,5 @@
 /*.bat
 /output/struct
 /output/input
+/data-quality/output
+/data-quality-web/target
