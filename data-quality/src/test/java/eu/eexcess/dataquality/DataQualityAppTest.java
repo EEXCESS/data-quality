@@ -54,112 +54,112 @@ public class DataQualityAppTest
     
     public void testAppTransformedEnrichedKIMPortal()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppTransformedEnrichedKIMPortalII()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal-II"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-KIMPortal-II"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppTransformedEnrichedMini()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\prw"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\prw"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppTransformedEnrichedZBW()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-ZBW"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-ZBW"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppTransformedEnrichedEuropeana()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-Europeana"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-Europeana"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppDebugKIMCollectSimpleExample()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\simple-example"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\simple-example"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppDebugKIMCollectOneRecordWithImages()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\one-record-with-images"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\kim-collect\\one-record-with-images"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppDebugMendeleySimpleExample()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\mendeley\\simple-example"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\mendeley\\simple-example"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputTestbedServiceResponse()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-testbed\\service-response"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-testbed\\service-response"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppInputTestbedRandom100()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-testbed\\random-100"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-testbed\\random-100"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedRandom100()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedRandom100Small()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedRandom100Small4Development()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedRandom100Small4DevelopmentOutliers()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-outliers"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-outliers"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedRandom100Small4DevelopmentDatePatterns()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-date-patterns"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-date-patterns"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedRandom100Small4DevelopmentWithCR()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-title-with-CR"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\random-100-small4Dev-title-with-CR"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
@@ -167,14 +167,14 @@ public class DataQualityAppTest
     
     public void testAppInputStructurednessTestbedSomeDataprovidersSmall()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppInputStructurednessTestbedLinksNotReachable()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-links-not-reachable"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-links-not-reachable"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
@@ -182,28 +182,28 @@ public class DataQualityAppTest
     
     public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2WithoutInputdataCopy()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2", "--dontCopyInput"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2", "--dontCopyInput"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedSomeDataprovidersSmallV3WithoutInputdataCopy()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v3", "--dontCopyInput"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v3", "--dontCopyInput"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputTheEuropeanLibraryDatasetTestCase1()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-1", 
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-1", 
     			"--dontCopyInput",
     			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
     			"--dataprovider=The European Library"
@@ -214,7 +214,7 @@ public class DataQualityAppTest
 
     public void testAppInputTheEuropeanLibraryDatasetTestCase2()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-2", 
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-2", 
     			"--dontCopyInput",
     			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
     			"--dataprovider=The European Library"
@@ -225,7 +225,7 @@ public class DataQualityAppTest
 
     public void testAppInputTheEuropeanLibraryDatasetTestCase3()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-3", 
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-3", 
     			"--dontCopyInput",
     			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
     			"--dataprovider=The European Library"
@@ -236,14 +236,14 @@ public class DataQualityAppTest
 
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44V2()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-v2"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-v2"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
@@ -259,14 +259,14 @@ public class DataQualityAppTest
     
     public void testAppInputStructurednessKIMCollect()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\kimcollect"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\structuredness\\kimcollect"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputKultur20150302()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\kultur-2015-03-02"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\kultur-2015-03-02"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
@@ -275,14 +275,14 @@ public class DataQualityAppTest
 
     public void testAppInputEnrichedManuallyServiceResponse()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-enriched-manually\\service-response"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-enriched-manually\\service-response"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
     public void testAppInputEnrichedManuallyServiceResponseEnriched()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-enriched-manually\\service-response-enriched"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-enriched-manually\\service-response-enriched"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
@@ -357,21 +357,21 @@ public class DataQualityAppTest
 	}
 
     public void testAppZBWOneRecord(){
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\zbw\\one-record"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\zbw\\one-record"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppInputTestbedRandom100_DDB()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\ddb"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\ddb"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
     public void testAppInputTestbedRandom100_ZBW()
     {
-    	String[] args = new String[]{ ".\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\zbw\\testbed-records"};
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\debug\\zbw\\testbed-records"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }

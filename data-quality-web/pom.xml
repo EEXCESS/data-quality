@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.eexcess.partnerrecommender</groupId>
-	<artifactId>PartnerWizardWebApp</artifactId>
-	<name>Wizard for creating an EEXCESS PartnerRecommender</name>
+	<artifactId>DataQualityWebApp</artifactId>
+	<name>WebApp for data quality</name>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<url>http://eexcess.eu</url>
@@ -29,12 +29,14 @@
 		<!-- Setting this property using archetype-metadata.xml requiredPorperty
 			so that generated project uses correct version of richfaces.
 		-->
-		<org.richfaces.bom.version>4.0.0-SNAPSHOT</org.richfaces.bom.version>
+<!-- 		<org.richfaces.bom.version>4.0.0-SNAPSHOT</org.richfaces.bom.version>
+
+-->
 		<!--         <eexcess.version>1.0-SNAPSHOT-20150924.093906-1</eexcess.version> -->
 		<eexcess.version>1.0-SNAPSHOT</eexcess.version>
 	</properties>
 	<build>
-		<finalName>PartnerWizard-${project.version}</finalName>
+		<finalName>DataQualityWebApp-${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -48,7 +50,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
+ <version>2.6</version>				<configuration>
 					<webResources>
 						<resource>
 							<directory>${basedir}/src/main/java</directory>
@@ -66,7 +68,8 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
-						<configuration>
+ <version>2.6</version>
+ 						<configuration>
 							<webappDirectory>${project.build.directory}/${project.build.finalName}-jee6</webappDirectory>
 						</configuration>
 					</plugin>
@@ -79,7 +82,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
-						<executions>
+ <version>2.6</version>						<executions>
 							<execution>
 								<id>jee6</id>
 								<phase>package</phase>
@@ -107,6 +110,7 @@
 			</build>
 		</profile>
 	</profiles>
+<!-- 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -118,7 +122,14 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	-->
 	<dependencies>
+		<dependency>  
+		    <groupId>org.primefaces</groupId>  
+		    <artifactId>primefaces</artifactId>  
+		    <version>5.3</version>  
+		</dependency>  
+<!-- 
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-ui</artifactId>
@@ -127,38 +138,46 @@
 			<groupId>org.richfaces.core</groupId>
 			<artifactId>richfaces-core-impl</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-		</dependency>
+		-->
+<dependency>
+    <groupId>javax.faces</groupId>
+    <artifactId>javax.faces-api</artifactId>
+    <version>2.2</version>
+</dependency>
+<!-- http://mvnrepository.com/artifact/com.sun.faces/jsf-impl -->
+<dependency>
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-impl</artifactId>
+    <version>2.2.13</version>
+</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
+			<version>2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<scope>provided</scope>
+			<version>2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>el-api</artifactId>
 			<scope>provided</scope>
+			<version>2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 		</dependency>
-		<!-- Tests -->
+		Tests
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
@@ -187,7 +206,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-	 <dependency>
+ -->	 <dependency>
 	  <groupId>eu.eexcess</groupId>
 	  <artifactId>eexcess-reference-partner-recommender</artifactId>
 	  <version>1.0-SNAPSHOT</version>
