@@ -201,6 +201,13 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV3WithoutInputdataCopyOutput()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v3", "--dontCopyInput", "--outputDir=d:\\test\\"};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+
     public void testAppInputTheEuropeanLibraryDatasetTestCase1()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-1", 

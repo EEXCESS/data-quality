@@ -171,6 +171,12 @@ public class Qc_dataprovider {
 						{
 							cmdParameterDataprovider = sParams[i].substring(DataQualityApp.CMD_PARAM_DATAPROVIDER.length());;
 						} else {
+							if (sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_OUTPUTDIR.toLowerCase()))
+							{
+								this.outputDir = sParams[i].substring(DataQualityApp.CMD_PARAM_OUTPUTDIR.length());;
+							} else {
+								
+							}
 						}
 					}
 				}

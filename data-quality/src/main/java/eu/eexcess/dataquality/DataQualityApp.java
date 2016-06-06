@@ -46,5 +46,6 @@ public class DataQualityApp
 	public static final String CMD_PARAM_XPATH_RECORD_SEPERATOR = "--XpathRecordSeparator=";
 	public static final String CMD_PARAM_XPATH_FIELDS_TO_RECORD_SEPERATOR = "--XpathsToFieldsFromRecordSeparator";
 	public static final String CMD_PARAM_DATAPROVIDER = "--dataprovider=";
+	public static final String CMD_PARAM_OUTPUTDIR = "--outputDir=";
 	
 }
