@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 
@@ -80,9 +81,13 @@ public class DataQualityWebApp
     
     public void upload() {
         if(file != null) {
-            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
 
+            if (file.getSize()> 220000)
+            {
+                FacesMessage messageFileToBig = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "The file "+file.getFileName() + " is to big("+file.getSize()+" Bytes). Please use a file smaler than 200kB.");
+                FacesContext.getCurrentInstance().addMessage(null, messageFileToBig);
+                return;
+            }
 //            File tempFile = new File(file.getFileName());
             try {
                 copyFile(file.getFileName(), file.getInputstream());
@@ -100,7 +105,7 @@ public class DataQualityWebApp
         		provider.process(args);
         	} catch (RuntimeException e) {
         		errorFlag = true;
-                FacesMessage errorMessage = new FacesMessage("Error", e.getMessage());
+                FacesMessage errorMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
                 FacesContext.getCurrentInstance().addMessage(null, errorMessage);
         	}
         	if (!errorFlag){
