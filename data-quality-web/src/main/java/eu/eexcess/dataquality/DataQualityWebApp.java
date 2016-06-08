@@ -23,14 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 @ManagedBean
+@SessionScoped
 public class DataQualityWebApp 
 {
 	public static final String CMD_PARAM_DONT_COPY_INPUT = "--dontCopyInput";
@@ -43,6 +44,19 @@ public class DataQualityWebApp
 	public DataQualityWebApp(){
 		this.dataproviderName="The European Library";
 		this.xpathLoop="/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']";
+		this.sessionCode = System.currentTimeMillis() + "";
+		{
+			File newSessionDir = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\");
+			newSessionDir.mkdir();
+		}
+		{
+			File newSessionDir = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\uploaded\\");
+			newSessionDir.mkdir();
+		}
+		{
+			File newSessionDir = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\report\\");
+			newSessionDir.mkdir();
+		}
 	}
 	
 	private UploadedFile file;
@@ -50,9 +64,18 @@ public class DataQualityWebApp
 	protected String xpathLoop;
 	protected String dataproviderName;
 		
+	protected String sessionCode;
 	 
     public String getDataproviderName() {
 		return dataproviderName;
+	}
+
+	public String getSessionCode() {
+		return sessionCode;
+	}
+
+	public void setSessionCode(String sessionCode) {
+		this.sessionCode = sessionCode;
 	}
 
 	public void setDataproviderName(String dataproviderName) {
@@ -143,7 +166,8 @@ public class DataQualityWebApp
     }
 
 	private String getRealPath() {
-		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+//		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("") ;
+		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\";
 		return realPath;
 	}
   
