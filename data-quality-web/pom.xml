@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>eu.eexcess.partnerrecommender</groupId>
+	<groupId>eu.eexcess.dataquality</groupId>
 	<artifactId>DataQualityWebApp</artifactId>
 	<name>WebApp for data quality</name>
 	<version>1.0-SNAPSHOT</version>
@@ -32,7 +32,7 @@
 <!-- 		<org.richfaces.bom.version>4.0.0-SNAPSHOT</org.richfaces.bom.version>
 
 -->
-		<!--         <eexcess.version>1.0-SNAPSHOT-20150924.093906-1</eexcess.version> -->
+<!--         <eexcess.version>1.0-SNAPSHOT-20150924.093906-1</eexcess.version> -->
 		<eexcess.version>1.0-SNAPSHOT</eexcess.version>
 	</properties>
 	<build>
@@ -50,16 +50,16 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
- <version>2.6</version>				<configuration>
-					<webResources>
-						<resource>
-							<directory>${basedir}/src/main/java</directory>
-							<targetPath>/WEB-INF/src</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
-		</plugins>
+				<version>2.6</version>				<configuration>
+				<webResources>
+					<resource>
+						<directory>${basedir}/src/main/java</directory>
+						<targetPath>/WEB-INF/src</targetPath>
+					</resource>
+				</webResources>
+			</configuration>
+		</plugin>
+	</plugins>
 	</build>
 	<profiles>
 		<profile>
@@ -68,8 +68,8 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
- <version>2.6</version>
- 						<configuration>
+						<version>2.6</version>
+						<configuration>
 							<webappDirectory>${project.build.directory}/${project.build.finalName}-jee6</webappDirectory>
 						</configuration>
 					</plugin>
@@ -82,74 +82,74 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
- <version>2.6</version>						<executions>
-							<execution>
-								<id>jee6</id>
-								<phase>package</phase>
-								<goals>
-									<goal>war</goal>
-								</goals>
-								<configuration>
-									<webappDirectory>${project.build.directory}/${project.build.finalName}-jee6</webappDirectory>
-									<classifier>jee6</classifier>
-									<packagingExcludes>WEB-INF/lib/jsf-api*,WEB-INF/lib/jsf-impl*</packagingExcludes>
-									<warSourceExcludes>WEB-INF/lib/jsf-api*,WEB-INF/lib/jsf-impl*</warSourceExcludes>
-								</configuration>
-							</execution>
-						</executions>
-						<configuration>
-							<webResources>
-								<resource>
-									<directory>${basedir}/src/main/java</directory>
-									<targetPath>/WEB-INF/src</targetPath>
-								</resource>
-							</webResources>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+						<version>2.6</version>						<executions>
+						<execution>
+							<id>jee6</id>
+							<phase>package</phase>
+							<goals>
+								<goal>war</goal>
+							</goals>
+							<configuration>
+								<webappDirectory>${project.build.directory}/${project.build.finalName}-jee6</webappDirectory>
+								<classifier>jee6</classifier>
+								<packagingExcludes>WEB-INF/lib/jsf-api*,WEB-INF/lib/jsf-impl*</packagingExcludes>
+								<warSourceExcludes>WEB-INF/lib/jsf-api*,WEB-INF/lib/jsf-impl*</warSourceExcludes>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+						<webResources>
+							<resource>
+								<directory>${basedir}/src/main/java</directory>
+								<targetPath>/WEB-INF/src</targetPath>
+							</resource>
+						</webResources>
+					</configuration>
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
 	</profiles>
-<!-- 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.richfaces</groupId>
-				<artifactId>richfaces-bom</artifactId>
-				<version>${org.richfaces.bom.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<!-- 
+		<dependencyManagement>
+			<dependencies>
+				<dependency>
+					<groupId>org.richfaces</groupId>
+					<artifactId>richfaces-bom</artifactId>
+					<version>${org.richfaces.bom.version}</version>
+					<scope>import</scope>
+					<type>pom</type>
+				</dependency>
+			</dependencies>
+		</dependencyManagement>
 	-->
 	<dependencies>
 		<dependency>  
-		    <groupId>org.primefaces</groupId>  
-		    <artifactId>primefaces</artifactId>  
-		    <version>5.3</version>  
+			<groupId>org.primefaces</groupId>  
+			<artifactId>primefaces</artifactId>  
+			<version>6.0</version>  
 		</dependency>  
-<!-- 
-		<dependency>
-			<groupId>org.richfaces.ui</groupId>
-			<artifactId>richfaces-components-ui</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.richfaces.core</groupId>
-			<artifactId>richfaces-core-impl</artifactId>
-		</dependency>
+	<!-- 
+			<dependency>
+				<groupId>org.richfaces.ui</groupId>
+				<artifactId>richfaces-components-ui</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.richfaces.core</groupId>
+				<artifactId>richfaces-core-impl</artifactId>
+			</dependency>
 		-->
-<dependency>
-    <groupId>javax.faces</groupId>
-    <artifactId>javax.faces-api</artifactId>
-    <version>2.2</version>
-</dependency>
-<!-- http://mvnrepository.com/artifact/com.sun.faces/jsf-impl -->
-<dependency>
-    <groupId>com.sun.faces</groupId>
-    <artifactId>jsf-impl</artifactId>
-    <version>2.2.13</version>
-</dependency>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>javax.faces-api</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<!-- http://mvnrepository.com/artifact/com.sun.faces/jsf-impl -->
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>2.2.13</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -173,45 +173,45 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-		</dependency>
-		Tests
+	<!-- 		<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache</artifactId>
+			</dependency>
+			Tests
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>5.10</version>
+				<classifier>jdk15</classifier>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.json-lib</groupId>
+				<artifactId>json-lib</artifactId>
+				<version>2.3</version>
+				<type>jar</type>
+				<classifier>jdk15</classifier>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>1.3.2</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+		-->	 
 		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>5.10</version>
-			<classifier>jdk15</classifier>
-			<scope>test</scope>
+			<groupId>eu.eexcess</groupId>
+			<artifactId>eexcess-reference-partner-recommender</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>2.3</version>
-			<type>jar</type>
-			<classifier>jdk15</classifier>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.3.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
- -->	 
- 	<dependency>
-	  <groupId>eu.eexcess</groupId>
-	  <artifactId>eexcess-reference-partner-recommender</artifactId>
-	  <version>1.0-SNAPSHOT</version>
-	 </dependency>
 		<dependency>
 			<groupId>org.jfree</groupId>
 			<artifactId>jfreechart</artifactId>
@@ -227,12 +227,10 @@
 			<artifactId>commons-math3</artifactId>
 			<version>3.6</version>
 		</dependency>
- 	<dependency>
-
-	 	<groupId>eu.eexcess.dataquality</groupId>
-	<artifactId>dataqualityLib</artifactId>
-	  <version>1.0-SNAPSHOT</version>
-	 </dependency>
-
+		<dependency>
+			<groupId>eu.eexcess.dataquality</groupId>
+			<artifactId>dataqualityLib</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

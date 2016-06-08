@@ -41,14 +41,38 @@ limitations under the License.
 					href="https://github.com/EEXCESS/data-quality" target="_blank">https://github.com/EEXCESS/data-quality</a>
 			</p>
  			<h2>File upload</h2>
-    		<p:fileUpload value="#{dataQualityWebApp.file}"  mode="simple" skinSimple="true"/>
- 			<br/>
-     		<p:commandButton value="Submit" ajax="false" actionListener="#{dataQualityWebApp.upload}"  />
+ 			Here you can upload your data as XML. The size of the file must be under 1MB. If you want to process more than one single file or bigger dataset we recommend to use the desktop application.
+ 			<br/><!-- mode="simple" skinSimple="true"
+ 			sizeLimit="1000" 
+ 			-->
+ 			
+ 			<p:fileUpload id="fileIdResume"  value="#{dataQualityWebApp.file}" mode="simple" skinSimple="true" description="Resume"/>
+             
+
+<!-- 
+    		<p:fileUpload value="#{dataQualityWebApp.file}"  mode="advanced" 
+                          update="messages" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+
+ 			<p:fileUpload id="fileIdPhoto"  fileUploadListener="#{fileUploadBean.uploadPhoto}" mode="advanced" dragDropSupport="false"
+             multiple="true" update="messages" sizeLimit="10000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|zip)$/"  />
+
+                          -->
+    		<p>
+	 			Please provide here the x-path where your records are located in your XML-structure.
+	 			<h:outputLabel>X-Path:</h:outputLabel><h:inputText value="#{dataQualityWebApp.xpathLoop}" style="width:100%"></h:inputText>
+	 			<br/>
+	 			<h:outputLabel>Name of the dataprovider:</h:outputLabel><h:inputText value="#{dataQualityWebApp.dataproviderName}" style="width:100%"></h:inputText>
+			</p> 			
+     		<p:commandButton value="analyse the data" ajax="false" actionListener="#{dataQualityWebApp.upload}"  />
      		
  			<h2>EEXCESS DataQuality report</h2>
      		<p>
-     		<a href=".\report\dataquality-report.html" target="_blank">DataQuality Report</a>
+	     		After analysing your data you can reach the report here: <a href=".\report\dataquality-report.html" target="_blank"> DataQuality Report</a>
      		</p> 
+ 			<h2>EEXCESS DataQuality Desktop Application</h2>
+     		If you want to process a larger dataset, we also provide a Desktop Application.
+     		
+     		
 		</ui:define>
 	</ui:composition>
 </body>

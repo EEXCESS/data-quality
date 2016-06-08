@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- 
-Copyright (C) 2015
+Copyright (C) 2016
 "JOANNEUM RESEARCH Forschungsgesellschaft mbH" 
  Graz, Austria, digital-iis@joanneum.at.
 
@@ -19,9 +19,4 @@ limitations under the License.
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
-    <managed-bean>
-        <managed-bean-name>richBean</managed-bean-name>
-        <managed-bean-class>eu.eexcess.partnerrecommender.RichBean</managed-bean-class>
-        <managed-bean-scope>view</managed-bean-scope>
-    </managed-bean>
 </faces-config>

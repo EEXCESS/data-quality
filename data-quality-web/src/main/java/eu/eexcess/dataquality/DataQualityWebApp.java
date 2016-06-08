@@ -21,13 +21,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 @ManagedBean
@@ -40,9 +39,34 @@ public class DataQualityWebApp
 	public static final String CMD_PARAM_XPATH_FIELDS_TO_RECORD_SEPERATOR = "--XpathsToFieldsFromRecordSeparator";
 	public static final String CMD_PARAM_DATAPROVIDER = "--dataprovider=";
 	 
+	public DataQualityWebApp(){
+		this.dataproviderName="The European Library";
+		this.xpathLoop="/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']";
+	}
+	
 	private UploadedFile file;
+	
+	protected String xpathLoop;
+	protected String dataproviderName;
+		
 	 
-    public UploadedFile getFile() {
+    public String getDataproviderName() {
+		return dataproviderName;
+	}
+
+	public void setDataproviderName(String dataproviderName) {
+		this.dataproviderName = dataproviderName;
+	}
+
+	public String getXpathLoop() {
+		return xpathLoop;
+	}
+
+	public void setXpathLoop(String xpathLoop) {
+		this.xpathLoop = xpathLoop;
+	}
+
+	public UploadedFile getFile() {
         return file;
     }
  
@@ -50,37 +74,39 @@ public class DataQualityWebApp
         this.file = file;
     }
     
+    public void uploadPhoto(FileUploadEvent e) throws IOException{
+    	file=e.getFile();
+    }
+    
     public void upload() {
         if(file != null) {
             FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
             FacesContext.getCurrentInstance().addMessage(null, message);
 
-            File tempFile = new File(file.getFileName());
-         // Do what you want with the file        
+//            File tempFile = new File(file.getFileName());
             try {
                 copyFile(file.getFileName(), file.getInputstream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             Qc_dataprovider provider = new Qc_dataprovider();
-        	String[] args = new String[]{ getRealPath()+"\\uploaded\\", "--outputDir="+getRealPath()+"\\report\\"};
-//
+        	String[] args = new String[]{ getRealPath()+"\\uploaded\\", "--outputDir="+getRealPath()+"\\report\\","--XpathRecordSeparator="+this.xpathLoop,"--dataprovider="+this.dataproviderName};
+        	/*
+        	--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
+        			"--dataprovider=The European Library
+        			*/
         	boolean errorFlag = false;
         	try {
-            provider.process(args);
-        	}
-        	catch (RuntimeException e) {
+        		provider.process(args);
+        	} catch (RuntimeException e) {
         		errorFlag = true;
                 FacesMessage errorMessage = new FacesMessage("Error", e.getMessage());
                 FacesContext.getCurrentInstance().addMessage(null, errorMessage);
-
         	}
         	if (!errorFlag){
                 FacesMessage successMessage = new FacesMessage("Succesful", "report is finished");
                 FacesContext.getCurrentInstance().addMessage(null, successMessage);
         	}
-//            String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
-//            System.out.println("real path:"+realPath);
         }
     }
     
@@ -109,7 +135,7 @@ public class DataQualityWebApp
              } catch (IOException e) {
              System.out.println(e.getMessage());
              }
- }
+    }
 
 	private String getRealPath() {
 		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
