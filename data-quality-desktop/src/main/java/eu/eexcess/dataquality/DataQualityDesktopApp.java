@@ -3,6 +3,7 @@ package eu.eexcess.dataquality;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +30,7 @@ import javax.swing.text.JTextComponent;
 public class DataQualityDesktopApp 
 {
 	
+	private static final Color BACKGROUND_COLOR = Color.LIGHT_GRAY;
 	protected String inputDataPath="";
 	protected String outputDataPath="";
 	protected JLabel inputDataLabel;
@@ -63,12 +65,27 @@ public class DataQualityDesktopApp
     	mainWindow.setVisible(true);
         
         JPanel mainframe=new JPanel();
-        mainframe.setBackground(Color.LIGHT_GRAY);
+        mainframe.setBackground(BACKGROUND_COLOR);
         //mainframe.setLayout(new FlowLayout());
         mainframe.setLayout(new BoxLayout(mainframe, BoxLayout.PAGE_AXIS));
         mainframe.setBorder(new EmptyBorder(10, 10, 10, 10));
         
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JLabel headerLabel = new JLabel();
+        headerLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        headerLabel.setForeground(eexcess);
+        headerLabel.setText("EEXCESS DataQuality");
+        headerLabel.setFont(headerLabel.getFont().deriveFont(Font.BOLD, 20f));
+        mainframe.add(headerLabel);
+        JTextArea descLabel = new JTextArea();
+        descLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        descLabel.setForeground(Color.BLACK);
+        descLabel.setEditable(false);
+        descLabel.setText("With this web-application you can analyse your data.\nFor more general information about the EEXCESS project please visit:\nhttp://eexcess.eu/ or \nhttps://github.com/EEXCESS.");
+        descLabel.setFont(descLabel.getFont().deriveFont(Font.PLAIN, 14f));
+        descLabel.setBackground(BACKGROUND_COLOR);
+        mainframe.add(descLabel);
+
         JButton buttonInputData=new JButton();
         buttonInputData.setText(" open data ");
         //buttonInputData.setBorder(new EmptyBorder(10, 10, 10, 10));
