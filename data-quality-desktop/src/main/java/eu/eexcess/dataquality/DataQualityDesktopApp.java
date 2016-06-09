@@ -39,6 +39,8 @@ public class DataQualityDesktopApp
 	protected MessageConsole messageConsole;
 	private JLabel outputDataReportLabel;
 	protected JFrame mainWindow;
+	private JTextField xpath;
+	private JTextField namedataprovider;
 	
     public static void main( String[] args )
     {
@@ -106,7 +108,7 @@ public class DataQualityDesktopApp
         namedataproviderLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         namedataproviderLabel.setText("name of the dataprovider");
         mainframe.add(namedataproviderLabel);
-        JTextField namedataprovider = new JTextField();
+        namedataprovider = new JTextField();
         namedataprovider.setToolTipText("name of the dataprovider");
         namedataprovider.setText("The European Library");
         mainframe.add(namedataprovider);
@@ -115,7 +117,7 @@ public class DataQualityDesktopApp
         xpathLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         xpathLabel.setText("xpath for the loop");
         mainframe.add(xpathLabel);
-        JTextField xpath = new JTextField();
+        xpath = new JTextField();
         xpath.setToolTipText("xpath for the loop");
         xpath.setText("/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']");
         mainframe.add(xpath);
@@ -196,7 +198,12 @@ public class DataQualityDesktopApp
 		File output = new File(getOutputDataPath());
 		output.delete();
         Qc_dataprovider provider = new Qc_dataprovider();
-    	String[] args = new String[]{ getInputDataPath(), "--outputDir="+getOutputDataPath()};
+    	String[] args = new String[]{ getInputDataPath(), 
+    			"--outputDir="+getOutputDataPath(),
+    			"--XpathRecordSeparator="+this.xpath.getText(),
+    			"--dataprovider="+this.namedataprovider.getText(),
+    			"--resourcesDir=.\\resources\\"
+    	};
     	try {
     		provider.process(args);
     	} catch (RuntimeException e) {
