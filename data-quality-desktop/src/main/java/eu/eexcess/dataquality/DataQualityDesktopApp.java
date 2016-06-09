@@ -42,7 +42,7 @@ public class DataQualityDesktopApp
 	
     public static void main( String[] args )
     {
-    	DataQualityDesktopApp app =  new DataQualityDesktopApp();
+    	new DataQualityDesktopApp();
     }
 
     public DataQualityDesktopApp()
@@ -172,7 +172,7 @@ public class DataQualityDesktopApp
             public void propertyChange(PropertyChangeEvent e) { 
                 if (e.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY) 
                         || e.getPropertyName().equals(JFileChooser.DIRECTORY_CHANGED_PROPERTY)) { 
-                    final File f = (File) e.getNewValue(); 
+                    //final File f = (File) e.getNewValue(); 
                 } 
             } 
         }); 
@@ -191,20 +191,17 @@ public class DataQualityDesktopApp
 
     
 	protected void analyseData() {
-        this.mainWindow.setCursor(Cursor.WAIT_CURSOR);
+        this.mainWindow.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 		File output = new File(getOutputDataPath());
 		output.delete();
         Qc_dataprovider provider = new Qc_dataprovider();
     	String[] args = new String[]{ getInputDataPath(), "--outputDir="+getOutputDataPath()};
-    	boolean errorFlag = false;
     	try {
     		provider.process(args);
     	} catch (RuntimeException e) {
-    		errorFlag = true;
     	}
     	this.mainWindow.setCursor(Cursor.getDefaultCursor());
-		
 	}
 
 
