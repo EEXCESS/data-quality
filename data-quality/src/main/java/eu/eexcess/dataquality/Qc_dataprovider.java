@@ -110,6 +110,8 @@ public class Qc_dataprovider {
 
 	public static String outputDir ="./output/";
 	
+	public static String resourcesDir ="./resources/";
+
 	private boolean copyInput = true;
 	
 	public static long countCheckedURLs = 0;
@@ -175,7 +177,12 @@ public class Qc_dataprovider {
 							{
 								this.outputDir = sParams[i].substring(DataQualityApp.CMD_PARAM_OUTPUTDIR.length());;
 							} else {
-								
+								if (sParams[i].toLowerCase().startsWith(DataQualityApp.CMD_PARAM_RESOURCESDIR.toLowerCase()))
+								{
+									this.resourcesDir = sParams[i].substring(DataQualityApp.CMD_PARAM_RESOURCESDIR.length());;
+								} else {
+
+								}	
 							}
 						}
 					}
@@ -1727,7 +1734,7 @@ public class Qc_dataprovider {
 	private void printRDFXMLVisWithJQPlot() {
         try {
         	TransformerFactory factory = TransformerFactory.newInstance();
-        	Templates template = factory.newTemplates(new StreamSource(new FileInputStream("./src/resources/dqv2html.xsl")));
+        	Templates template = factory.newTemplates(new StreamSource(new FileInputStream(this.resourcesDir+"xsl/dqv2html.xsl")));
         	Transformer xformer = template.newTransformer();
         	Source source = new StreamSource(new FileInputStream(Qc_dataprovider.outputDir + DataQualityVocabularyRDFWriter.STATISTICS_DATAPROVIDER_XML_FILENAME));
         	DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -1770,7 +1777,7 @@ public class Qc_dataprovider {
 		OutputStream outStream = null;
 	    try{
 	      try {
-	    	  File file = new File("./resources/" + sFile);
+	    	  File file = new File(this.resourcesDir + sFile);
 	    	  inStream = new FileInputStream(file); 
 	        byte[] bucket = new byte[32*1024];
 	        outStream = new BufferedOutputStream(new FileOutputStream(Qc_dataprovider.outputDir + sFile));
@@ -1800,7 +1807,7 @@ public class Qc_dataprovider {
 		OutputStream outStream = null;
 	    try{
 	      try {
-	    	  File file = new File("./resources/report.css");
+	    	  File file = new File(this.resourcesDir+"report.css");
 	    	  inStream = new FileInputStream(file); 
 	        byte[] bucket = new byte[32*1024];
 	        outStream = new BufferedOutputStream(new FileOutputStream(Qc_dataprovider.outputDir + "report.css"));
@@ -1828,10 +1835,10 @@ public class Qc_dataprovider {
 	private void copyResourcesHTML() {
 	    try{
 	    	File destDir = new File(Qc_dataprovider.outputDir + "jqplot/");
-            File srcDir = new File("./resources/jqplot");
+            File srcDir = new File(this.resourcesDir+"jqplot");
 	    	FileUtils.copyDirectory(srcDir, destDir);
 	    	destDir = new File(Qc_dataprovider.outputDir );
-            srcDir = new File("./resources/cssjs");
+            srcDir = new File(this.resourcesDir+"cssjs");
 	    	FileUtils.copyDirectory(srcDir, destDir);
 	    }
 	    catch (FileNotFoundException ex){

@@ -241,6 +241,16 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
 
+    public void testAppInputTheEuropeanLibraryDatasetTestCase3WithCopyData()
+    {
+    	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\theeuropeanlibrary-dataset\\testcase-3", 
+    			"--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
+    			"--dataprovider=The European Library"
+    			};
+		DataQualityApp.main(args );
+    	assertTrue( true );
+    }
+    
     public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};

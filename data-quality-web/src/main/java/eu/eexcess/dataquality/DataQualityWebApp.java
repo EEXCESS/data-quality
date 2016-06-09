@@ -118,7 +118,17 @@ public class DataQualityWebApp
                 e.printStackTrace();
             }
             Qc_dataprovider provider = new Qc_dataprovider();
-        	String[] args = new String[]{ getRealPath()+"\\uploaded\\", "--outputDir="+getRealPath()+"\\report\\","--XpathRecordSeparator="+this.xpathLoop,"--dataprovider="+this.dataproviderName};
+        	String[] args = new String[]{ getRealPathforSession()+"\\uploaded\\", 
+        			"--outputDir="+getRealPathforSession()+"\\report\\",
+        			"--XpathRecordSeparator="+this.xpathLoop,
+        			"--dataprovider="+this.dataproviderName,
+        			"--resourcesDir="+this.getRealPath()+"\\resources\\"
+        			};
+        	
+        	
+
+        			
+        			
         	/*
         	--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
         			"--dataprovider=The European Library
@@ -144,7 +154,7 @@ public class DataQualityWebApp
            
            
              // write the inputStream to a FileOutputStream
-        	File outFile = new File( getRealPath()+"\\uploaded\\" + fileName);
+        	File outFile = new File( getRealPathforSession()+"\\uploaded\\" + fileName);
         	FileOutputStream out = new FileOutputStream(outFile);
            
              int read = 0;
@@ -165,10 +175,14 @@ public class DataQualityWebApp
              }
     }
 
-	private String getRealPath() {
-//		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("") ;
-		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\";
+	private String getRealPathforSession() {
+		String realPath = getRealPath() +"\\"+this.sessionCode+"\\";
 		return realPath;
 	}
   
+	private String getRealPath() {
+		String realPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+		return realPath;
+	}
+
 }
