@@ -42,8 +42,8 @@ public class DataQualityWebApp
 	public static final String CMD_PARAM_DATAPROVIDER = "--dataprovider=";
 	 
 	public DataQualityWebApp(){
-		this.dataproviderName="The European Library";
-		this.xpathLoop="/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']";
+//		this.dataproviderName="The European Library";
+//		this.xpathLoop="/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']";
 		this.sessionCode = System.currentTimeMillis() + "";
 		{
 			File newSessionDir = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\");

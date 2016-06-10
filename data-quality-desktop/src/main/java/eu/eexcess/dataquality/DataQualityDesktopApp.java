@@ -110,7 +110,7 @@ public class DataQualityDesktopApp
         mainframe.add(namedataproviderLabel);
         namedataprovider = new JTextField();
         namedataprovider.setToolTipText("name of the dataprovider");
-        namedataprovider.setText("The European Library");
+//        namedataprovider.setText("The European Library");
         mainframe.add(namedataprovider);
 
         JLabel xpathLabel = new JLabel();
@@ -119,7 +119,7 @@ public class DataQualityDesktopApp
         mainframe.add(xpathLabel);
         xpath = new JTextField();
         xpath.setToolTipText("xpath for the loop");
-        xpath.setText("/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']");
+//        xpath.setText("/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']");
         mainframe.add(xpath);
 
         JButton buttonCalcReport=new JButton();
@@ -155,6 +155,7 @@ public class DataQualityDesktopApp
         mainWindow.pack();
         mainWindow.setVisible(true);
         mainWindow.setSize(800, 600);
+        
         
         this.setInputDataPath("");
 
