@@ -1686,12 +1686,12 @@ public class Qc_dataprovider {
 		htmlReport.append("</table>");
 		htmlReport.append("<p>");
 		htmlReport.append("The following chart shows the data from the table above.<br/>");
-		String filename = Qc_graphs.struturendnessDataproviderResultOverview(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider,structureResultType);
+		String filename = Qc_graphs.struturendnessDataproviderResultStructuredness(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider,structureResultType);
 		htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 
 		htmlReport.append("</p><p>");
 		htmlReport.append("The following chart shows the data from the table above.<br/>");
-		filename = Qc_graphs.struturendnessDataproviderResultOverview2(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider,structureResultType);
+		filename = Qc_graphs.struturendnessDataproviderResultOutliners(dataprovider, CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, resultsByDataprovider,structureResultType);
 		htmlReport.append("<img src=\""+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+filename+"\" style=\"width:1000px;\"/>");
 		
 		htmlReport.append("</p>");
