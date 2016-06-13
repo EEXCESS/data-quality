@@ -21,7 +21,7 @@ public class WordNetSimilarity {
 	private static ILexicalDatabase db = new NictWordNet();
 	private static NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
 	
-	private boolean traceOutput = true;
+	private boolean traceOutput = false;
 	
 	public double SIM_MAX = Double.MAX_VALUE;
 	public boolean isTraceOn() {
