@@ -1619,7 +1619,7 @@ public class Qc_dataprovider {
             SummaryStatistics statsScoreEnrichedProxy = new SummaryStatistics();
             SummaryStatistics statsScoreDistance = new SummaryStatistics();
 
-	        htmlReportGeneral += "<table><tr><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance</td><td>values original</td><td>values original and enriched</td><td>source</td></tr>";
+	        htmlReportGeneral += "<table><tr><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td><td>values original</td><td>values original and enriched</td><td>source</td></tr>";
 			Iterator<Entry<String, WordNetSimilarityResultObject>> resultsByDataproviderIterator = resultsByDataprovider.entrySet().iterator();
 			boolean hasElements =false;
 		    while (resultsByDataproviderIterator.hasNext()) {
@@ -1663,7 +1663,7 @@ public class Qc_dataprovider {
 	        htmlReportGeneral += "</table>";
 	        if (hasElements) {
 		        htmlReportGeneral += "<p>" +
-		        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance</td></tr>";
+		        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td></tr>";
 		        htmlReportGeneral += "<tr>";
 		        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(statsScoreProxy.getMean()) + "</td>";
 		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getMean()) + "</td>";

@@ -11,7 +11,7 @@ public class WordNetSimilarityResultObject {
 		this.valueProxy = myValueProxy;
 		this.valueEnrichedProxy = myValueEnrichedProxy;
 		this.filename = myFilename;
-		wuPalmerRelatednessOfWordsMedianDist =  Math.abs(valueEnrichedProxy.getWuPalmerRelatednessOfWordsMedian() - valueProxy.getWuPalmerRelatednessOfWordsMedian());
+		wuPalmerRelatednessOfWordsMedianDist =  valueProxy.getWuPalmerRelatednessOfWordsMedian() - valueEnrichedProxy.getWuPalmerRelatednessOfWordsMedian();
 	}
 
 	public WordNetSimilarityResultProxyObject getValueProxy() {
