@@ -83,7 +83,7 @@ public class DataQualityDesktopApp
         descLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         descLabel.setForeground(Color.BLACK);
         descLabel.setEditable(false);
-        descLabel.setText("With this web-application you can analyse your data.\nFor more general information about the EEXCESS project please visit:\nhttp://eexcess.eu/ or \nhttps://github.com/EEXCESS.");
+        descLabel.setText("With this application you can analyse your data.\nFor more general information about the EEXCESS project please visit:\nhttp://eexcess.eu/ or \nhttps://github.com/EEXCESS.");
         descLabel.setFont(descLabel.getFont().deriveFont(Font.PLAIN, 14f));
         descLabel.setBackground(BACKGROUND_COLOR);
         mainframe.add(descLabel);
