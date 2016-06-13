@@ -21,7 +21,7 @@ public class WordNetSimilarity {
 	private static ILexicalDatabase db = new NictWordNet();
 	private static NumberFormat numberFormater = NumberFormat.getNumberInstance( new Locale.Builder().setLanguage("en").setRegion("GB").build());
 	
-	private boolean traceOutput = false;
+	private boolean traceOutput = true;
 	
 	public double SIM_MAX = Double.MAX_VALUE;
 	public boolean isTraceOn() {
@@ -39,23 +39,23 @@ public class WordNetSimilarity {
 			new Resnik(db), new JiangConrath(db), new Lin(db), new Path(db) };
 	*/
 	public WordNetSimilarityResultTwoWords compute(String word1, String word2) {
+		WordNetSimilarityResultTwoWords result = new WordNetSimilarityResultTwoWords();
+		result.setWordOne(word1);
+		result.setWordTwo(word2);
 		if (word1.equalsIgnoreCase(word2) ) {
-			WordNetSimilarityResultTwoWords result = new WordNetSimilarityResultTwoWords();
 			result.setWuPalmerRelatednessOfWords( 0 );
 			return result;
 		}
 		if (word1 == null || word2 == null || word1.trim().isEmpty() || word2.trim().isEmpty()) {
-			WordNetSimilarityResultTwoWords result = new WordNetSimilarityResultTwoWords();
 			result.setWuPalmerRelatednessOfWords( SIM_MAX);
 			return result;
 		}
 		WS4JConfiguration.getInstance().setMFS(true);
-		WordNetSimilarityResultTwoWords result = new WordNetSimilarityResultTwoWords();
 		result.setWuPalmerRelatednessOfWords( new WuPalmer(db).calcRelatednessOfWords(word1, word2));
 		return result;
 	}
 	
-	public WordNetSimilarityResultProxyObject compute(ArrayList<String> wordList) {
+	protected WordNetSimilarityResultProxyObject compute(ArrayList<String> wordList) {
 		ArrayList<WordNetSimilarityResultTwoWords> myData = new ArrayList<WordNetSimilarityResultTwoWords>();
 		String SYSTEM_OUT_DELIMITER = ";";
 		if (this.isTraceOn()) {
@@ -90,6 +90,10 @@ public class WordNetSimilarity {
 	    double median = stats.getMean();
 	    double sigma = stats.getStandardDeviation();
 	    result.setWuPalmerRelatednessOfWordsMedian(median);
+	    result.setWordListUsed(wordList);
+		if (this.isTraceOn()){
+			System.out.print("used words:\n"+ wordList.toString());
+		}
 		return result;
 	}
 	
@@ -101,15 +105,25 @@ public class WordNetSimilarity {
 			if (tempWord.length() > 3) {
 				List<Synset> wordNetResult = WordNetUtil.wordToSynsets(tempWord, POS.n);
 				if (wordNetResult.size() > 0) {
-					if (this.isTraceOn()) System.out.println("wordNet -> add to List:" + tempWord);
-					myWordList.add(tempWord);
+					boolean found = false;
+					for (int i = 0; i < myWordList.size(); i++) {
+						if (myWordList.get(i).equalsIgnoreCase(tempWord))
+							found = true;
+					}
+					if (!found) {
+						myWordList.add(tempWord);
+						if (this.isTraceOn()) System.out.println("wordNet -> add to List:" + tempWord);
+					} else {
+						if (this.isTraceOn()) System.out.println("wordNet -> skip(already added):" + tempWord);
+					}
 				} else {
 					if (this.isTraceOn()) System.out.println("wordNet -> skip:" + tempWord);
 				}
+			} else {
+				if (this.isTraceOn()) System.out.println("wordNet -> skip:" + tempWord);
 			}
 		}
 		return this.compute(myWordList);
-		
 	}
 
 	protected static String formatNumber(double number) {

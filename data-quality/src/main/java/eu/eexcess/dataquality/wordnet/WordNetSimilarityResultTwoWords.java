@@ -2,6 +2,25 @@ package eu.eexcess.dataquality.wordnet;
 
 public class WordNetSimilarityResultTwoWords {
 
+	String wordOne;
+	public String getWordOne() {
+		return wordOne;
+	}
+
+	public void setWordOne(String wordOne) {
+		this.wordOne = wordOne;
+	}
+
+	public String getWordTwo() {
+		return wordTwo;
+	}
+
+	public void setWordTwo(String wordTwo) {
+		this.wordTwo = wordTwo;
+	}
+
+	String wordTwo;
+	
 	double wuPalmerRelatednessOfWords;
 
 	public double getWuPalmerRelatednessOfWords() {

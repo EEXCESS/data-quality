@@ -56,6 +56,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -795,7 +796,7 @@ public class Qc_dataprovider {
 			ArrayList<String> fieldXPathsProxy = new ArrayList<String>();
 			ArrayList<String> fieldXPathsEnrichedProxy = new ArrayList<String>();
 			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='title']");
-			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='description']");
+//			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='description']");
 			fieldXPathsProxy.add(		 "/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/proxy/')]/*[local-name()='creator']");
 			
 			fieldXPathsEnrichedProxy.add("/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/enrichedProxy/')]/*[local-name()='subject']/*/*[local-name()='label']");
@@ -855,8 +856,16 @@ public class Qc_dataprovider {
 						valuesEnrichedProxy.addAll(valuesProxy);
 						if (valuesProxy.size() > 0 ) {
 							WordNetSimilarity wordnetSimilarity = new WordNetSimilarity();
-							WordNetSimilarityResultProxyObject valueProxy = wordnetSimilarity.compute(valuesProxy);
-							WordNetSimilarityResultProxyObject valueEnrichedProxy = wordnetSimilarity.compute(valuesEnrichedProxy);
+							String valuesProxyString ="";
+							for (int i = 0; i < valuesProxy.size(); i++) {
+								valuesProxyString += valuesProxy.get(i)+" ";
+							}
+							WordNetSimilarityResultProxyObject valueProxy = wordnetSimilarity.compute(valuesProxyString);
+							String valuesEnrichedProxyString ="";
+							for (int i = 0; i < valuesEnrichedProxy.size(); i++) {
+								valuesEnrichedProxyString += valuesEnrichedProxy.get(i)+" ";
+							}
+							WordNetSimilarityResultProxyObject valueEnrichedProxy = wordnetSimilarity.compute(valuesEnrichedProxyString);
 							WordNetSimilarityResultObject mySimilarityResult = new WordNetSimilarityResultObject(valueProxy, valueEnrichedProxy,actFileName);
 							mySimilarityResultHashMap.put(actFileName, mySimilarityResult);
 						}
@@ -1591,6 +1600,9 @@ public class Qc_dataprovider {
 		String htmlReportJavascript = "<script>$(document).ready(function(){";
         htmlReportGeneral += "<h2>Enrichment Report</h2>";
 		Iterator<Entry<String, HashMap<String, WordNetSimilarityResultObject>>> similarityResultsIterator = this.similarityResults.entrySet().iterator();
+        SummaryStatistics statsScoreAllProxy = new SummaryStatistics();
+        SummaryStatistics statsScoreAllEnrichedProxy = new SummaryStatistics();
+        SummaryStatistics statsScoreAllDistance = new SummaryStatistics();
 	    while (similarityResultsIterator.hasNext()) {
 	        Entry<String, HashMap<String, WordNetSimilarityResultObject>> entry = similarityResultsIterator.next();
 	        String dataprovider = entry.getKey();
@@ -1603,8 +1615,13 @@ public class Qc_dataprovider {
             htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+"Panel\").slideToggle(\"slow\");";
             htmlReportJavascript +="});";
 
-	        htmlReportGeneral += "<table><tr><td></td><td>source</td></tr>";
+            SummaryStatistics statsScoreProxy = new SummaryStatistics();
+            SummaryStatistics statsScoreEnrichedProxy = new SummaryStatistics();
+            SummaryStatistics statsScoreDistance = new SummaryStatistics();
+
+	        htmlReportGeneral += "<table><tr><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance</td><td>values original</td><td>values original and enriched</td><td>source</td></tr>";
 			Iterator<Entry<String, WordNetSimilarityResultObject>> resultsByDataproviderIterator = resultsByDataprovider.entrySet().iterator();
+			boolean hasElements =false;
 		    while (resultsByDataproviderIterator.hasNext()) {
 		        Entry<String, WordNetSimilarityResultObject> entryObject = resultsByDataproviderIterator.next();
 		        String filename = entryObject.getKey();
@@ -1614,16 +1631,72 @@ public class Qc_dataprovider {
 		        	!Double.isNaN(resultsObject.getWuPalmerRelatednessOfWordsMedianDist())
 		        		)
 		        {
-			        htmlReportGeneral += "<tr><td>";
-		        	htmlReportGeneral += this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMedianDist()) ;
-		        	htmlReportGeneral += "</td><td> <a href=\".\\input\\"+filename.substring(filename.lastIndexOf("\\"))+"\" target=\"_blank\">" + filename.substring(filename.lastIndexOf("\\")+1) + " " + "</a>";
-
-		        	htmlReportGeneral += "</td></tr>";
+		        	hasElements = true;
+			        htmlReportGeneral += "<tr>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMedianDist()) +"</td>";
+		        	htmlReportGeneral += "<td><ul>";
+		        	for (int i = 0; i < resultsObject.getValueProxy().getWordListUsed().size(); i++) {
+		        		htmlReportGeneral += "<li>" + resultsObject.getValueProxy().getWordListUsed().get(i)+"</li>";	
+					}
+		        	htmlReportGeneral += "</ul></td>";
+//		        	htmlReportGeneral += "<td>" + resultsObject.getValueProxy().getWordListUsed().toString() +"</td>";
+//		        	htmlReportGeneral += "<td>" + resultsObject.getValueEnrichedProxy().getWordListUsed().toString() +"</td>";
+		        	htmlReportGeneral += "<td><ul>";
+		        	for (int i = 0; i < resultsObject.getValueEnrichedProxy().getWordListUsed().size(); i++) {
+		        		htmlReportGeneral += "<li>" + resultsObject.getValueEnrichedProxy().getWordListUsed().get(i)+"</li>";	
+					}
+		        	htmlReportGeneral += "</ul></td>";
+		        	htmlReportGeneral += "<td> <a href=\".\\input\\"+filename.substring(filename.lastIndexOf("\\"))+"\" target=\"_blank\">" + filename.substring(filename.lastIndexOf("\\")+1) + " " + "</a></td>";
+		        	htmlReportGeneral += "</tr>";
+		        	
+		        	statsScoreProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMedianDist());
+		        	
+		        	statsScoreAllProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreAllEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreAllDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMedianDist());
 		        }
 		    }
-	        htmlReportGeneral += "</table></div></div>";
+	        htmlReportGeneral += "</table>";
+	        if (hasElements) {
+		        htmlReportGeneral += "<p>" +
+		        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance</td></tr>";
+		        htmlReportGeneral += "<tr>";
+		        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(statsScoreProxy.getMean()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getMean()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistance.getMean()) + "</td>";
+		        htmlReportGeneral += "</tr>";
+		        
+		        htmlReportGeneral += "<tr>";
+		        htmlReportGeneral += "<td>StandardDeviation:</td><td>" + this.formatNumber(statsScoreProxy.getStandardDeviation()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getStandardDeviation()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistance.getStandardDeviation()) + "</td>";
+		        htmlReportGeneral += "</tr>";
+		        
+		        htmlReportGeneral += "</table></p>";
+	        }
+	        htmlReportGeneral += "</div></div>";
 	        htmlReportGeneral += "</p>";
 	    }        
+        htmlReportGeneral += "<h3>All dataprovider</h3>"; 
+        htmlReportGeneral += "<p>" +
+        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance</td></tr>";
+        htmlReportGeneral += "<tr>";
+        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(statsScoreAllProxy.getMean()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getMean()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistance.getMean()) + "</td>";
+        htmlReportGeneral += "</tr>";
+        
+        htmlReportGeneral += "<tr>";
+        htmlReportGeneral += "<td>StandardDeviation:</td><td>" + this.formatNumber(statsScoreAllProxy.getStandardDeviation()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getStandardDeviation()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistance.getStandardDeviation()) + "</td>";
+        htmlReportGeneral += "</tr>";
+        
+        htmlReportGeneral += "</table></p>";
         htmlReportGeneral += htmlReportJavascript + "});</script>";
         htmlReportGeneral += "</body></html>";
 		try {
