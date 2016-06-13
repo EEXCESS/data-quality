@@ -1683,7 +1683,7 @@ public class Qc_dataprovider {
 	    }        
         htmlReportGeneral += "<h3>All dataprovider</h3>"; 
         htmlReportGeneral += "<p>" +
-        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance</td></tr>";
+        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td></tr>";
         htmlReportGeneral += "<tr>";
         htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(statsScoreAllProxy.getMean()) + "</td>";
         htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getMean()) + "</td>";
