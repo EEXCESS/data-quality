@@ -808,10 +808,8 @@ public class Qc_dataprovider {
 				for (String actFileName : actProviderFileList) {
 //					System.out.println("//////////////////////////////////////////////////////\n"+actFileName);
 					qcBase.setXmlFileName(actFileName);
-
 					ArrayList<String> valuesProxy = new ArrayList<String>();
 					ArrayList<String> valuesEnrichedProxy = new ArrayList<String>();
-
 //					System.out.println("fieldXPathsProxy:");
 					for (int i = 0; i < fieldXPathsProxy.size(); i++) {
 						String xpath = 	fieldXPathsProxy.get(i);
@@ -825,18 +823,12 @@ public class Qc_dataprovider {
 							}
 						}
 //						System.out.println("-------------------------------------------------------");
-				
 					}
-					
-
 //					System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-					
 //					System.out.println("fieldXPathsEnrichedProxy:");
 					for (int i = 0; i < fieldXPathsEnrichedProxy.size(); i++) {
 						String xpath = 	fieldXPathsEnrichedProxy.get(i);
 //						System.out.println("xPath:"+xpath);
-
 						NodeList nodes = qcBase.getNodesListByXPath(xpath);
 						for (int count = 0; count < nodes.getLength(); count++) {
 							if (nodes.item(count).getNodeType() == Node.ELEMENT_NODE) {
@@ -846,9 +838,7 @@ public class Qc_dataprovider {
 							}
 						}
 //						System.out.println("-------------------------------------------------------");
-				
 					}
-					
 //					for (int i = 0; i < values.size(); i++) {
 //						System.out.println(values.get(i));
 //					}
@@ -874,10 +864,7 @@ public class Qc_dataprovider {
 				}
 			}
 			this.similarityResults.put(actDataprovider, mySimilarityResultHashMap);
-			//this.structurednessResults.put(actDataprovider, actProviderStructurednessResults);
-
 	    }
-
 	}
 	
 	public static String DATAPROVIDER_CULTUREWEB ="KIMCollect";
