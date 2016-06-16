@@ -127,15 +127,7 @@ public class DataQualityWebApp
         			"--dataprovider="+this.dataproviderName,
         			"--resourcesDir="+this.getRealPath()+"\\resources\\"
         			};
-        	
-        	
 
-        			
-        			
-        	/*
-        	--XpathRecordSeparator=/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']",
-        			"--dataprovider=The European Library
-        			*/
         	boolean errorFlag = false;
         	try {
         		provider.process(args);
@@ -163,7 +155,6 @@ public class DataQualityWebApp
 
 	public void copyFile(String fileName, InputStream in) {
         try {
-           
            
              // write the inputStream to a FileOutputStream
         	File outFile = new File( getRealPathforSession()+"\\uploaded\\" + fileName);
