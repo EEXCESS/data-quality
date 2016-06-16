@@ -64,11 +64,12 @@ limitations under the License.
 	 			<h:outputLabel>Name of the dataprovider:</h:outputLabel><h:inputText value="#{dataQualityWebApp.dataproviderName}" style="width:100%"></h:inputText>
 			</p> 			
      		<p:commandButton value="analyse the data" ajax="false" actionListener="#{dataQualityWebApp.upload}"  />
-     		
- 			<h2>EEXCESS DataQuality report</h2>
-     		<p>
-	     		After analysing your data you can reach the report here: <h:outputLink value="#{dataQualityWebApp.sessionCode}\report\dataquality-report.html" target="_blank"> DataQuality Report</h:outputLink>
-     		</p> 
+     		<f:subview id="reportViewId" rendered="#{dataQualityWebApp.reportGenerated}">
+	 			<h2>EEXCESS DataQuality report</h2>
+	     		<p>
+		     		After analysing your data you can reach the report here: <h:outputLink value="#{dataQualityWebApp.sessionCode}\report\dataquality-report.html" target="_blank"> DataQuality Report</h:outputLink>
+	     		</p> 
+     		</f:subview>
  			<h2>EEXCESS DataQuality Desktop Application</h2>
      		If you want to process a larger dataset, we also provide a Desktop Application. To use this Desktop Application please download <a href=".\eexcessDataQualityApp.zip">zip-archive</a> extract it and start the start.bat script.
      		

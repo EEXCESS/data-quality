@@ -44,6 +44,7 @@ public class DataQualityWebApp
 	public DataQualityWebApp(){
 //		this.dataproviderName="The European Library";
 //		this.xpathLoop="/*[local-name()='BibliographicResourceCollection']/*[local-name()='BibliographicResource']";
+		this.reportGenerated = false;
 		this.sessionCode = System.currentTimeMillis() + "";
 		{
 			File newSessionDir = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("") +"\\"+this.sessionCode+"\\");
@@ -65,6 +66,8 @@ public class DataQualityWebApp
 	protected String dataproviderName;
 		
 	protected String sessionCode;
+	
+	protected boolean reportGenerated;
 	 
     public String getDataproviderName() {
 		return dataproviderName;
@@ -144,12 +147,21 @@ public class DataQualityWebApp
         	if (!errorFlag){
                 FacesMessage successMessage = new FacesMessage("Succesful", "report is finished");
                 FacesContext.getCurrentInstance().addMessage(null, successMessage);
+                this.reportGenerated = true;
         	}
         }
     }
     
     
-    public void copyFile(String fileName, InputStream in) {
+    public boolean isReportGenerated() {
+		return reportGenerated;
+	}
+
+	public void setReportGenerated(boolean reportGenerated) {
+		this.reportGenerated = reportGenerated;
+	}
+
+	public void copyFile(String fileName, InputStream in) {
         try {
            
            
