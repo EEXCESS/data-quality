@@ -87,9 +87,9 @@ public class WordNetSimilarity {
             stats.addValue(myData.get(j).getWuPalmerRelatednessOfWords());
         }
         WordNetSimilarityResultProxyObject result = new WordNetSimilarityResultProxyObject();
-	    double median = stats.getMean();
+	    double mean = stats.getMean();
 	    double sigma = stats.getStandardDeviation();
-	    result.setWuPalmerRelatednessOfWordsMedian(median);
+	    result.setWuPalmerRelatednessOfWordsMean(mean);
 	    result.setWordListUsed(wordList);
 		if (this.isTraceOn()){
 			System.out.print("used words:\n"+ wordList.toString());

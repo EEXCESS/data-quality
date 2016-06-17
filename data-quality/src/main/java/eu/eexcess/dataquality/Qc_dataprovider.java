@@ -1614,15 +1614,15 @@ public class Qc_dataprovider {
 		        String filename = entryObject.getKey();
 		        WordNetSimilarityResultObject resultsObject = entryObject.getValue();
 	        
-		        if (resultsObject.getWuPalmerRelatednessOfWordsMedianDist() != Double.MAX_VALUE &&
-		        	!Double.isNaN(resultsObject.getWuPalmerRelatednessOfWordsMedianDist())
+		        if (resultsObject.getWuPalmerRelatednessOfWordsMeanDist() != Double.MAX_VALUE &&
+		        	!Double.isNaN(resultsObject.getWuPalmerRelatednessOfWordsMeanDist())
 		        		)
 		        {
 		        	hasElements = true;
 			        htmlReportGeneral += "<tr>";
-		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian()) +"</td>";
-		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian()) +"</td>";
-		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMedianDist()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMeanDist()) +"</td>";
 		        	htmlReportGeneral += "<td><ul>";
 		        	for (int i = 0; i < resultsObject.getValueProxy().getWordListUsed().size(); i++) {
 		        		htmlReportGeneral += "<li>" + resultsObject.getValueProxy().getWordListUsed().get(i)+"</li>";	
@@ -1638,13 +1638,13 @@ public class Qc_dataprovider {
 		        	htmlReportGeneral += "<td> <a href=\".\\input\\"+filename.substring(filename.lastIndexOf("\\"))+"\" target=\"_blank\">" + filename.substring(filename.lastIndexOf("\\")+1) + " " + "</a></td>";
 		        	htmlReportGeneral += "</tr>";
 		        	
-		        	statsScoreProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian());
-		        	statsScoreEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian());
-		        	statsScoreDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMedianDist());
+		        	statsScoreProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
 		        	
-		        	statsScoreAllProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian());
-		        	statsScoreAllEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian());
-		        	statsScoreAllDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMedianDist());
+		        	statsScoreAllProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreAllEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreAllDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
 		        }
 		    }
 	        htmlReportGeneral += "</table>";
@@ -1652,7 +1652,7 @@ public class Qc_dataprovider {
 		        htmlReportGeneral += "<p>" +
 		        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td></tr>";
 		        htmlReportGeneral += "<tr>";
-		        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(statsScoreProxy.getMean()) + "</td>";
+		        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreProxy.getMean()) + "</td>";
 		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getMean()) + "</td>";
 		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistance.getMean()) + "</td>";
 		        htmlReportGeneral += "</tr>";
@@ -1672,7 +1672,7 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>" +
         		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td></tr>";
         htmlReportGeneral += "<tr>";
-        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(statsScoreAllProxy.getMean()) + "</td>";
+        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreAllProxy.getMean()) + "</td>";
         htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getMean()) + "</td>";
         htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistance.getMean()) + "</td>";
         htmlReportGeneral += "</tr>";
