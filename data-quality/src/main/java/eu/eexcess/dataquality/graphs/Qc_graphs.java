@@ -598,7 +598,7 @@ public final class Qc_graphs {
            	dataset.addValue(resultData.getResultFracOutWeighted(), "weighted frac",fieldResult.getKey());
         }
 		
-		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" outliners", "fields", "score", dataset);
+		JFreeChart chart = ChartFactory.createBarChart(dataprovider +" outliers", "fields", "score", dataset);
         
 		chart.setAntiAlias(true);
 		chart.setBackgroundPaint(Color.white);
@@ -620,7 +620,7 @@ public final class Qc_graphs {
 //	    	domainAxis.setVisible(false);
         BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
-		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-outliners-"+resultType+"-"+nWidth+"x"+nHeight+".png");
+		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_STRUCT_IMG_DIR+ dataprovider +"-outliers-"+resultType+"-"+nWidth+"x"+nHeight+".png");
 		try {
 			ImageIO.write(img_graph, "png", outputfile);
 		} catch (Exception e) {
