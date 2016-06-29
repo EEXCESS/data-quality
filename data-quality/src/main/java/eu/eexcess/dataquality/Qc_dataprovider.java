@@ -1555,7 +1555,7 @@ public class Qc_dataprovider {
         htmlReportGeneral += htmlReportGeneralDataproviders;
         
         htmlReportGeneral += "<h3>Report for enrichments</h3>";
-        htmlReportGeneral +="<a target=\"_blank\" href=\""+DATAQUALITY_REPORT_ENRICHMENT_HTML_FILENAME+"\">Report about enrichment </a>";        
+        htmlReportGeneral +="<a target=\"_blank\" href=\""+DATAQUALITY_REPORT_ENRICHMENT_HTML_FILENAME+"\">Annotation Consistency </a>";        
         
         htmlReportGeneral += "<h3>Stats of the report generation</h3>";
 		long timestampEnd = System.currentTimeMillis();
@@ -1585,7 +1585,7 @@ public class Qc_dataprovider {
 	private void printEnrichmentsReport(String htmlReportGeneral)
 	{
 		String htmlReportJavascript = "<script>$(document).ready(function(){";
-        htmlReportGeneral += "<h2>Enrichment Report</h2>";
+        htmlReportGeneral += "<h2>Annotation Consistency</h2>";
 		Iterator<Entry<String, HashMap<String, WordNetSimilarityResultObject>>> similarityResultsIterator = this.similarityResults.entrySet().iterator();
         SummaryStatistics statsScoreAllProxy = new SummaryStatistics();
         SummaryStatistics statsScoreAllEnrichedProxy = new SummaryStatistics();
