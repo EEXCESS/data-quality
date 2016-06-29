@@ -124,6 +124,7 @@ public class Qc_dataprovider {
 	
 	HashMap<String,HashMap<String, StructureRecResult>> structurednessResults = new HashMap<String, HashMap<String, StructureRecResult>>();
 	HashMap<String,HashMap<String,WordNetSimilarityResultObject>> similarityResults = new HashMap<String,HashMap<String, WordNetSimilarityResultObject>>();
+	HashMap<String,EnrichmentResultDataprovider> enrichmenResults= new HashMap<String,EnrichmentResultDataprovider>();
 
 	NumberFormat numberFormater = null;
 	NumberFormat numberFormaterXML = null;
@@ -784,6 +785,7 @@ public class Qc_dataprovider {
 		// process Enriched 
 		//
 		///////////////////////////////
+	    
 		Iterator<Entry<String, ArrayList<String>>> filesNameByDataproviderEnrichedHashMapIterator = filesNameByDataproviderEnrichedHashMap.entrySet().iterator();
 	    while (filesNameByDataproviderEnrichedHashMapIterator.hasNext()) {
 	        Entry<String, ArrayList<String>> entry = filesNameByDataproviderEnrichedHashMapIterator.next();
@@ -802,10 +804,12 @@ public class Qc_dataprovider {
 			fieldXPathsEnrichedProxy.add("/*[local-name()='RDF']/*[local-name()='Proxy'][contains(@about,'/enrichedProxy/')]/*[local-name()='subject']/*/*[local-name()='label']");
 
 			HashMap<String, WordNetSimilarityResultObject> mySimilarityResultHashMap = new HashMap<String, WordNetSimilarityResultObject>();
-			
+		    EnrichmentResultDataprovider enrichmentResultDataprovider = new EnrichmentResultDataprovider();
+
 			if (qcBase != null)
 			{
 				for (String actFileName : actProviderFileList) {
+			    	enrichmentResultDataprovider.increaseRecordsEnriched();
 //					System.out.println("//////////////////////////////////////////////////////\n"+actFileName);
 					qcBase.setXmlFileName(actFileName);
 					ArrayList<String> valuesProxy = new ArrayList<String>();
@@ -843,6 +847,7 @@ public class Qc_dataprovider {
 //						System.out.println(values.get(i));
 //					}
 					if (valuesEnrichedProxy.size() > 0 ) {
+						enrichmentResultDataprovider.increaseRecordsEnrichedWithEnrichedMetadata();
 						valuesEnrichedProxy.addAll(valuesProxy);
 						if (valuesProxy.size() > 0 ) {
 							WordNetSimilarity wordnetSimilarity = new WordNetSimilarity();
@@ -864,6 +869,7 @@ public class Qc_dataprovider {
 				}
 			}
 			this.similarityResults.put(actDataprovider, mySimilarityResultHashMap);
+			this.enrichmenResults.put(actDataprovider, enrichmentResultDataprovider);
 	    }
 	}
 	
@@ -1586,6 +1592,21 @@ public class Qc_dataprovider {
 	{
 		String htmlReportJavascript = "<script>$(document).ready(function(){";
         htmlReportGeneral += "<h2>Annotation Consistency</h2>";
+        Iterator<Entry<String, EnrichmentResultDataprovider>> enrichmenResultsIterator = this.enrichmenResults.entrySet().iterator();
+        htmlReportGeneral += "<h3>Enrichment Overview</h3>";
+        htmlReportGeneral +="<p><table>";
+        htmlReportGeneral +="<tr><td><b>dataprovider</b></td><td><b>records</b></td><td><b>records with enriched metadata</b></td></tr>";
+	    while (enrichmenResultsIterator.hasNext()) {
+	        Entry<String, EnrichmentResultDataprovider> entry = enrichmenResultsIterator.next();
+	        htmlReportGeneral += "<tr><td>"+entry.getKey()+"</td><td>";
+	        htmlReportGeneral += entry.getValue().getCountRecordsEnriched();
+	        htmlReportGeneral += "</td><td>";
+	        htmlReportGeneral += entry.getValue().getCountRecordsEnrichedWithEnrichedMetadata();
+	        htmlReportGeneral += "</td></tr>";
+	    	
+	    }
+        htmlReportGeneral +="</table></p>";
+	    
 		Iterator<Entry<String, HashMap<String, WordNetSimilarityResultObject>>> similarityResultsIterator = this.similarityResults.entrySet().iterator();
         SummaryStatistics statsScoreAllProxy = new SummaryStatistics();
         SummaryStatistics statsScoreAllEnrichedProxy = new SummaryStatistics();
