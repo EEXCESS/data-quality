@@ -89,11 +89,11 @@ public class Qc_trustedLinks {
 		
 		if (bLinkKnown == false)
 		{
-			CountUnknownLinks(sLink);
+			countUnknownLinks(sLink);
 		}
 	}
 	
-	void CountUnknownLinks(String sLink)
+	void countUnknownLinks(String sLink)
 	{
 		if (sLink.contains("://"))
 		{

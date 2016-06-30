@@ -1542,7 +1542,7 @@ public class Qc_dataprovider {
 			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
 			String tempReportFile = htmlReportGeneralHeader;
 			tempReportFile += "<h3>known vocabulary links detailed data</h3>";
-			tempReportFile +=enrichment.CalcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
+			tempReportFile +=enrichment.calcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
 			tempReportFile +="</body></html>";
 			writerStatisticRecords.write(tempReportFile);
 			writerStatisticRecords.close();

@@ -258,7 +258,7 @@ public class CheckEnrichment {
 			System.out.println(e.getMessage());
 		}
 		
-		CalcTrustedLinks(paramDataList,nWidth,nHeight,providerSelected);
+		calcTrustedLinks(paramDataList,nWidth,nHeight,providerSelected);
 	}
 	
 	private static void setupFonts(JFreeChart chart, final CategoryPlot plot) {
@@ -303,7 +303,7 @@ public class CheckEnrichment {
 	/*
 	 * Show chart for trusted links
 	 */
-	void CalcTrustedLinks(Qc_paramDataList paramDataList, int nWidth, int nHeight, DataProvider providerSelected)
+	void calcTrustedLinks(Qc_paramDataList paramDataList, int nWidth, int nHeight, DataProvider providerSelected)
 	{
 		int nRecords = 0;
 		
@@ -401,7 +401,7 @@ public class CheckEnrichment {
 	/*
 	 * Show all Links per provider
 	 */
-	public String CalcLinkTable(Qc_paramDataList paramDataList, String sFieldSeperator)
+	public String calcLinkTable(Qc_paramDataList paramDataList, String sFieldSeperator)
 	{
 		try
 		{
