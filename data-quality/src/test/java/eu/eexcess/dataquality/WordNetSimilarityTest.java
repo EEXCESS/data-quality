@@ -121,6 +121,22 @@ public class WordNetSimilarityTest extends TestCase {
 //		assertEquals(18, result.getRecords());
     }
     
+    public void testExampleFromReport()
+    {
+		WordNetSimilarity sim = new WordNetSimilarity();
+		sim.setTraceOn();
+		String words = "Culture Make Slant";
+		WordNetSimilarityResultProxyObject result = sim.compute(words);
+		System.out.println("Results:\n"+result+"\n" + result.toString());
+//		assertEquals(18, result.getRecords());
+		System.out.println("\n\n");
+		words = "Bacteria Culture Make Slant";
+		result = sim.compute(words);
+		System.out.println("Results:\n"+result+"\n" + result.toString());
+    }
+    
+
+    
     public void testSentencesProxyEnrichedProxy()
     {
 		WordNetSimilarity sim = new WordNetSimilarity();
