@@ -405,49 +405,13 @@ public class CheckEnrichment {
 	{
 		try
 		{
-		File fileStatisticRecords = new File(Qc_dataprovider.outputDir + "statistics-links-dataprovider.csv");
-		BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
-		
-		StringBuilder sContent = new StringBuilder();
-		StringBuilder sCSVcontent = new StringBuilder();
-		sCSVcontent.append(sFieldSeperator);
-		sContent.append("<table><tr><td>&nbsp;</td>");
-		for (DataProvider provider : DataProvider.values())
-		{
-			switch (provider)
-			{
-				case cultureWeb:
-				case cultureWeb_EEXCESS:
-				case cultureWeb_enriched:
-				case unknown:
-					// Do nothing
-					break;
-					
-					default:
-						sContent.append("<td><b>");
-						String tempDataprovider = provider.name();
-						if (tempDataprovider.equalsIgnoreCase(DataProvider.unknown.toString()) && 
-							!Qc_dataprovider.cmdParameterDataprovider.isEmpty())
-							tempDataprovider  = Qc_dataprovider.cmdParameterDataprovider;
-						sContent.append(tempDataprovider.replace("_", " "));
-						sContent.append("</b></td>");
-						sCSVcontent.append(tempDataprovider.replace("_", " "));
-						sCSVcontent.append(sFieldSeperator);
-						break;
-			}
-		}
-		writerStatisticRecords.write(sCSVcontent.toString());
-		writerStatisticRecords.newLine();
-		
-		sContent.append("</tr>");
-		for (String sLink : paramDataList.getAllTrustedLinks())
-		{
-			sCSVcontent.setLength(0);
-			sContent.append("<tr><td>");
-			sContent.append(sLink);
-			sCSVcontent.append(sLink);
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir + "statistics-links-dataprovider.csv");
+			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+			
+			StringBuilder sContent = new StringBuilder();
+			StringBuilder sCSVcontent = new StringBuilder();
 			sCSVcontent.append(sFieldSeperator);
-			sContent.append("</td>");
+			sContent.append("<table><tr><td>&nbsp;</td>");
 			for (DataProvider provider : DataProvider.values())
 			{
 				switch (provider)
@@ -459,31 +423,117 @@ public class CheckEnrichment {
 						// Do nothing
 						break;
 						
-					default:
-						sContent.append("<td>");
-						sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2));
-						sContent.append("</td>");
-						
-						sCSVcontent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,4));
-						sCSVcontent.append(sFieldSeperator);
-						break;
+						default:
+							sContent.append("<td><b>");
+							String tempDataprovider = provider.name();
+							if (tempDataprovider.equalsIgnoreCase(DataProvider.unknown.toString()) && 
+								!Qc_dataprovider.cmdParameterDataprovider.isEmpty())
+								tempDataprovider  = Qc_dataprovider.cmdParameterDataprovider;
+							sContent.append(tempDataprovider.replace("_", " "));
+							sContent.append("</b></td>");
+							sCSVcontent.append(tempDataprovider.replace("_", " "));
+							sCSVcontent.append(sFieldSeperator);
+							break;
 				}
 			}
 			writerStatisticRecords.write(sCSVcontent.toString());
 			writerStatisticRecords.newLine();
+			
 			sContent.append("</tr>");
-		}
-		
-		for (String sLink : paramDataList.getAllUnknownLinks())
-		{
-			sCSVcontent.setLength(0);
-			sContent.append("<tr><td>");
-			sContent.append(sLink);
-			sCSVcontent.append(sLink);
-			sCSVcontent.append(sFieldSeperator);
-			sContent.append("</td>");
-			for (DataProvider provider : DataProvider.values())
+			for (String sLink : paramDataList.getAllTrustedLinks())
 			{
+				sCSVcontent.setLength(0);
+				sContent.append("<tr><td><b>");
+				sContent.append(sLink);
+				sCSVcontent.append(sLink);
+				sCSVcontent.append(sFieldSeperator);
+				sContent.append("</b></td>");
+				for (DataProvider provider : DataProvider.values())
+				{
+					switch (provider)
+					{
+						case cultureWeb:
+						case cultureWeb_EEXCESS:
+						case cultureWeb_enriched:
+						case unknown:
+							// Do nothing
+							break;
+							
+						default:
+							sContent.append("<td><b>");
+							sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2));
+							sContent.append("</td></b>");
+							
+							sCSVcontent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,4));
+							sCSVcontent.append(sFieldSeperator);
+							break;
+					}
+				}
+				writerStatisticRecords.write(sCSVcontent.toString());
+				writerStatisticRecords.newLine();
+				sContent.append("</tr>");
+			}
+			
+			for (String sLink : paramDataList.getAllUnknownLinks())
+			{
+				sCSVcontent.setLength(0);
+				sContent.append("<tr><td>");
+				sContent.append(sLink);
+				sCSVcontent.append(sLink);
+				sCSVcontent.append(sFieldSeperator);
+				sContent.append("</td>");
+				for (DataProvider provider : DataProvider.values())
+				{
+					switch (provider)
+					{
+						case cultureWeb:
+						case cultureWeb_EEXCESS:
+						case cultureWeb_enriched:
+						case unknown:
+							// Do nothing
+							break;
+							
+						default:
+							sContent.append("<td>");
+							sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2));
+							sContent.append("</td>");
+							
+							sCSVcontent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,4));
+							sCSVcontent.append(sFieldSeperator);
+							break;
+					}
+				}
+				writerStatisticRecords.write(sCSVcontent.toString());
+				writerStatisticRecords.newLine();
+				sContent.append("</tr>");
+			}
+			
+			sContent.append("</table>");
+			sContent.append("<p><a href=\".\\statistics-links-dataprovider.csv\">data as CSV</a></p>");
+			writerStatisticRecords.close();
+			return sContent.toString();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+		return "";
+	}
+	
+	public String calcLinkTablePerDataprovider(Qc_paramDataList paramDataList, String sFieldSeperator, DataProvider provider)
+	{
+		try
+		{
+			File fileStatisticRecords = new File(Qc_dataprovider.outputDir + "statistics-links-dataprovider"+provider.toString()+".csv");
+			BufferedWriter writerStatisticRecords = new BufferedWriter(new FileWriter(fileStatisticRecords));
+			
+			StringBuilder sContent = new StringBuilder();
+			sContent.append("<h2>"+provider.toString().replace("_", " ")+"</h2>");
+			StringBuilder sCSVcontent = new StringBuilder();
+			sCSVcontent.append(sFieldSeperator);
+			sContent.append("<table><tr><td>&nbsp;</td>");
+//			for (DataProvider provider : DataProvider.values())
+//			{
 				switch (provider)
 				{
 					case cultureWeb:
@@ -493,25 +543,101 @@ public class CheckEnrichment {
 						// Do nothing
 						break;
 						
-					default:
-						sContent.append("<td>");
-						sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2));
-						sContent.append("</td>");
-						
-						sCSVcontent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,4));
-						sCSVcontent.append(sFieldSeperator);
-						break;
+						default:
+							sContent.append("<td><b>");
+							String tempDataprovider = provider.name();
+							if (tempDataprovider.equalsIgnoreCase(DataProvider.unknown.toString()) && 
+								!Qc_dataprovider.cmdParameterDataprovider.isEmpty())
+								tempDataprovider  = Qc_dataprovider.cmdParameterDataprovider;
+							sContent.append(tempDataprovider.replace("_", " "));
+							sContent.append("</b></td>");
+							sCSVcontent.append(tempDataprovider.replace("_", " "));
+							sCSVcontent.append(sFieldSeperator);
+							break;
 				}
-			}
+//			}
 			writerStatisticRecords.write(sCSVcontent.toString());
 			writerStatisticRecords.newLine();
+			
 			sContent.append("</tr>");
-		}
-		
-		sContent.append("</table>");
-		sContent.append("<p><a href=\".\\statistics-links-dataprovider.csv\">data as CSV</a></p>");
-		writerStatisticRecords.close();
-		return sContent.toString();
+			for (String sLink : paramDataList.getAllTrustedLinks())
+			{
+				sCSVcontent.setLength(0);
+				String temp = paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2);
+				if (temp.isEmpty())
+					continue;
+				sContent.append("<tr><td><b>");
+				sContent.append(sLink);
+				sCSVcontent.append(sLink);
+				sCSVcontent.append(sFieldSeperator);
+				sContent.append("</b></td>");
+//				for (DataProvider provider : DataProvider.values())
+//				{
+					switch (provider)
+					{
+						case cultureWeb:
+						case cultureWeb_EEXCESS:
+						case cultureWeb_enriched:
+						case unknown:
+							// Do nothing
+							break;
+							
+						default:
+							sContent.append("<td><b>");
+							sContent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2));
+							sContent.append("</td></b>");
+							
+							sCSVcontent.append(paramDataList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,4));
+							sCSVcontent.append(sFieldSeperator);
+							break;
+					}
+//				}
+				writerStatisticRecords.write(sCSVcontent.toString());
+				writerStatisticRecords.newLine();
+				sContent.append("</tr>");
+			}
+			
+			for (String sLink : paramDataList.getAllUnknownLinks())
+			{
+				sCSVcontent.setLength(0);
+				String temp = paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2);
+				if (temp.isEmpty())
+					continue;
+				sContent.append("<tr><td>");
+				sContent.append(sLink);
+				sCSVcontent.append(sLink);
+				sCSVcontent.append(sFieldSeperator);
+				sContent.append("</td>");
+//				for (DataProvider provider : DataProvider.values())
+//				{
+					switch (provider)
+					{
+						case cultureWeb:
+						case cultureWeb_EEXCESS:
+						case cultureWeb_enriched:
+						case unknown:
+							// Do nothing
+							break;
+							
+						default:
+							sContent.append("<td>");
+							sContent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2));
+							sContent.append("</td>");
+							
+							sCSVcontent.append(paramDataList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,4));
+							sCSVcontent.append(sFieldSeperator);
+							break;
+					}
+//				}
+				writerStatisticRecords.write(sCSVcontent.toString());
+				writerStatisticRecords.newLine();
+				sContent.append("</tr>");
+			}
+			
+			sContent.append("</table>");
+			sContent.append("<p><a href=\".\\statistics-links-dataprovider"+provider.toString()+".csv\">data as CSV</a></p>");
+			writerStatisticRecords.close();
+			return sContent.toString();
 		}
 		catch (Exception e)
 		{

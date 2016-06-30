@@ -89,6 +89,8 @@ public class Qc_dataprovider {
 	public static final String OUTPUT_STRUCT = "struct";
 	public static final String OUTPUT_STRUCT_IMG = "img";
 	public static final String OUTPUT_STRUCT_IMG_DIR = OUTPUT_STRUCT + "/" + OUTPUT_STRUCT_IMG + "/";
+	public static final String OUTPUT_IMG = "img";
+	public static final String OUTPUT_IMG_DIR = OUTPUT_IMG + "/";
 	public static final String OUTPUT_STRUCT_CSV = "csv";
 	public static final String OUTPUT_STRUCT_CSV_DIR = OUTPUT_STRUCT + "/" + OUTPUT_STRUCT_CSV + "/";
 	
@@ -919,6 +921,7 @@ public class Qc_dataprovider {
 	private void printReports() {
 		new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_IMG_DIR).mkdirs();
 		new File(Qc_dataprovider.outputDir+OUTPUT_STRUCT_CSV_DIR).mkdirs();
+		new File(Qc_dataprovider.outputDir+OUTPUT_IMG_DIR).mkdirs();
 		
 		String htmlReportJavascriptGeneral = new String();
 		htmlReportJavascriptGeneral += "<script>$(document).ready(function(){";
@@ -1543,6 +1546,16 @@ public class Qc_dataprovider {
 			String tempReportFile = htmlReportGeneralHeader;
 			tempReportFile += "<h3>known vocabulary links detailed data</h3>";
 			tempReportFile +=enrichment.calcLinkTable(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR);
+			
+			for (DataProvider provider : DataProvider.values())
+			{
+				tempReportFile +=enrichment.calcLinkTablePerDataprovider(paramDataList,STATISTIC_FILE_FIELD_SEPERATOR,provider);
+				Qc_graphs.linkTablePerDataproviderPie(CHART_WIDTH_HIGH, CHART_HEIGHT_HIGH, paramDataList,provider);
+				tempReportFile += "<img src=\""+Qc_dataprovider.OUTPUT_IMG_DIR+"statistics-links-dataprovider"+provider.toString()+".png\" style=\"width:1000px;\"/>";
+
+			}
+			
+			
 			tempReportFile +="</body></html>";
 			writerStatisticRecords.write(tempReportFile);
 			writerStatisticRecords.close();

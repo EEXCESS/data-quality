@@ -21,6 +21,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -627,6 +629,84 @@ public final class Qc_graphs {
 			System.out.println(e.getMessage());
 		}
 		return outputfile.getName();
+	}
+
+	public static void linkTablePerDataproviderPie (int nWidth, int nHeight, Qc_paramDataList paramList, DataProvider provider) {
+
+		DefaultPieDataset piechart = new DefaultPieDataset();
+		
+		for (String sLink : paramList.getAllTrustedLinks())
+		{
+			String temp = paramList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2);
+			if (temp.isEmpty())
+				continue;
+				switch (provider)
+				{
+					case cultureWeb:
+					case cultureWeb_EEXCESS:
+					case cultureWeb_enriched:
+					case unknown:
+						// Do nothing
+						break;
+						
+					default:
+						NumberFormat nf = NumberFormat.getInstance();
+						try {
+							piechart.setValue(sLink ,  nf.parse(paramList.getTrustedLinkCountPerLinkAndProvider(provider, sLink,2)));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+				}
+		}
+		
+		for (String sLink : paramList.getAllUnknownLinks())
+		{
+			String temp = paramList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2);
+			if (temp.isEmpty())
+				continue;
+				switch (provider)
+				{
+					case cultureWeb:
+					case cultureWeb_EEXCESS:
+					case cultureWeb_enriched:
+					case unknown:
+						// Do nothing
+						break;
+						
+					default:
+						NumberFormat nf = NumberFormat.getInstance();
+						try {
+							piechart.setValue(sLink ,  nf.parse(paramList.getAllUnknownLinkCountPerLinkAndProvider(provider, sLink,2)));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+				}
+		}
+		
+		
+		
+		JFreeChart chart = ChartFactory.createPieChart3D("links / provider", piechart);
+		
+		chart.setAntiAlias(true);
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+        plot.setNoDataMessage("No data available");
+        plot.setIgnoreZeroValues(true);
+        plot.setCircular(false);
+        plot.setLabelGap(0.02);
+		
+		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
+		
+		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_IMG_DIR+"statistics-links-dataprovider"+provider.toString()+".png");
+		try {
+			ImageIO.write(img_graph, "png", outputfile);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }
