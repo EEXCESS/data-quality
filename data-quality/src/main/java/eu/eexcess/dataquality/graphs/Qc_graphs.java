@@ -77,6 +77,26 @@ public final class Qc_graphs {
         plot.getDomainAxis().setTickLabelFont(fontDomainAxis);
 	}
 
+	private static void setupFonts(JFreeChart chart, final PiePlot plot) {
+		Font fontTitle = new Font("Tahoma", Font.BOLD, 32); 
+        chart.getTitle().setFont(fontTitle);
+		Font fontLabel = new Font("Tahoma", Font.PLAIN, 29);// 29 or 34
+        plot.setLabelFont(fontLabel);
+//        legend.setPosition(RectangleEdge.BOTTOM); 
+//        legend.setItemLabelPadding(new RectangleInsets(2, 2, 2, 50));
+////        legend.setLegendItemGraphicPadding(new RectangleInsets(10, 1, 1, 10));
+//        legend.setLegendItemGraphicLocation(RectangleAnchor.CENTER);
+//        legend.setLegendItemGraphicAnchor(RectangleAnchor.CENTER);
+//        legend.setLegendItemGraphicEdge(RectangleEdge.LEFT);
+//        legend.setMargin(0, 10, 0, 20);
+//        chart.addLegend(legend);
+//		Font fontRangeAxis = new Font("Tahoma", Font.PLAIN, 29); 
+//        plot.getRangeAxis().setTickLabelFont(fontRangeAxis);
+//        plot.getRangeAxis().setLabelFont(fontRangeAxis);
+//		Font fontDomainAxis = new Font("Tahoma", Font.PLAIN, 29); 
+//        plot.getDomainAxis().setLabelFont(fontDomainAxis);
+//        plot.getDomainAxis().setTickLabelFont(fontDomainAxis);
+	}
 
 /*
 	public static void allProviderRecordsPie (int nWidth, int nHeight, Qc_paramDataList paramList) {
@@ -689,7 +709,7 @@ public final class Qc_graphs {
 		
 		
 		
-		JFreeChart chart = ChartFactory.createPieChart3D("links / provider", piechart);
+		JFreeChart chart = ChartFactory.createPieChart3D(provider.toString().replace("_", " ") +   " vocabulary links / record", piechart);
 		
 		chart.setAntiAlias(true);
         PiePlot plot = (PiePlot) chart.getPlot();
@@ -698,7 +718,7 @@ public final class Qc_graphs {
         plot.setIgnoreZeroValues(true);
         plot.setCircular(false);
         plot.setLabelGap(0.02);
-		
+		setupFonts(chart, plot);
 		BufferedImage img_graph = chart.createBufferedImage(nWidth, nHeight);
 		
 		File outputfile = new File(Qc_dataprovider.outputDir+Qc_dataprovider.OUTPUT_IMG_DIR+"statistics-links-dataprovider"+provider.toString()+".png");
