@@ -28,7 +28,7 @@ public class WordNetSimilarityResultProxyObject {
 	
 	public String toString(){
 		String ret ="";
-		ret += "wuPalmerRelatednessOfWordsMedian:" + WordNetSimilarity.formatNumber(wuPalmerRelatednessOfWordsMean);
+		ret += "wuPalmerRelatednessOfWordsMean:" + WordNetSimilarity.formatNumber(wuPalmerRelatednessOfWordsMean);
 		return ret;
 	}
 

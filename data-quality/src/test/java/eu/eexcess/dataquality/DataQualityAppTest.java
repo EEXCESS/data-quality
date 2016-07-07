@@ -165,14 +165,14 @@ public class DataQualityAppTest
     }
     
     
-    public void testAppInputStructurednessTestbedSomeDataprovidersSmall()
+    public void testAppInputTestbedSomeDataprovidersSmall()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
     
-    public void testAppInputStructurednessTestbedLinksNotReachable()
+    public void testAppInputTestbedLinksNotReachable()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-links-not-reachable"};
 		DataQualityApp.main(args );
@@ -180,28 +180,28 @@ public class DataQualityAppTest
     }
     
     
-    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2()
+    public void testAppInputTestbedSomeDataprovidersSmallV2()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
-    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV2WithoutInputdataCopy()
+    public void testAppInputTestbedSomeDataprovidersSmallV2WithoutInputdataCopy()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v2", "--dontCopyInput"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
-    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV3WithoutInputdataCopy()
+    public void testAppInputTestbedSomeDataprovidersSmallV3WithoutInputdataCopy()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v3", "--dontCopyInput"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
-    public void testAppInputStructurednessTestbedSomeDataprovidersSmallV3WithoutInputdataCopyOutput()
+    public void testAppInputTestbedSomeDataprovidersSmallV3WithoutInputdataCopyOutput()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-small-v3", "--dontCopyInput", "--outputDir=d:\\test\\"};
 		DataQualityApp.main(args );
@@ -251,14 +251,14 @@ public class DataQualityAppTest
     	assertTrue( true );
     }
     
-    public void testAppInputStructurednessTestbedSomeDataprovidersBigD44()
+    public void testAppInputTestbedSomeDataprovidersBigD44()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44"};
 		DataQualityApp.main(args );
     	assertTrue( true );
     }
 
-    public void testAppInputStructurednessTestbedSomeDataprovidersBigD44V2()
+    public void testAppInputTestbedSomeDataprovidersBigD44V2()
     {
     	String[] args = new String[]{ ".\\..\\..\\..\\eexcess\\trunk\\src\\wp4\\dataquality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-v2"};
 		DataQualityApp.main(args );
@@ -266,7 +266,7 @@ public class DataQualityAppTest
     }
 
     
-    public void testAppInputStructurednessTestbedSomeDataprovidersBigD44Keywords2000()
+    public void testAppInputTestbedSomeDataprovidersBigD44Keywords2000()
     {
     	String[] args = new String[]{ "\\\\dig-file\\DIG_IIS\\project\\EEXCESS\\data-quality\\resources\\input-transformed-enriched-some-dataproviders-big-d44-2000-keywords"};
 		DataQualityApp.main(args );

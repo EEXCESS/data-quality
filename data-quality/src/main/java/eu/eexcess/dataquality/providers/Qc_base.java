@@ -67,6 +67,8 @@ public class Qc_base implements Qc_interface {
 		, uriDataFields
 	}
 
+	boolean useAttributesInXPath = false; 
+	
 	String xmlFileName = "";
 	DataProvider dataProvider = DataProvider.unknown;
 	Qc_params param = null;
@@ -578,6 +580,14 @@ public class Qc_base implements Qc_interface {
 	    String elementName = "";
 	    if (node instanceof Element) {
 	        elementName = ((Element) node).getNodeName();
+	        if (this.useAttributesInXPath && xpath.isEmpty()){
+	        	NamedNodeMap attributes = node.getAttributes();
+	 			for (int i=0; i<attributes.getLength();i++)
+				{
+	 				Node temp = attributes.item(i);
+					elementName += "[@"+attributes.item(i).getNodeName()+"='"+attributes.item(i).getNodeValue()+"']";
+				}
+	        }
 	    }
 	    Node parent = node.getParentNode();
 	    if (parent == null) {

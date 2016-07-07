@@ -86,6 +86,10 @@ import eu.eexcess.dataquality.wordnet.WordNetSimilarityResultProxyObject;
 // Check for data provider
 public class Qc_dataprovider {
 
+	private static final String SIMILARTY_DISTANCE_REPORT_LABEL = "distance(enriched - original)[+ means increased similarty/- decreased similarty]";
+	private static final String SIMILARTY_ORGINAL_REPORT_LABEL = "similarity score of original meta data[0(different)..1(the same)]";
+	private static final String SIMILARTY_ENRICHED_REPORT_LABEL = "similarity score of original and enriched meta data[0(different)..1(the same)]";
+	
 	public static final String OUTPUT_STRUCT = "struct";
 	public static final String OUTPUT_STRUCT_IMG = "img";
 	public static final String OUTPUT_STRUCT_IMG_DIR = OUTPUT_STRUCT + "/" + OUTPUT_STRUCT_IMG + "/";
@@ -703,6 +707,8 @@ public class Qc_dataprovider {
 	        String actDataprovider = entry.getKey();
 	        ArrayList<String> actProviderFileList = entry.getValue();
 			Qc_base qcBase = createProviderQC(actDataprovider);
+			if (actDataprovider.equalsIgnoreCase(DATAPROVIDER_KIMPORTAL))
+				System.out.println("dataprovider:"+actDataprovider+" "+qcBase.getRecordSeparator());
 //			System.out.println("dataprovider:"+actDataprovider+" "+qcBase.getRecordSeparator());
 			
 			// calc all XPaths for all fields in all file from a data provider
@@ -775,6 +781,7 @@ public class Qc_dataprovider {
 					}
 				}
 				StructureRecognizer recognizer = new StructureRecognizer();
+				//System.out.println(actDataprovider + ": structure - analyse field:" + actFieldName + " \nwith XPATH:" +tempXPath);
 				actProviderStructurednessResults.put(actFieldName, recognizer.analyse(values ));
 			}
 
@@ -1640,7 +1647,8 @@ public class Qc_dataprovider {
             SummaryStatistics statsScoreEnrichedProxy = new SummaryStatistics();
             SummaryStatistics statsScoreDistance = new SummaryStatistics();
 
-	        htmlReportGeneral += "<table><tr><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td><td>values original</td><td>values original and enriched</td><td>source</td></tr>";
+	        htmlReportGeneral += "<table><tr><td>"+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>"+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>"+SIMILARTY_DISTANCE_REPORT_LABEL+"</td><td>values original</td><td>values original and enriched</td><td>source</td></tr>";
+
 			Iterator<Entry<String, WordNetSimilarityResultObject>> resultsByDataproviderIterator = resultsByDataprovider.entrySet().iterator();
 			boolean hasElements =false;
 		    while (resultsByDataproviderIterator.hasNext()) {
@@ -1681,10 +1689,11 @@ public class Qc_dataprovider {
 		        	statsScoreAllDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
 		        }
 		    }
+		    
 	        htmlReportGeneral += "</table>";
 	        if (hasElements) {
 		        htmlReportGeneral += "<p>" +
-		        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td></tr>";
+		        		"<table><tr><td></td><td>"+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>"+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>"+SIMILARTY_DISTANCE_REPORT_LABEL+"</td></tr>";
 		        htmlReportGeneral += "<tr>";
 		        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreProxy.getMean()) + "</td>";
 		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getMean()) + "</td>";
@@ -1704,7 +1713,7 @@ public class Qc_dataprovider {
 	    }        
         htmlReportGeneral += "<h3>All dataprovider</h3>"; 
         htmlReportGeneral += "<p>" +
-        		"<table><tr><td></td><td>score of original meta data</td><td>score of original and enriched meta data </td><td>distance(original-enriched)</td></tr>";
+        		"<table><tr><td></td><td>"+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>"+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>"+SIMILARTY_DISTANCE_REPORT_LABEL+"</td></tr>";
         htmlReportGeneral += "<tr>";
         htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreAllProxy.getMean()) + "</td>";
         htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getMean()) + "</td>";

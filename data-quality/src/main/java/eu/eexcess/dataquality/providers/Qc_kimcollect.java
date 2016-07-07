@@ -29,6 +29,7 @@ public class Qc_kimcollect extends Qc_base {
 	public Qc_kimcollect() {
 		recordSeparator = "/response/result/doc";
 		dataProvider = DataProvider.KIMCollect;
+		this.useAttributesInXPath = true;
 	}
 
 	// Counts dataFields
