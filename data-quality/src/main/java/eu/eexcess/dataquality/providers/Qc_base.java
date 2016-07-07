@@ -584,7 +584,6 @@ public class Qc_base implements Qc_interface {
 	        	NamedNodeMap attributes = node.getAttributes();
 	 			for (int i=0; i<attributes.getLength();i++)
 				{
-	 				Node temp = attributes.item(i);
 					elementName += "[@"+attributes.item(i).getNodeName()+"='"+attributes.item(i).getNodeValue()+"']";
 				}
 	        }
