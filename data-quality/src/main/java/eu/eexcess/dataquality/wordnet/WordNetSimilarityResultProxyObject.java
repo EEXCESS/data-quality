@@ -7,6 +7,7 @@ public class WordNetSimilarityResultProxyObject {
 	protected ArrayList<String> wordListUsed;
 	
 	double wuPalmerRelatednessOfWordsMean;
+	double wuPalmerRelatednessOfWordsMedian;
 
 	public ArrayList<String> getWordListUsed() {
 		return wordListUsed;
@@ -26,9 +27,19 @@ public class WordNetSimilarityResultProxyObject {
 	}
 	
 	
+	public double getWuPalmerRelatednessOfWordsMedian() {
+		return wuPalmerRelatednessOfWordsMedian;
+	}
+
+	public void setWuPalmerRelatednessOfWordsMedian(
+			double wuPalmerRelatednessOfWordsMedian) {
+		this.wuPalmerRelatednessOfWordsMedian = wuPalmerRelatednessOfWordsMedian;
+	}
+
 	public String toString(){
 		String ret ="";
 		ret += "wuPalmerRelatednessOfWordsMean:" + WordNetSimilarity.formatNumber(wuPalmerRelatednessOfWordsMean);
+		ret += "wuPalmerRelatednessOfWordsMedian:" + WordNetSimilarity.formatNumber(wuPalmerRelatednessOfWordsMedian);
 		return ret;
 	}
 

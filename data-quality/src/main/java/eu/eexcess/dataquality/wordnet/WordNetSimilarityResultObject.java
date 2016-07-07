@@ -6,12 +6,14 @@ public class WordNetSimilarityResultObject {
 	String filename;
 	
 	double wuPalmerRelatednessOfWordsMeanDist;
+	double wuPalmerRelatednessOfWordsMedianDist;
 
 	public WordNetSimilarityResultObject(WordNetSimilarityResultProxyObject myValueProxy, WordNetSimilarityResultProxyObject myValueEnrichedProxy, String myFilename) {
 		this.valueProxy = myValueProxy;
 		this.valueEnrichedProxy = myValueEnrichedProxy;
 		this.filename = myFilename;
 		wuPalmerRelatednessOfWordsMeanDist =  valueEnrichedProxy.getWuPalmerRelatednessOfWordsMean() - valueProxy.getWuPalmerRelatednessOfWordsMean();
+		wuPalmerRelatednessOfWordsMedianDist =  valueEnrichedProxy.getWuPalmerRelatednessOfWordsMedian() - valueProxy.getWuPalmerRelatednessOfWordsMedian();
 	}
 
 	public WordNetSimilarityResultProxyObject getValueProxy() {
@@ -41,6 +43,15 @@ public class WordNetSimilarityResultObject {
 
 	public double getWuPalmerRelatednessOfWordsMeanDist() {
 		return wuPalmerRelatednessOfWordsMeanDist;
+	}
+
+	public double getWuPalmerRelatednessOfWordsMedianDist() {
+		return wuPalmerRelatednessOfWordsMedianDist;
+	}
+
+	public void setWuPalmerRelatednessOfWordsMedianDist(
+			double wuPalmerRelatednessOfWordsMedianDist) {
+		this.wuPalmerRelatednessOfWordsMedianDist = wuPalmerRelatednessOfWordsMedianDist;
 	}
 
 	public void setWuPalmerRelatednessOfWordsMeanDist(

@@ -24,8 +24,16 @@ public class EnrichmentResultDataprovider {
 	}
 	protected long countRecordsEnriched =0;
     protected long countRecordsEnrichedWithEnrichedMetadata =0;
+    protected long countRecordsEnrichedWithEnrichedMetadataSimilarityChecked =0;
 
-    public void increaseRecordsEnriched() {
+    public long getCountRecordsEnrichedWithEnrichedMetadataSimilarityChecked() {
+		return countRecordsEnrichedWithEnrichedMetadataSimilarityChecked;
+	}
+	public void setCountRecordsEnrichedWithEnrichedMetadataSimilarityChecked(
+			long countRecordsEnrichedWithEnrichedMetadataSimilarityChecked) {
+		this.countRecordsEnrichedWithEnrichedMetadataSimilarityChecked = countRecordsEnrichedWithEnrichedMetadataSimilarityChecked;
+	}
+	public void increaseRecordsEnriched() {
     	this.countRecordsEnriched++;
     }
     public void increaseRecordsEnrichedWithEnrichedMetadata() {

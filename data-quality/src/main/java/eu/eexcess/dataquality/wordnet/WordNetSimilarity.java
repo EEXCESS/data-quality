@@ -7,6 +7,9 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math3.stat.descriptive.UnivariateStatistic;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 import edu.cmu.lti.jawjaw.pobj.POS;
 import edu.cmu.lti.jawjaw.pobj.Synset;
@@ -82,14 +85,18 @@ public class WordNetSimilarity {
 		if (this.isTraceOn()) System.out.print("\n");
 		
         SummaryStatistics stats = new SummaryStatistics();
-
+        double[] values = new double[myData.size()]; 
         for (int j = 0; j < myData.size(); j++) {
             stats.addValue(myData.get(j).getWuPalmerRelatednessOfWords());
+            values[j] = myData.get(j).getWuPalmerRelatednessOfWords();
         }
         WordNetSimilarityResultProxyObject result = new WordNetSimilarityResultProxyObject();
 	    double mean = stats.getMean();
+	    UnivariateStatistic stat = new Median();
+	    double median = stat.evaluate(values);
 	    double sigma = stats.getStandardDeviation();
 	    result.setWuPalmerRelatednessOfWordsMean(mean);
+	    result.setWuPalmerRelatednessOfWordsMedian(median);
 	    result.setWordListUsed(wordList);
 		if (this.isTraceOn()){
 			System.out.print("used words:\n"+ wordList.toString());

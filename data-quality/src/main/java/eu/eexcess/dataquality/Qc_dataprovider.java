@@ -57,6 +57,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math3.stat.descriptive.UnivariateStatistic;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -1613,24 +1615,27 @@ public class Qc_dataprovider {
 		String htmlReportJavascript = "<script>$(document).ready(function(){";
         htmlReportGeneral += "<h2>Annotation Consistency</h2>";
         Iterator<Entry<String, EnrichmentResultDataprovider>> enrichmenResultsIterator = this.enrichmenResults.entrySet().iterator();
-        htmlReportGeneral += "<h3>Enrichment Overview</h3>";
-        htmlReportGeneral +="<p><table>";
-        htmlReportGeneral +="<tr><td><b>dataprovider</b></td><td><b>records</b></td><td><b>records with enriched metadata</b></td></tr>";
-	    while (enrichmenResultsIterator.hasNext()) {
-	        Entry<String, EnrichmentResultDataprovider> entry = enrichmenResultsIterator.next();
-	        htmlReportGeneral += "<tr><td>"+entry.getKey()+"</td><td>";
-	        htmlReportGeneral += entry.getValue().getCountRecordsEnriched();
-	        htmlReportGeneral += "</td><td>";
-	        htmlReportGeneral += entry.getValue().getCountRecordsEnrichedWithEnrichedMetadata();
-	        htmlReportGeneral += "</td></tr>";
-	    	
-	    }
-        htmlReportGeneral +="</table></p>";
+//        htmlReportGeneral += "<h3>Enrichment Overview</h3>";
+//        htmlReportGeneral +="<p><table>";
+//        htmlReportGeneral +="<tr><td><b>dataprovider</b></td><td><b>records</b></td><td><b>records with enriched metadata</b></td></tr>";
+//	    while (enrichmenResultsIterator.hasNext()) {
+//	        Entry<String, EnrichmentResultDataprovider> entry = enrichmenResultsIterator.next();
+//	        htmlReportGeneral += "<tr><td>"+entry.getKey()+"</td><td>";
+//	        htmlReportGeneral += entry.getValue().getCountRecordsEnriched();
+//	        htmlReportGeneral += "</td><td>";
+//	        htmlReportGeneral += entry.getValue().getCountRecordsEnrichedWithEnrichedMetadata();
+//	        htmlReportGeneral += "</td></tr>";
+//	    	
+//	    }
+//        htmlReportGeneral +="</table></p>";
 	    
 		Iterator<Entry<String, HashMap<String, WordNetSimilarityResultObject>>> similarityResultsIterator = this.similarityResults.entrySet().iterator();
-        SummaryStatistics statsScoreAllProxy = new SummaryStatistics();
-        SummaryStatistics statsScoreAllEnrichedProxy = new SummaryStatistics();
-        SummaryStatistics statsScoreAllDistance = new SummaryStatistics();
+        SummaryStatistics statsScoreAllProxyMean = new SummaryStatistics();
+        SummaryStatistics statsScoreAllEnrichedProxyMean = new SummaryStatistics();
+        SummaryStatistics statsScoreAllDistanceMean = new SummaryStatistics();
+        ArrayList<Double> statsScoreAllProxyMedian = new ArrayList<Double>();
+        ArrayList<Double> statsScoreAllEnrichedProxyMedian = new ArrayList<Double>();
+        ArrayList<Double> statsScoreAllDistanceMedian = new ArrayList<Double>();
 	    while (similarityResultsIterator.hasNext()) {
 	        Entry<String, HashMap<String, WordNetSimilarityResultObject>> entry = similarityResultsIterator.next();
 	        String dataprovider = entry.getKey();
@@ -1643,14 +1648,27 @@ public class Qc_dataprovider {
             htmlReportJavascript += "    $(\"#"+dataprovider.replace(" ", "")+"Panel\").slideToggle(\"slow\");";
             htmlReportJavascript +="});";
 
-            SummaryStatistics statsScoreProxy = new SummaryStatistics();
-            SummaryStatistics statsScoreEnrichedProxy = new SummaryStatistics();
-            SummaryStatistics statsScoreDistance = new SummaryStatistics();
+            SummaryStatistics statsScoreProxyMean = new SummaryStatistics();
+            SummaryStatistics statsScoreEnrichedProxyMean = new SummaryStatistics();
+            SummaryStatistics statsScoreDistanceMean = new SummaryStatistics();
+            ArrayList<Double> statsScoreProxyMedian = new ArrayList<Double>();
+            ArrayList<Double> statsScoreEnrichedProxyMedian = new ArrayList<Double>();
+            ArrayList<Double> statsScoreDistanceMedian = new ArrayList<Double>();
 
-	        htmlReportGeneral += "<table><tr><td>"+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>"+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>"+SIMILARTY_DISTANCE_REPORT_LABEL+"</td><td>values original</td><td>values original and enriched</td><td>source</td></tr>";
+	        htmlReportGeneral += "<table><tr>"+
+	        		"<td> mean "+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>mean "+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>mean "+SIMILARTY_DISTANCE_REPORT_LABEL+"</td>"+
+	        		"<td> median "+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>median "+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>median "+SIMILARTY_DISTANCE_REPORT_LABEL+"</td>"+
+	        		"<td>values original</td><td>values original and enriched</td><td>source</td></tr>";
 
 			Iterator<Entry<String, WordNetSimilarityResultObject>> resultsByDataproviderIterator = resultsByDataprovider.entrySet().iterator();
-			boolean hasElements =false;
+			boolean hasElements =false;	    
+			EnrichmentResultDataprovider actEnrichmentResult=null;
+	        enrichmenResultsIterator = this.enrichmenResults.entrySet().iterator();
+			while (enrichmenResultsIterator.hasNext()) {
+		        Entry<String, EnrichmentResultDataprovider> entryEnrichmentResultDataprovider = enrichmenResultsIterator.next();
+		        if (entryEnrichmentResultDataprovider.getKey().equalsIgnoreCase(dataprovider))
+		        	actEnrichmentResult = entryEnrichmentResultDataprovider.getValue();
+			}
 		    while (resultsByDataproviderIterator.hasNext()) {
 		        Entry<String, WordNetSimilarityResultObject> entryObject = resultsByDataproviderIterator.next();
 		        String filename = entryObject.getKey();
@@ -1660,11 +1678,16 @@ public class Qc_dataprovider {
 		        	!Double.isNaN(resultsObject.getWuPalmerRelatednessOfWordsMeanDist())
 		        		)
 		        {
+					actEnrichmentResult.countRecordsEnrichedWithEnrichedMetadataSimilarityChecked++;
 		        	hasElements = true;
 			        htmlReportGeneral += "<tr>";
 		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean()) +"</td>";
 		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean()) +"</td>";
 		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMeanDist()) +"</td>";
+
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian()) +"</td>";
+		        	htmlReportGeneral += "<td>" + this.formatNumber(resultsObject.getWuPalmerRelatednessOfWordsMedianDist()) +"</td>";
 		        	htmlReportGeneral += "<td><ul>";
 		        	for (int i = 0; i < resultsObject.getValueProxy().getWordListUsed().size(); i++) {
 		        		htmlReportGeneral += "<li>" + resultsObject.getValueProxy().getWordListUsed().get(i)+"</li>";	
@@ -1680,30 +1703,45 @@ public class Qc_dataprovider {
 		        	htmlReportGeneral += "<td> <a href=\".\\input\\"+filename.substring(filename.lastIndexOf("\\"))+"\" target=\"_blank\">" + filename.substring(filename.lastIndexOf("\\")+1) + " " + "</a></td>";
 		        	htmlReportGeneral += "</tr>";
 		        	
-		        	statsScoreProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean());
-		        	statsScoreEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean());
-		        	statsScoreDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
+		        	statsScoreProxyMean.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreEnrichedProxyMean.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreDistanceMean.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
 		        	
-		        	statsScoreAllProxy.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean());
-		        	statsScoreAllEnrichedProxy.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean());
-		        	statsScoreAllDistance.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
+		        	statsScoreProxyMedian.add(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreEnrichedProxyMedian.add(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreDistanceMedian.add(resultsObject.getWuPalmerRelatednessOfWordsMedianDist());
+
+		        	statsScoreAllProxyMean.addValue(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreAllEnrichedProxyMean.addValue(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMean());
+		        	statsScoreAllDistanceMean.addValue(resultsObject.getWuPalmerRelatednessOfWordsMeanDist());
+
+		        	statsScoreAllProxyMedian.add(resultsObject.getValueProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreAllEnrichedProxyMedian.add(resultsObject.getValueEnrichedProxy().getWuPalmerRelatednessOfWordsMedian());
+		        	statsScoreAllDistanceMedian.add(resultsObject.getWuPalmerRelatednessOfWordsMedianDist());
 		        }
 		    }
+		    this.enrichmenResults.put(dataprovider, actEnrichmentResult);
 		    
 	        htmlReportGeneral += "</table>";
 	        if (hasElements) {
 		        htmlReportGeneral += "<p>" +
 		        		"<table><tr><td></td><td>"+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>"+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>"+SIMILARTY_DISTANCE_REPORT_LABEL+"</td></tr>";
 		        htmlReportGeneral += "<tr>";
-		        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreProxy.getMean()) + "</td>";
-		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getMean()) + "</td>";
-		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistance.getMean()) + "</td>";
+		        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreProxyMean.getMean()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxyMean.getMean()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistanceMean.getMean()) + "</td>";
 		        htmlReportGeneral += "</tr>";
 		        
 		        htmlReportGeneral += "<tr>";
-		        htmlReportGeneral += "<td>StandardDeviation:</td><td>" + this.formatNumber(statsScoreProxy.getStandardDeviation()) + "</td>";
-		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxy.getStandardDeviation()) + "</td>";
-		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistance.getStandardDeviation()) + "</td>";
+		        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(getMedian(statsScoreProxyMedian)) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(getMedian(statsScoreEnrichedProxyMedian)) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(getMedian(statsScoreDistanceMedian)) + "</td>";
+		        htmlReportGeneral += "</tr>";
+
+		        htmlReportGeneral += "<tr>";
+		        htmlReportGeneral += "<td>StandardDeviation:</td><td>" + this.formatNumber(statsScoreProxyMean.getStandardDeviation()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreEnrichedProxyMean.getStandardDeviation()) + "</td>";
+		        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreDistanceMean.getStandardDeviation()) + "</td>";
 		        htmlReportGeneral += "</tr>";
 		        
 		        htmlReportGeneral += "</table></p>";
@@ -1715,18 +1753,40 @@ public class Qc_dataprovider {
         htmlReportGeneral += "<p>" +
         		"<table><tr><td></td><td>"+SIMILARTY_ORGINAL_REPORT_LABEL+"</td><td>"+SIMILARTY_ENRICHED_REPORT_LABEL+"</td><td>"+SIMILARTY_DISTANCE_REPORT_LABEL+"</td></tr>";
         htmlReportGeneral += "<tr>";
-        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreAllProxy.getMean()) + "</td>";
-        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getMean()) + "</td>";
-        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistance.getMean()) + "</td>";
+        htmlReportGeneral += "<td>mean:</td><td>" + this.formatNumber(statsScoreAllProxyMean.getMean()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxyMean.getMean()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistanceMean.getMean()) + "</td>";
         htmlReportGeneral += "</tr>";
         
         htmlReportGeneral += "<tr>";
-        htmlReportGeneral += "<td>StandardDeviation:</td><td>" + this.formatNumber(statsScoreAllProxy.getStandardDeviation()) + "</td>";
-        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxy.getStandardDeviation()) + "</td>";
-        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistance.getStandardDeviation()) + "</td>";
+        htmlReportGeneral += "<td>median:</td><td>" + this.formatNumber(getMedian(statsScoreAllProxyMedian)) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(getMedian(statsScoreAllEnrichedProxyMedian)) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(getMedian(statsScoreAllDistanceMedian)) + "</td>";
+        htmlReportGeneral += "</tr>";
+
+        htmlReportGeneral += "<tr>";
+        htmlReportGeneral += "<td>StandardDeviation:</td><td>" + this.formatNumber(statsScoreAllProxyMean.getStandardDeviation()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllEnrichedProxyMean.getStandardDeviation()) + "</td>";
+        htmlReportGeneral += "<td>" + this.formatNumber(statsScoreAllDistanceMean.getStandardDeviation()) + "</td>";
         htmlReportGeneral += "</tr>";
         
         htmlReportGeneral += "</table></p>";
+        htmlReportGeneral += "<h3>Enrichment Overview</h3>";
+        htmlReportGeneral +="<p><table>";
+        htmlReportGeneral +="<tr><td><b>dataprovider</b></td><td><b>records</b></td><td><b>records with enriched metadata</b></td><td><b>records with enriched metadata and similarity results</b></td></tr>";
+        enrichmenResultsIterator = this.enrichmenResults.entrySet().iterator();
+	    while (enrichmenResultsIterator.hasNext()) {
+	        Entry<String, EnrichmentResultDataprovider> entry = enrichmenResultsIterator.next();
+	        htmlReportGeneral += "<tr><td>"+entry.getKey()+"</td><td>";
+	        htmlReportGeneral += entry.getValue().getCountRecordsEnriched();
+	        htmlReportGeneral += "</td><td>";
+	        htmlReportGeneral += entry.getValue().getCountRecordsEnrichedWithEnrichedMetadata();
+	        htmlReportGeneral += "</td><td>";
+	        htmlReportGeneral += entry.getValue().getCountRecordsEnrichedWithEnrichedMetadataSimilarityChecked();
+	        htmlReportGeneral += "</td></tr>";
+	    	
+	    }
+        htmlReportGeneral +="</table></p>";
         htmlReportGeneral += htmlReportJavascript + "});</script>";
         htmlReportGeneral += "</body></html>";
 		try {
@@ -1739,6 +1799,17 @@ public class Qc_dataprovider {
 			e.printStackTrace();
 		}
 	
+	}
+
+	protected double getMedian(
+			ArrayList<Double> statsScoreProxyMedian) {
+		UnivariateStatistic stat = new Median();
+		double[] tempValues = new double[statsScoreProxyMedian.size()];
+		for (int i = 0; i < tempValues.length; i++) {
+			tempValues[i] = statsScoreProxyMedian.get(i);
+		}
+		double median = stat.evaluate(tempValues);
+		return median;
 	}
 	
 	private void printStructureOverview(StringBuffer htmlReport,
