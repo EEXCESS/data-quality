@@ -1,0 +1,1 @@
+java -Xmx11g -jar dataquality-app.jar 

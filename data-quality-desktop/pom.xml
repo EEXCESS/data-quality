@@ -42,4 +42,32 @@
       <version>3.6</version>
     </dependency>
   </dependencies>
+
+    <build>
+        <plugins>
+            
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>myExecution</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <ant target="create_run_jar" inheritRefs="true" antfile="desktop-app-export.xml">
+                                  
+                                </ant>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

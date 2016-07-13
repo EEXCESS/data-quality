@@ -1,0 +1,65 @@
+body {
+    margin: 20px;
+}
+h1 {
+    font-size: 40px;
+    font-family: "Helvetica";
+    color: #1F903E;
+    text-align: center;
+}
+h2 {
+    font-size: 32px;
+    font-family: "Helvetica";
+    color: #1F903E;
+    text-align: center;
+}
+h3 {
+    font-size: 28px;
+    font-family: "Helvetica";
+    color: #1F903E;
+    text-align: center;
+}
+h4 {
+    font-size: 22px;
+    font-family: "Helvetica";
+    color: #1F903E;
+    text-align: left;
+}
+h5 {
+    font-size: 18px;
+    font-family: "Helvetica";
+    color: #1F903E;
+    text-align: left;
+}
+
+.panel, .flip {
+    padding: 5px 5px 0px 5px;
+	margin-bottom: 0px;
+    background-color: #e5eecc;
+    border: solid 1px #c3c3c3;
+}
+.panel {
+	display: none;
+}
+
+.flip {
+    cursor: pointer;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border: green 2px solid;
+    margin:10px;
+}
+
+th {
+    font-style: bold;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px grey solid;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
